@@ -1,0 +1,20 @@
+name: OpenBooks
+
+options:
+  bundleIdPrefix: com.openbooks
+
+targets:
+  OpenBooks:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+
+    sources:
+      - path: OpenBooks
+
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.openbooks.app
+        GENERATE_INFOPLIST_FILE: YES
+
+    scheme: {}
