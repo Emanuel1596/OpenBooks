@@ -1,0 +1,35 @@
+name: Build OpenBooks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v7
+
+      - name: Mostrar version de Xcode
+        run: xcodebuild -version
+
+      - name: Instalar XcodeGen
+        run: brew install xcodegen
+
+      - name: Generar proyecto de Xcode
+        run: xcodegen generate
+
+      - name: Ver proyecto generado
+        run: xcodebuild -list -project OpenBooks.xcodeproj
+
+      - name: Compilar OpenBooks
+        run: |
+          xcodebuild \
+            -project OpenBooks.xcodeproj \
+            -scheme OpenBooks \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build
