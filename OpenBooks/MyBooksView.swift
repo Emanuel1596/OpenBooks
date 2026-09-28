@@ -9,32 +9,42 @@ struct MyBooksView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    Text("Mis libros")
-                        .font(.largeTitle)
-                        .bold()
+            HStack {
+                Text("Mis libros")
+                    .font(.largeTitle)
+                    .bold()
 
-                    if hasSavedBooks() {
-                        VStack(spacing: 0) {
-                            ForEach(0..<books.count) { index in
-                                if books[index].isSaved {
-                                    BookRowView(
-                                        book: books[index]
-                                    ) {
-                                        onBookSelected(index)
-                                    }
+                Spacer()
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 24)
+
+            if hasSavedBooks() {
+                ScrollView {
+                    VStack(spacing: 0) {
+                        ForEach(0..<books.count) { index in
+                            if books[index].isSaved {
+                                BookRowView(
+                                    book: books[index]
+                                ) {
+                                    onBookSelected(index)
                                 }
                             }
                         }
-                    } else {
-                        EmptyMyBooksView(
-                            onSearch: onSearch
-                        )
                     }
+                    .padding(.horizontal, 20)
                 }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 24)
+            } else {
+                VStack(spacing: 0) {
+                    Spacer()
+
+                    EmptyMyBooksView(
+                        onSearch: onSearch
+                    )
+                    .padding(.horizontal, 20)
+
+                    Spacer()
+                }
             }
 
             BottomNavigationView(
@@ -61,8 +71,6 @@ struct EmptyMyBooksView: View {
 
     var body: some View {
         VStack(spacing: 18) {
-            Spacer()
-
             Image(systemName: "book")
                 .font(.system(size: 60))
                 .foregroundStyle(.gray)
@@ -98,8 +106,6 @@ struct EmptyMyBooksView: View {
                     .padding(1)
                 }
             }
-
-            Spacer()
         }
     }
 }
