@@ -20,22 +20,24 @@ struct HomeView: View {
                         onSearch: onSearch
                     )
 
-                    Text("Libros")
-                        .font(.system(size: 24))
-                        .bold()
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Libros")
+                            .font(.system(size: 24))
+                            .bold()
 
-                    VStack(spacing: 0) {
-                        ForEach(0..<3) { index in
-                            BookRowView(
-                                book: books[index]
-                            ) {
-                                onBookSelected(index)
-                            }
+                        VStack(spacing: 0) {
+                            ForEach(0..<3) { index in
+                                BookRowView(
+                                    book: books[index]
+                                ) {
+                                    onBookSelected(index)
+                                }
 
-                            if index < 2 {
-                                RoundedRectangle(cornerRadius: 0)
-                                    .frame(height: 1)
-                                    .foregroundStyle(.gray)
+                                if index < 2 {
+                                    RoundedRectangle(cornerRadius: 0)
+                                        .frame(height: 1)
+                                        .foregroundStyle(.gray)
+                                }
                             }
                         }
                     }
@@ -91,33 +93,33 @@ struct BookRowView: View {
     let onTap: () -> Void
 
     var body: some View {
-        Button {
-            onTap()
-        } label: {
-            HStack(spacing: 16) {
-                SmallBookCoverView(
-                    hasCover: book.hasCover
-                )
+        HStack(spacing: 16) {
+            SmallBookCoverView(
+                hasCover: book.hasCover
+            )
 
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(book.title)
-                        .font(.system(size: 18))
-                        .bold()
-                        .foregroundStyle(.black)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(book.title)
+                    .font(.system(size: 18))
+                    .bold()
+                    .foregroundStyle(.black)
 
-                    Text(book.author)
-                        .font(.system(size: 16))
-                        .foregroundStyle(.gray)
-                }
+                Text(book.author)
+                    .font(.system(size: 16))
+                    .foregroundStyle(.gray)
+            }
 
-                Spacer()
+            Spacer()
 
+            Button {
+                onTap()
+            } label: {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 18))
                     .foregroundStyle(.black)
             }
-            .padding(.vertical, 12)
         }
+        .padding(.vertical, 12)
     }
 }
 
@@ -167,19 +169,25 @@ struct BottomNavigationView: View {
                 Button {
                     onHome()
                 } label: {
-                    VStack(spacing: 4) {
-                        if homeActive {
+                    if homeActive {
+                        VStack(spacing: 4) {
                             Image(systemName: "house.fill")
-                        } else {
-                            Image(systemName: "house")
-                        }
+                                .font(.system(size: 24))
 
-                        Text("Inicio")
-                            .font(.system(size: 13))
+                            Text("Inicio")
+                                .font(.system(size: 14))
+                        }
+                        .foregroundStyle(.black)
+                    } else {
+                        VStack(spacing: 4) {
+                            Image(systemName: "house")
+                                .font(.system(size: 24))
+
+                            Text("Inicio")
+                                .font(.system(size: 14))
+                        }
+                        .foregroundStyle(.gray)
                     }
-                    .foregroundStyle(
-                        homeActive ? .black : .gray
-                    )
                 }
 
                 Spacer()
@@ -188,19 +196,25 @@ struct BottomNavigationView: View {
                 Button {
                     onMyBooks()
                 } label: {
-                    VStack(spacing: 4) {
-                        if homeActive {
+                    if homeActive {
+                        VStack(spacing: 4) {
                             Image(systemName: "book")
-                        } else {
-                            Image(systemName: "book.fill")
-                        }
+                                .font(.system(size: 24))
 
-                        Text("Mis libros")
-                            .font(.system(size: 13))
+                            Text("Mis libros")
+                                .font(.system(size: 14))
+                        }
+                        .foregroundStyle(.gray)
+                    } else {
+                        VStack(spacing: 4) {
+                            Image(systemName: "book.fill")
+                                .font(.system(size: 24))
+
+                            Text("Mis libros")
+                                .font(.system(size: 14))
+                        }
+                        .foregroundStyle(.black)
                     }
-                    .foregroundStyle(
-                        homeActive ? .gray : .black
-                    )
                 }
 
                 Spacer()
