@@ -10,7 +10,7 @@ struct HomeView: View {
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
+                VStack(alignment: .leading, spacing: 20) {
                     Text("OpenBooks")
                         .font(.largeTitle)
                         .bold()
@@ -85,6 +85,7 @@ struct SearchFieldView: View {
             )
             .padding(1)
         }
+        .frame(height: 50)
     }
 }
 
@@ -93,33 +94,33 @@ struct BookRowView: View {
     let onTap: () -> Void
 
     var body: some View {
-        HStack(spacing: 16) {
-            SmallBookCoverView(
-                hasCover: book.hasCover
-            )
+        Button {
+            onTap()
+        } label: {
+            HStack(spacing: 16) {
+                SmallBookCoverView(
+                    hasCover: book.hasCover
+                )
 
-            VStack(alignment: .leading, spacing: 6) {
-                Text(book.title)
-                    .font(.system(size: 18))
-                    .bold()
-                    .foregroundStyle(.black)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(book.title)
+                        .font(.system(size: 18))
+                        .bold()
+                        .foregroundStyle(.black)
 
-                Text(book.author)
-                    .font(.system(size: 16))
-                    .foregroundStyle(.gray)
-            }
+                    Text(book.author)
+                        .font(.system(size: 16))
+                        .foregroundStyle(.gray)
+                }
 
-            Spacer()
+                Spacer()
 
-            Button {
-                onTap()
-            } label: {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 18))
                     .foregroundStyle(.black)
             }
+            .padding(.vertical, 10)
         }
-        .padding(.vertical, 12)
     }
 }
 
@@ -137,10 +138,12 @@ struct SmallBookCoverView: View {
 
             if hasCover {
                 Image(systemName: "xmark")
+                    .font(.system(size: 24))
                     .foregroundStyle(.gray)
             } else {
                 VStack(spacing: 4) {
                     Image(systemName: "book")
+                        .font(.system(size: 20))
 
                     Text("Sin portada")
                         .font(.system(size: 13))
@@ -175,7 +178,7 @@ struct BottomNavigationView: View {
                                 .font(.system(size: 24))
 
                             Text("Inicio")
-                                .font(.system(size: 14))
+                                .font(.system(size: 13))
                         }
                         .foregroundStyle(.black)
                     } else {
@@ -184,7 +187,7 @@ struct BottomNavigationView: View {
                                 .font(.system(size: 24))
 
                             Text("Inicio")
-                                .font(.system(size: 14))
+                                .font(.system(size: 13))
                         }
                         .foregroundStyle(.gray)
                     }
@@ -202,7 +205,7 @@ struct BottomNavigationView: View {
                                 .font(.system(size: 24))
 
                             Text("Mis libros")
-                                .font(.system(size: 14))
+                                .font(.system(size: 13))
                         }
                         .foregroundStyle(.gray)
                     } else {
@@ -211,7 +214,7 @@ struct BottomNavigationView: View {
                                 .font(.system(size: 24))
 
                             Text("Mis libros")
-                                .font(.system(size: 14))
+                                .font(.system(size: 13))
                         }
                         .foregroundStyle(.black)
                     }
