@@ -14,99 +14,75 @@ struct SearchResultsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            VStack(alignment: .leading, spacing: 24) {
-                Button {
-                    onBack()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 24))
-                        .foregroundStyle(.black)
-                }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    Button {
+                        onBack()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 24))
+                            .foregroundStyle(.black)
+                    }
 
-                Text("Resultados")
-                    .font(.largeTitle)
-                    .bold()
+                    Text("Resultados")
+                        .font(.largeTitle)
+                        .bold()
 
-                SearchFieldView(
-                    text: $searchText,
-                    onSearch: onSearch
-                )
-            }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 24)
+                    SearchFieldView(
+                        text: $searchText,
+                        onSearch: onSearch
+                    )
 
-            switch state {
+                    switch state {
+                    case .loading:
+                        LoadingResultsView()
 
-            case .loading:
-                VStack(spacing: 0) {
-                    Spacer()
+                    case .content:
+                        if searchText == "Orgullo y prejuicio" {
+                            VStack(spacing: 0) {
+                                ForEach(7..<10) { index in
+                                    BookRowView(
+                                        book: books[index]
+                                    ) {
+                                        onBookSelected(index)
+                                    }
 
-                    LoadingResultsView()
-                        .padding(.horizontal, 20)
-
-                    Spacer()
-                }
-
-            case .content:
-                ScrollView {
-                    if searchText == "Orgullo y prejuicio" {
-                        VStack(spacing: 0) {
-                            ForEach(7..<10) { index in
-                                BookRowView(
-                                    book: books[index]
-                                ) {
-                                    onBookSelected(index)
+                                    if index < 9 {
+                                        RoundedRectangle(cornerRadius: 0)
+                                            .frame(height: 1)
+                                            .foregroundStyle(.gray)
+                                    }
                                 }
+                            }
+                        } else {
+                            VStack(spacing: 0) {
+                                ForEach(3..<7) { index in
+                                    BookRowView(
+                                        book: books[index]
+                                    ) {
+                                        onBookSelected(index)
+                                    }
 
-                                if index < 9 {
-                                    RoundedRectangle(cornerRadius: 0)
-                                        .frame(height: 1)
-                                        .foregroundStyle(.gray)
+                                    if index < 6 {
+                                        RoundedRectangle(cornerRadius: 0)
+                                            .frame(height: 1)
+                                            .foregroundStyle(.gray)
+                                    }
                                 }
                             }
                         }
-                        .padding(.horizontal, 20)
-                    } else {
-                        VStack(spacing: 0) {
-                            ForEach(3..<7) { index in
-                                BookRowView(
-                                    book: books[index]
-                                ) {
-                                    onBookSelected(index)
-                                }
 
-                                if index < 6 {
-                                    RoundedRectangle(cornerRadius: 0)
-                                        .frame(height: 1)
-                                        .foregroundStyle(.gray)
-                                }
-                            }
-                        }
-                        .padding(.horizontal, 20)
+                    case .noResults:
+                        NoResultsView()
+
+                    case .error:
+                        SearchErrorView(
+                            onRetry: onRetry
+                        )
                     }
                 }
-
-            case .noResults:
-                VStack(spacing: 0) {
-                    Spacer()
-
-                    NoResultsView()
-                        .padding(.horizontal, 20)
-
-                    Spacer()
-                }
-
-            case .error:
-                VStack(spacing: 0) {
-                    Spacer()
-
-                    SearchErrorView(
-                        onRetry: onRetry
-                    )
-                    .padding(.horizontal, 20)
-
-                    Spacer()
-                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 24)
             }
 
             BottomNavigationView(
@@ -121,33 +97,19 @@ struct SearchResultsView: View {
 struct LoadingResultsView: View {
     var body: some View {
         VStack(spacing: 16) {
-            HStack {
-                Spacer()
+            Spacer()
 
-                Image(systemName: "hourglass")
-                    .font(.system(size: 50))
-                    .foregroundStyle(.gray)
+            Image(systemName: "hourglass")
+                .font(.system(size: 50))
+                .foregroundStyle(.gray)
 
-                Spacer()
-            }
+            Text("Buscando libros...")
+                .font(.system(size: 20))
 
-            HStack {
-                Spacer()
+            Text("Esto puede tardar unos segundos.")
+                .foregroundStyle(.gray)
 
-                Text("Buscando libros...")
-                    .font(.system(size: 20))
-
-                Spacer()
-            }
-
-            HStack {
-                Spacer()
-
-                Text("Esto puede tardar unos segundos.")
-                    .foregroundStyle(.gray)
-
-                Spacer()
-            }
+            Spacer()
         }
     }
 }
@@ -155,34 +117,20 @@ struct LoadingResultsView: View {
 struct NoResultsView: View {
     var body: some View {
         VStack(spacing: 16) {
-            HStack {
-                Spacer()
+            Spacer()
 
-                Image(systemName: "magnifyingglass")
-                    .font(.system(size: 50))
-                    .foregroundStyle(.gray)
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 50))
+                .foregroundStyle(.gray)
 
-                Spacer()
-            }
+            Text("No se encontraron libros")
+                .font(.system(size: 20))
+                .bold()
 
-            HStack {
-                Spacer()
+            Text("Intenta realizar otra búsqueda.")
+                .foregroundStyle(.gray)
 
-                Text("No se encontraron libros")
-                    .font(.system(size: 20))
-                    .bold()
-
-                Spacer()
-            }
-
-            HStack {
-                Spacer()
-
-                Text("Intenta realizar otra búsqueda.")
-                    .foregroundStyle(.gray)
-
-                Spacer()
-            }
+            Spacer()
         }
     }
 }
@@ -192,34 +140,18 @@ struct SearchErrorView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            HStack {
-                Spacer()
+            Spacer()
 
-                Image(systemName: "exclamationmark.circle")
-                    .font(.system(size: 50))
-                    .foregroundStyle(.gray)
+            Image(systemName: "exclamationmark.circle")
+                .font(.system(size: 50))
+                .foregroundStyle(.gray)
 
-                Spacer()
-            }
+            Text("No se pudieron cargar los libros")
+                .font(.system(size: 20))
+                .bold()
 
-            HStack {
-                Spacer()
-
-                Text("No se pudieron cargar los libros")
-                    .font(.system(size: 20))
-                    .bold()
-
-                Spacer()
-            }
-
-            HStack {
-                Spacer()
-
-                Text("Ocurrió un error al obtener los resultados. Intenta nuevamente.")
-                    .foregroundStyle(.gray)
-
-                Spacer()
-            }
+            Text("Ocurrió un error al obtener los resultados. Intenta nuevamente.")
+                .foregroundStyle(.gray)
 
             Button {
                 onRetry()
@@ -238,6 +170,8 @@ struct SearchErrorView: View {
                     RoundedRectangle(cornerRadius: 14)
                 )
             }
+
+            Spacer()
         }
     }
 }
