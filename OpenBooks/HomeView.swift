@@ -31,11 +31,19 @@ struct HomeView: View {
                             ) {
                                 onBookSelected(index)
                             }
+
+                            if index < 2 {
+                                RoundedRectangle(cornerRadius: 0)
+                                    .frame(height: 1)
+                                    .foregroundStyle(.gray)
+                                    .padding(.leading, 100)
+                            }
                         }
                     }
                 }
                 .padding(.horizontal, 20)
-                .padding(.vertical, 24)
+                .padding(.top, 24)
+                .padding(.bottom, 24)
             }
 
             BottomNavigationView(
@@ -110,7 +118,7 @@ struct BookRowView: View {
                     .font(.system(size: 18))
                     .foregroundStyle(.black)
             }
-            .padding(.vertical, 12)
+            .padding(.vertical, 16)
         }
     }
 }
@@ -119,30 +127,30 @@ struct SmallBookCoverView: View {
     let hasCover: Bool
 
     var body: some View {
-        if hasCover {
-            Image(systemName: "xmark")
-                .font(.system(size: 24))
-                .foregroundStyle(.black)
-                .frame(width: 84, height: 108)
-                .background(.gray)
-                .clipShape(
-                    RoundedRectangle(cornerRadius: 3)
-                )
-        } else {
-            VStack(spacing: 4) {
-                Image(systemName: "book")
-                    .font(.system(size: 20))
+        ZStack {
+            RoundedRectangle(cornerRadius: 3)
+                .foregroundStyle(.gray)
 
-                Text("Sin portada")
-                    .font(.system(size: 13))
+            RoundedRectangle(cornerRadius: 3)
+                .foregroundStyle(.white)
+                .padding(1)
+
+            if hasCover {
+                Image(systemName: "xmark")
+                    .font(.system(size: 28))
+                    .foregroundStyle(.gray)
+            } else {
+                VStack(spacing: 4) {
+                    Image(systemName: "book")
+                        .font(.system(size: 20))
+
+                    Text("Sin portada")
+                        .font(.system(size: 13))
+                }
+                .foregroundStyle(.gray)
             }
-            .foregroundStyle(.black)
-            .frame(width: 84, height: 108)
-            .background(.gray)
-            .clipShape(
-                RoundedRectangle(cornerRadius: 3)
-            )
         }
+        .frame(width: 84, height: 108)
     }
 }
 
@@ -152,50 +160,68 @@ struct BottomNavigationView: View {
     let onMyBooks: () -> Void
 
     var body: some View {
-        HStack {
-            Spacer()
+        VStack(spacing: 0) {
+            RoundedRectangle(cornerRadius: 0)
+                .frame(height: 1)
+                .foregroundStyle(.gray)
 
-            Button {
-                onHome()
-            } label: {
-                VStack(spacing: 4) {
+            HStack {
+                Spacer()
+
+                Button {
+                    onHome()
+                } label: {
                     if homeActive {
-                        Image(systemName: "house.fill")
-                            .font(.system(size: 24))
+                        VStack(spacing: 4) {
+                            Image(systemName: "house.fill")
+                                .font(.system(size: 24))
+
+                            Text("Inicio")
+                                .font(.system(size: 13))
+                        }
+                        .foregroundStyle(.black)
                     } else {
-                        Image(systemName: "house")
-                            .font(.system(size: 24))
+                        VStack(spacing: 4) {
+                            Image(systemName: "house")
+                                .font(.system(size: 24))
+
+                            Text("Inicio")
+                                .font(.system(size: 13))
+                        }
+                        .foregroundStyle(.gray)
                     }
-
-                    Text("Inicio")
-                        .font(.system(size: 13))
                 }
-                .foregroundStyle(.black)
-            }
 
-            Spacer()
-            Spacer()
+                Spacer()
+                Spacer()
 
-            Button {
-                onMyBooks()
-            } label: {
-                VStack(spacing: 4) {
+                Button {
+                    onMyBooks()
+                } label: {
                     if homeActive {
-                        Image(systemName: "book")
-                            .font(.system(size: 24))
+                        VStack(spacing: 4) {
+                            Image(systemName: "book")
+                                .font(.system(size: 24))
+
+                            Text("Mis libros")
+                                .font(.system(size: 13))
+                        }
+                        .foregroundStyle(.gray)
                     } else {
-                        Image(systemName: "book.fill")
-                            .font(.system(size: 24))
+                        VStack(spacing: 4) {
+                            Image(systemName: "book.fill")
+                                .font(.system(size: 24))
+
+                            Text("Mis libros")
+                                .font(.system(size: 13))
+                        }
+                        .foregroundStyle(.black)
                     }
-
-                    Text("Mis libros")
-                        .font(.system(size: 13))
                 }
-                .foregroundStyle(.black)
-            }
 
-            Spacer()
+                Spacer()
+            }
+            .padding(.vertical, 10)
         }
-        .padding(.vertical, 10)
     }
 }
