@@ -17,7 +17,8 @@ struct MyBooksView: View {
                 Spacer()
             }
             .padding(.horizontal, 20)
-            .padding(.vertical, 24)
+            .padding(.top, 24)
+            .padding(.bottom, 12)
 
             if hasSavedBooks() {
                 ScrollView {
@@ -87,17 +88,34 @@ struct EmptyMyBooksView: View {
 
     var body: some View {
         VStack(spacing: 18) {
-            Image(systemName: "book")
-                .font(.system(size: 60))
-                .foregroundStyle(.gray)
+            HStack {
+                Spacer()
 
-            Text("Todavía no tienes libros guardados")
-                .font(.system(size: 20))
-                .bold()
+                Image(systemName: "book")
+                    .font(.system(size: 60))
+                    .foregroundStyle(.gray)
 
-            Text("Busca un libro y guárdalo para verlo aquí.")
-                .font(.system(size: 16))
-                .foregroundStyle(.gray)
+                Spacer()
+            }
+
+            HStack {
+                Spacer()
+
+                Text("Todavía no tienes libros guardados")
+                    .font(.system(size: 20))
+                    .bold()
+
+                Spacer()
+            }
+
+            HStack {
+                Spacer()
+
+                Text("Busca un libro y guárdalo para verlo aquí.")
+                    .foregroundStyle(.gray)
+
+                Spacer()
+            }
 
             Button {
                 onSearch()
@@ -115,13 +133,14 @@ struct EmptyMyBooksView: View {
 
                         Spacer()
                     }
-                    .padding(.vertical, 16)
+                    .padding(.vertical, 14)
                     .background(.white)
                     .clipShape(
                         RoundedRectangle(cornerRadius: 13)
                     )
                     .padding(1)
                 }
+                .frame(height: 52)
             }
         }
     }
