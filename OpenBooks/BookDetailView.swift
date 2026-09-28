@@ -99,29 +99,29 @@ struct LargeBookCoverView: View {
     let hasCover: Bool
 
     var body: some View {
-        if hasCover {
-            Image(systemName: "xmark")
-                .font(.system(size: 60))
-                .foregroundStyle(.black)
-                .frame(width: 220, height: 280)
-                .background(.gray)
-                .clipShape(
-                    RoundedRectangle(cornerRadius: 3)
-                )
-        } else {
-            VStack(spacing: 8) {
-                Image(systemName: "book")
-                    .font(.system(size: 50))
+        ZStack {
+            RoundedRectangle(cornerRadius: 3)
+                .foregroundStyle(.gray)
 
-                Text("Sin portada")
-                    .font(.system(size: 18))
+            RoundedRectangle(cornerRadius: 3)
+                .foregroundStyle(.white)
+                .padding(1)
+
+            if hasCover {
+                Image(systemName: "xmark")
+                    .font(.system(size: 60))
+                    .foregroundStyle(.gray)
+            } else {
+                VStack(spacing: 8) {
+                    Image(systemName: "book")
+                        .font(.system(size: 50))
+
+                    Text("Sin portada")
+                        .font(.system(size: 18))
+                }
+                .foregroundStyle(.gray)
             }
-            .foregroundStyle(.black)
-            .frame(width: 220, height: 280)
-            .background(.gray)
-            .clipShape(
-                RoundedRectangle(cornerRadius: 3)
-            )
         }
+        .frame(width: 220, height: 280)
     }
 }
