@@ -9,38 +9,48 @@ struct MyBooksView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Mis libros")
-                        .font(.largeTitle)
-                        .bold()
+            HStack {
+                Text("Mis libros")
+                    .font(.largeTitle)
+                    .bold()
 
-                    if hasSavedBooks() {
-                        VStack(spacing: 0) {
-                            ForEach(0..<books.count) { index in
-                                if books[index].isSaved {
-                                    BookRowView(
-                                        book: books[index]
-                                    ) {
-                                        onBookSelected(index)
-                                    }
+                Spacer()
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 24)
 
-                                    if hasSavedBookAfter(index: index) {
-                                        RoundedRectangle(cornerRadius: 0)
-                                            .frame(height: 1)
-                                            .foregroundStyle(.gray)
-                                    }
+            if hasSavedBooks() {
+                ScrollView {
+                    VStack(spacing: 0) {
+                        ForEach(0..<books.count) { index in
+                            if books[index].isSaved {
+                                BookRowView(
+                                    book: books[index]
+                                ) {
+                                    onBookSelected(index)
+                                }
+
+                                if hasSavedBookAfter(index: index) {
+                                    RoundedRectangle(cornerRadius: 0)
+                                        .frame(height: 1)
+                                        .foregroundStyle(.gray)
                                 }
                             }
                         }
-                    } else {
-                        EmptyMyBooksView(
-                            onSearch: onSearch
-                        )
                     }
+                    .padding(.horizontal, 20)
                 }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 24)
+            } else {
+                VStack(spacing: 0) {
+                    Spacer()
+
+                    EmptyMyBooksView(
+                        onSearch: onSearch
+                    )
+                    .padding(.horizontal, 20)
+
+                    Spacer()
+                }
             }
 
             BottomNavigationView(
@@ -77,17 +87,16 @@ struct EmptyMyBooksView: View {
 
     var body: some View {
         VStack(spacing: 18) {
-            Spacer()
-
             Image(systemName: "book")
                 .font(.system(size: 60))
                 .foregroundStyle(.gray)
 
             Text("Todavía no tienes libros guardados")
-                .font(.system(size: 24))
+                .font(.system(size: 20))
                 .bold()
 
             Text("Busca un libro y guárdalo para verlo aquí.")
+                .font(.system(size: 16))
                 .foregroundStyle(.gray)
 
             Button {
@@ -114,8 +123,6 @@ struct EmptyMyBooksView: View {
                     .padding(1)
                 }
             }
-
-            Spacer()
         }
     }
 }
