@@ -1,0 +1,34 @@
+name: Export Xcode Project
+
+on:
+  workflow_dispatch:
+
+jobs:
+  export:
+    runs-on: macos-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v7
+
+      - name: Mostrar version de Xcode
+        run: xcodebuild -version
+
+      - name: Instalar XcodeGen
+        run: brew install xcodegen
+
+      - name: Generar proyecto de Xcode
+        run: xcodegen generate
+
+      - name: Verificar proyecto generado
+        run: xcodebuild -list -project OpenBooks.xcodeproj
+
+      - name: Guardar proyecto para Xcode
+        uses: actions/upload-artifact@v7
+        with:
+          name: OpenBooks-Xcode
+          path: |
+            OpenBooks.xcodeproj
+            OpenBooks
+          if-no-files-found: error
+          retention-days: 7
