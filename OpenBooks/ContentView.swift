@@ -1,148 +1,201 @@
 import SwiftUI
 
-struct Book: Identifiable {
-    let id = UUID()
-    let title: String
-    let author: String
-    let year: Int
-}
-
 struct ContentView: View {
-    @State private var searchText = ""
+    @State var screen: AppScreen = .home
+    @State var previousScreen: AppScreen = .home
+    @State var selectedBookIndex: Int? = nil
+    @State var searchText: String = ""
+    @State var resultsState: ResultsState = .content
+    @State var detailHomeActive: Bool = true
 
-    private let books = [
+    @State var books: [Book] = [
         Book(
             title: "Cien años de soledad",
             author: "Gabriel García Márquez",
-            year: 1967
+            year: "1967",
+            hasCover: true,
+            isSaved: false
         ),
         Book(
             title: "El principito",
             author: "Antoine de Saint-Exupéry",
-            year: 1943
+            year: nil,
+            hasCover: true,
+            isSaved: false
         ),
         Book(
             title: "1984",
             author: "George Orwell",
-            year: 1949
+            year: nil,
+            hasCover: true,
+            isSaved: false
+        ),
+        Book(
+            title: "Harry Potter y la piedra filosofal",
+            author: "J. K. Rowling",
+            year: "1997",
+            hasCover: true,
+            isSaved: false
+        ),
+        Book(
+            title: "Harry Potter y la cámara secreta",
+            author: "J. K. Rowling",
+            year: nil,
+            hasCover: true,
+            isSaved: false
+        ),
+        Book(
+            title: "Harry Potter y el prisionero de Azkaban",
+            author: "J. K. Rowling",
+            year: nil,
+            hasCover: true,
+            isSaved: false
+        ),
+        Book(
+            title: "Harry Potter y el cáliz de fuego",
+            author: "J. K. Rowling",
+            year: nil,
+            hasCover: true,
+            isSaved: false
+        ),
+        Book(
+            title: "Orgullo y prejuicio",
+            author: "Jane Austen",
+            year: nil,
+            hasCover: false,
+            isSaved: false
+        ),
+        Book(
+            title: "Emma",
+            author: "Jane Austen",
+            year: nil,
+            hasCover: false,
+            isSaved: false
+        ),
+        Book(
+            title: "Persuasión",
+            author: "Jane Austen",
+            year: nil,
+            hasCover: false,
+            isSaved: false
         )
     ]
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 24) {
-                        Text("OpenBooks")
-                            .font(.largeTitle)
-                            .bold()
+        switch screen {
 
-                        HStack(spacing: 12) {
-                            Image(systemName: "magnifyingglass")
-                                .font(.title3)
-                                .foregroundStyle(.secondary)
-
-                            TextField(
-                                "Buscar libros",
-                                text: $searchText
-                            )
-                        }
-                        .padding(.horizontal, 16)
-                        .frame(minHeight: 52)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 14)
-                                .stroke(
-                                    Color.secondary.opacity(0.7),
-                                    lineWidth: 1
-                                )
-                        }
-
-                        Text("Libros")
-                            .font(.title2)
-                            .bold()
-
-                        VStack(spacing: 0) {
-                            ForEach(books) { book in
-                                NavigationLink {
-                                    BookDetailView(book: book)
-                                } label: {
-                                    BookRow(book: book)
-                                }
-                                .buttonStyle(.plain)
-
-                                Divider()
-                                    .padding(.leading, 100)
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 24)
-                    .padding(.bottom, 24)
+        case .home:
+            HomeView(
+                searchText: $searchText,
+                books: books,
+                onSearch: {
+                    searchBooks()
+                },
+                onBookSelected: { index in
+                    selectedBookIndex = index
+                    previousScreen = .home
+                    detailHomeActive = true
+                    screen = .detail
+                },
+                onMyBooks: {
+                    screen = .myBooks
                 }
+            )
 
-                Divider()
-
-                HStack(spacing: 0) {
-                    VStack(spacing: 4) {
-                        Image(systemName: "house.fill")
-                            .font(.title2)
-
-                        Text("Inicio")
-                            .font(.caption)
-                    }
-                    .frame(maxWidth: .infinity)
-
-                    VStack(spacing: 4) {
-                        Image(systemName: "book.fill")
-                            .font(.title2)
-
-                        Text("Mis libros")
-                            .font(.caption)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .foregroundStyle(.secondary)
+        case .results:
+            SearchResultsView(
+                searchText: $searchText,
+                books: books,
+                state: resultsState,
+                onBack: {
+                    screen = .home
+                },
+                onSearch: {
+                    searchBooks()
+                },
+                onBookSelected: { index in
+                    selectedBookIndex = index
+                    previousScreen = .results
+                    detailHomeActive = true
+                    screen = .detail
+                },
+                onRetry: {
+                    searchBooks()
+                },
+                onHome: {
+                    screen = .home
+                },
+                onMyBooks: {
+                    screen = .myBooks
                 }
-                .padding(.vertical, 10)
+            )
+
+        case .detail:
+            if let index = selectedBookIndex {
+                BookDetailView(
+                    book: books[index],
+                    homeActive: detailHomeActive,
+                    onBack: {
+                        screen = previousScreen
+                    },
+                    onSaveOrDelete: {
+                        books[index].isSaved.toggle()
+                        screen = .myBooks
+                    },
+                    onHome: {
+                        screen = .home
+                    },
+                    onMyBooks: {
+                        screen = .myBooks
+                    }
+                )
+            } else {
+                HomeView(
+                    searchText: $searchText,
+                    books: books,
+                    onSearch: {
+                        searchBooks()
+                    },
+                    onBookSelected: { index in
+                        selectedBookIndex = index
+                        previousScreen = .home
+                        detailHomeActive = true
+                        screen = .detail
+                    },
+                    onMyBooks: {
+                        screen = .myBooks
+                    }
+                )
             }
+
+        case .myBooks:
+            MyBooksView(
+                books: books,
+                onBookSelected: { index in
+                    selectedBookIndex = index
+                    previousScreen = .myBooks
+                    detailHomeActive = false
+                    screen = .detail
+                },
+                onHome: {
+                    screen = .home
+                },
+                onSearch: {
+                    screen = .home
+                }
+            )
         }
     }
-}
 
-struct BookRow: View {
-    let book: Book
-
-    var body: some View {
-        HStack(spacing: 16) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 3)
-                    .fill(Color.gray.opacity(0.08))
-
-                RoundedRectangle(cornerRadius: 3)
-                    .stroke(
-                        Color.secondary.opacity(0.7),
-                        lineWidth: 1
-                    )
-
-                Image(systemName: "book.closed")
-                    .font(.title2)
-                    .foregroundStyle(.secondary)
-            }
-            .frame(width: 84, height: 108)
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text(book.title)
-                    .font(.headline)
-
-                Text(book.author)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-
-            Spacer()
-
-            Image(systemName: "chevron.right")
-                .font(.headline)
+    func searchBooks() {
+        if searchText == "Harry Potter" {
+            resultsState = .content
+        } else if searchText == "Orgullo y prejuicio" {
+            resultsState = .content
+        } else {
+            resultsState = .noResults
         }
-        .padding(.vertical, 16)
+
+        screen = .results
     }
 }
