@@ -1,0 +1,89 @@
+name: Screenshot OpenBooks
+
+on:
+  push:
+    branches:
+      - build-openbooks
+      - main
+
+jobs:
+  screenshot:
+    runs-on: macos-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v7
+
+      - name: Mostrar version de Xcode
+        run: xcodebuild -version
+
+      - name: Instalar XcodeGen
+        run: brew install xcodegen
+
+      - name: Generar proyecto de Xcode
+        run: xcodegen generate
+
+      - name: Buscar un iPhone Simulator
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json
+          import sys
+
+          data = json.load(sys.stdin)
+
+          for devices in data["devices"].values():
+              for device in devices:
+                  if device.get("isAvailable") and device["name"].startswith("iPhone"):
+                      print(device["udid"])
+                      sys.exit(0)
+
+          sys.exit(1)
+          ')
+
+          echo "SIMULATOR_UDID=$UDID" >> "$GITHUB_ENV"
+          echo "Simulator seleccionado: $UDID"
+
+      - name: Encender Simulator
+        run: |
+          xcrun simctl boot "$SIMULATOR_UDID" || true
+          xcrun simctl bootstatus "$SIMULATOR_UDID" -b
+
+      - name: Compilar OpenBooks para Simulator
+        run: |
+          xcodebuild \
+            -project OpenBooks.xcodeproj \
+            -scheme OpenBooks \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Instalar OpenBooks
+        run: |
+          APP_PATH="build/Build/Products/Debug-iphonesimulator/OpenBooks.app"
+
+          if [ ! -d "$APP_PATH" ]; then
+            echo "No se encontro OpenBooks.app"
+            exit 1
+          fi
+
+          xcrun simctl install "$SIMULATOR_UDID" "$APP_PATH"
+
+      - name: Abrir OpenBooks
+        run: |
+          xcrun simctl launch "$SIMULATOR_UDID" com.openbooks.app
+          sleep 5
+
+      - name: Tomar captura
+        run: |
+          mkdir -p screenshots
+          xcrun simctl io "$SIMULATOR_UDID" screenshot screenshots/home.png
+
+      - name: Guardar captura
+        uses: actions/upload-artifact@v7
+        with:
+          name: OpenBooks-Screenshot
+          path: screenshots/home.png
+          if-no-files-found: error
+          retention-days: 7
