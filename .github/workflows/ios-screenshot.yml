@@ -1,6 +1,7 @@
 name: Screenshot OpenBooks
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - build-openbooks
@@ -48,42 +49,131 @@ jobs:
           xcrun simctl boot "$SIMULATOR_UDID" || true
           xcrun simctl bootstatus "$SIMULATOR_UDID" -b
 
-      - name: Compilar OpenBooks para Simulator
+      - name: Capturar todas las pantallas
+        shell: bash
         run: |
-          xcodebuild \
-            -project OpenBooks.xcodeproj \
-            -scheme OpenBooks \
-            -configuration Debug \
-            -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
-            -derivedDataPath build \
-            CODE_SIGNING_ALLOWED=NO \
-            build
+          set -euo pipefail
 
-      - name: Instalar OpenBooks
-        run: |
+          mkdir -p screenshots
+
+          SOURCE="OpenBooks/ContentView.swift"
+          BUNDLE_ID="com.openbooks.app"
           APP_PATH="build/Build/Products/Debug-iphonesimulator/OpenBooks.app"
 
-          if [ ! -d "$APP_PATH" ]; then
-            echo "No se encontro OpenBooks.app"
-            exit 1
-          fi
+          capture() {
+            NAME="$1"
+            SCREEN="$2"
+            SEARCH_TEXT="$3"
+            RESULTS_STATE="$4"
+            SELECTED_INDEX="$5"
+            DETAIL_HOME_ACTIVE="$6"
+            SAVE_FIRST_BOOK="$7"
 
-          xcrun simctl install "$SIMULATOR_UDID" "$APP_PATH"
+            echo "Preparando captura: $NAME"
 
-      - name: Abrir OpenBooks
-        run: |
-          xcrun simctl launch "$SIMULATOR_UDID" com.openbooks.app
-          sleep 5
+            git checkout -- "$SOURCE"
 
-      - name: Tomar captura
-        run: |
-          mkdir -p screenshots
-          xcrun simctl io "$SIMULATOR_UDID" screenshot screenshots/home.png
+            python3 - "$SOURCE" "$SCREEN" "$SEARCH_TEXT" "$RESULTS_STATE" "$SELECTED_INDEX" "$DETAIL_HOME_ACTIVE" "$SAVE_FIRST_BOOK" <<'PY'
+          import sys
 
-      - name: Guardar captura
+          path = sys.argv[1]
+          screen = sys.argv[2]
+          search_text = sys.argv[3]
+          results_state = sys.argv[4]
+          selected_index = sys.argv[5]
+          detail_home_active = sys.argv[6]
+          save_first_book = sys.argv[7]
+
+          with open(path, "r", encoding="utf-8") as file:
+              text = file.read()
+
+          def replace_once(old, new):
+              global text
+              if old not in text:
+                  raise SystemExit(f"No se encontro en ContentView.swift: {old}")
+              text = text.replace(old, new, 1)
+
+          safe_search = search_text.replace("\\", "\\\\").replace('"', '\\"')
+
+          replace_once(
+              "@State var screen: AppScreen = .home",
+              f"@State var screen: AppScreen = .{screen}"
+          )
+
+          replace_once(
+              "@State var selectedBookIndex: Int? = nil",
+              f"@State var selectedBookIndex: Int? = {selected_index}"
+          )
+
+          replace_once(
+              '@State var searchText: String = ""',
+              f'@State var searchText: String = "{safe_search}"'
+          )
+
+          replace_once(
+              "@State var resultsState: ResultsState = .content",
+              f"@State var resultsState: ResultsState = .{results_state}"
+          )
+
+          replace_once(
+              "@State var detailHomeActive: Bool = true",
+              f"@State var detailHomeActive: Bool = {detail_home_active}"
+          )
+
+          if save_first_book == "true":
+              replace_once("isSaved: false", "isSaved: true")
+
+          with open(path, "w", encoding="utf-8") as file:
+              file.write(text)
+          PY
+
+            rm -rf build
+
+            xcodebuild \
+              -project OpenBooks.xcodeproj \
+              -scheme OpenBooks \
+              -configuration Debug \
+              -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
+              -derivedDataPath build \
+              CODE_SIGNING_ALLOWED=NO \
+              build
+
+            xcrun simctl terminate "$SIMULATOR_UDID" "$BUNDLE_ID" || true
+            xcrun simctl uninstall "$SIMULATOR_UDID" "$BUNDLE_ID" || true
+            xcrun simctl install "$SIMULATOR_UDID" "$APP_PATH"
+            xcrun simctl launch "$SIMULATOR_UDID" "$BUNDLE_ID"
+
+            sleep 3
+
+            xcrun simctl io "$SIMULATOR_UDID" screenshot "screenshots/$NAME.png"
+          }
+
+          capture "home" "home" "" "content" "nil" "true" "false"
+
+          capture "results" "results" "Harry Potter" "content" "nil" "true" "false"
+
+          capture "detail" "detail" "" "content" "0" "true" "false"
+
+          capture "detail-saved" "detail" "" "content" "0" "false" "true"
+
+          capture "my-books" "myBooks" "" "content" "nil" "false" "true"
+
+          capture "my-books-empty" "myBooks" "" "content" "nil" "false" "false"
+
+          capture "no-results" "results" "Otra busqueda" "noResults" "nil" "true" "false"
+
+          capture "loading" "results" "Harry Potter" "loading" "nil" "true" "false"
+
+          capture "error" "results" "Harry Potter" "error" "nil" "true" "false"
+
+          capture "no-cover" "results" "Orgullo y prejuicio" "content" "nil" "true" "false"
+
+          git checkout -- "$SOURCE"
+
+      - name: Guardar capturas
         uses: actions/upload-artifact@v7
         with:
-          name: OpenBooks-Screenshot
-          path: screenshots/home.png
+          name: OpenBooks-Screenshots
+          path: screenshots/*.png
           if-no-files-found: error
           retention-days: 7
