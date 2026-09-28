@@ -49,7 +49,7 @@ jobs:
           xcrun simctl boot "$SIMULATOR_UDID" || true
           xcrun simctl bootstatus "$SIMULATOR_UDID" -b
 
-      - name: Capturar pantallas con problemas
+      - name: Capturar estados pendientes
         shell: bash
         run: |
           set -euo pipefail
@@ -89,11 +89,19 @@ jobs:
 
           def replace_once(old, new):
               global text
+
               if old not in text:
-                  raise SystemExit(f"No se encontro en ContentView.swift: {old}")
+                  raise SystemExit(
+                      f"No se encontro en ContentView.swift: {old}"
+                  )
+
               text = text.replace(old, new, 1)
 
-          safe_search = search_text.replace("\\", "\\\\").replace('"', '\\"')
+          safe_search = (
+              search_text
+              .replace("\\", "\\\\")
+              .replace('"', '\\"')
+          )
 
           replace_once(
               "@State var screen: AppScreen = .home",
@@ -121,7 +129,10 @@ jobs:
           )
 
           if save_first_book == "true":
-              replace_once("isSaved: false", "isSaved: true")
+              replace_once(
+                  "isSaved: false",
+                  "isSaved: true"
+              )
 
           with open(path, "w", encoding="utf-8") as file:
               file.write(text)
@@ -138,19 +149,56 @@ jobs:
               CODE_SIGNING_ALLOWED=NO \
               build
 
-            xcrun simctl terminate "$SIMULATOR_UDID" "$BUNDLE_ID" || true
-            xcrun simctl uninstall "$SIMULATOR_UDID" "$BUNDLE_ID" || true
-            xcrun simctl install "$SIMULATOR_UDID" "$APP_PATH"
-            xcrun simctl launch "$SIMULATOR_UDID" "$BUNDLE_ID"
+            xcrun simctl terminate \
+              "$SIMULATOR_UDID" \
+              "$BUNDLE_ID" || true
+
+            xcrun simctl uninstall \
+              "$SIMULATOR_UDID" \
+              "$BUNDLE_ID" || true
+
+            xcrun simctl install \
+              "$SIMULATOR_UDID" \
+              "$APP_PATH"
+
+            xcrun simctl launch \
+              "$SIMULATOR_UDID" \
+              "$BUNDLE_ID"
 
             sleep 3
 
-            xcrun simctl io "$SIMULATOR_UDID" screenshot "screenshots/$NAME.png"
+            xcrun simctl io \
+              "$SIMULATOR_UDID" \
+              screenshot \
+              "screenshots/$NAME.png"
           }
 
-          capture "detail-saved" "detail" "" "content" "0" "false" "true"
+          capture \
+            "loading" \
+            "results" \
+            "Harry Potter" \
+            "loading" \
+            "nil" \
+            "true" \
+            "false"
 
-          capture "my-books-empty" "myBooks" "" "content" "nil" "false" "false"
+          capture \
+            "no-results" \
+            "results" \
+            "Otra busqueda" \
+            "noResults" \
+            "nil" \
+            "true" \
+            "false"
+
+          capture \
+            "my-books-empty" \
+            "myBooks" \
+            "" \
+            "content" \
+            "nil" \
+            "false" \
+            "false"
 
           git checkout -- "$SOURCE"
 
