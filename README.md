@@ -250,19 +250,19 @@ Muestra el buscador, la lista inicial de libros y la navegación entre **Inicio*
 
 Muestra los resultados de una búsqueda y permite seleccionar un libro para consultar su detalle.
 
-<mg width="260" alt="02-resultados" src="https://github.com/user-attachments/assets/f4403735-70f6-4926-bfb7-46987f16e3d2" />
+<img width="260" alt="02-resultados" src="https://github.com/user-attachments/assets/f4403735-70f6-4926-bfb7-46987f16e3d2" />
 
 ### Detalle de un libro no guardado
 
 Muestra la información del libro seleccionado y la opción **Guardar libro**.
 
-<mg width="260" alt="03-detalle-no-guardado" src="https://github.com/user-attachments/assets/205931c3-31c4-406b-a4e7-82029595fd97" />
+<img width="260" alt="03-detalle-no-guardado" src="https://github.com/user-attachments/assets/205931c3-31c4-406b-a4e7-82029595fd97" />
 
 ### Detalle de un libro guardado
 
 Muestra la información de un libro guardado y la opción **Eliminar de Mis libros**.
 
-<mg width="260" alt="04-mis-libros" src="https://github.com/user-attachments/assets/b7568132-028e-44f4-be32-34d895bcfe1d" />
+<img width="260" alt="04-mis-libros" src="https://github.com/user-attachments/assets/b7568132-028e-44f4-be32-34d895bcfe1d" />
 
 ### Mis libros
 
@@ -274,7 +274,7 @@ Muestra los libros que se encuentran guardados en la colección.
 
 Muestra el estado de la sección cuando todavía no existen libros guardados.
 
-<mg width="260" alt="06-mis-libros-vacio" src="https://github.com/user-attachments/assets/7beac29c-e70e-4cd8-86a0-08563d5f0957" />
+<img width="260" alt="06-mis-libros-vacio" src="https://github.com/user-attachments/assets/7beac29c-e70e-4cd8-86a0-08563d5f0957" />
 
 ### Estados de búsqueda
 
@@ -282,25 +282,25 @@ Muestra el estado de la sección cuando todavía no existen libros guardados.
 
 Muestra el estado utilizado mientras se obtienen los resultados de una búsqueda.
 
-<mg width="260" alt="07-cargando" src="https://github.com/user-attachments/assets/f441b56a-8f55-4bcb-af79-4cd62969084e" />
+<img width="260" alt="07-cargando" src="https://github.com/user-attachments/assets/f441b56a-8f55-4bcb-af79-4cd62969084e" />
 
 #### Búsqueda sin resultados
 
 Muestra el estado utilizado cuando no se encuentran libros que coincidan con la búsqueda.
 
-<mg width="260" alt="08-no-resultados" src="https://github.com/user-attachments/assets/a80647df-3a93-47a4-bb42-9883a9712b98" />
+<img width="260" alt="08-no-resultados" src="https://github.com/user-attachments/assets/a80647df-3a93-47a4-bb42-9883a9712b98" />
 
 #### Error en la búsqueda
 
 Muestra el estado utilizado cuando ocurre un problema al obtener los resultados.
 
-<mg width="260" alt="09-error" src="https://github.com/user-attachments/assets/ac6c4726-265b-4c22-84cd-2c316f16477e" />
+<img width="260" alt="09-error" src="https://github.com/user-attachments/assets/ac6c4726-265b-4c22-84cd-2c316f16477e" />
 
 ### Libro sin portada
 
 Muestra el elemento visual sustituto utilizado cuando un libro no cuenta con una portada disponible.
 
-<mg width="260" alt="10-sin-portada" src="https://github.com/user-attachments/assets/7d89a443-d41a-4d5b-b5e3-a766f45defe6" />
+<img width="260" alt="10-sin-portada" src="https://github.com/user-attachments/assets/7d89a443-d41a-4d5b-b5e3-a766f45defe6" />
 
 ## Estado actual del proyecto
 
