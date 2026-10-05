@@ -141,73 +141,6 @@ Cuando Open Library no tenga una portada disponible para un libro, se mostrará 
 
 <img width="1536" height="1024" alt="08-estados-adicionales" src="https://github.com/user-attachments/assets/d4c5124b-5d78-457f-b252-ebaca66c3d95" />
 
-## Pantallas actuales
-
-Las siguientes capturas muestran el estado actual de las pantallas implementadas en OpenBooks.
-Estas imágenes se actualizarán conforme avance el proyecto para mantener un registro visual de los cambios realizados en la interfaz.
-
-### Pantalla principal
-
-Muestra el buscador, la lista inicial de libros y la navegación entre **Inicio** y **Mis libros**.
-
-<img width="1206" height="2622" alt="01-pantalla-principal" src="https://github.com/user-attachments/assets/9000cb2b-fc82-4a9f-9aa6-3ad09755adaf" />
-
-### Resultados de búsqueda
-
-Muestra los resultados de una búsqueda y permite seleccionar un libro para consultar su detalle.
-
-<img width="1206" height="2622" alt="02-resultados" src="https://github.com/user-attachments/assets/f4403735-70f6-4926-bfb7-46987f16e3d2" />
-
-### Detalle de un libro no guardado
-
-Muestra la información del libro seleccionado y la opción **Guardar libro**.
-
-<img width="1206" height="2622" alt="03-detalle-no-guardado" src="https://github.com/user-attachments/assets/205931c3-31c4-406b-a4e7-82029595fd97" />
-
-### Detalle de un libro guardado
-
-Muestra la información de un libro guardado y la opción **Eliminar de Mis libros**.
-
-<img width="1206" height="2622" alt="04-mis-libros" src="https://github.com/user-attachments/assets/b7568132-028e-44f4-be32-34d895bcfe1d" />
-
-### Mis libros
-
-Muestra los libros que se encuentran guardados en la colección.
-
-<img width="1206" height="2622" alt="05-detalle-guardado" src="https://github.com/user-attachments/assets/784b783f-d948-44a5-8bb1-91cb97f91c38" />
-
-### Mis libros vacío
-
-Muestra el estado de la sección cuando todavía no existen libros guardados.
-
-<img width="1206" height="2622" alt="06-mis-libros-vacio" src="https://github.com/user-attachments/assets/7beac29c-e70e-4cd8-86a0-08563d5f0957" />
-
-### Estados de búsqueda
-
-#### Carga
-
-Muestra el estado utilizado mientras se obtienen los resultados de una búsqueda.
-
-<img width="1206" height="2622" alt="07-cargando" src="https://github.com/user-attachments/assets/f441b56a-8f55-4bcb-af79-4cd62969084e" />
-
-#### Búsqueda sin resultados
-
-Muestra el estado utilizado cuando no se encuentran libros que coincidan con la búsqueda.
-
-<img width="1206" height="2622" alt="08-no-resultados" src="https://github.com/user-attachments/assets/a80647df-3a93-47a4-bb42-9883a9712b98" />
-
-#### Error en la búsqueda
-
-Muestra el estado utilizado cuando ocurre un problema al obtener los resultados.
-
-<img width="1206" height="2622" alt="09-error" src="https://github.com/user-attachments/assets/ac6c4726-265b-4c22-84cd-2c316f16477e" />
-
-### Libro sin portada
-
-Muestra el elemento visual sustituto utilizado cuando un libro no cuenta con una portada disponible.
-
-<img width="1206" height="2622" alt="10-sin-portada" src="https://github.com/user-attachments/assets/7d89a443-d41a-4d5b-b5e3-a766f45defe6" />
-
 ## Tecnologías previstas
 
 - Swift
@@ -301,6 +234,74 @@ Este documento incluye:
 - La definición de una sola fuente de verdad para los datos compartidos.
 - La estrategia de navegación propuesta para SwiftUI.
 - La relación entre la propuesta y el prototipo actual de OpenBooks.
+
+## Pantallas actuales
+
+Las siguientes capturas muestran el estado actual de las pantallas implementadas en OpenBooks.
+Estas imágenes se actualizarán conforme avance el proyecto para mantener un registro visual de los cambios realizados en la interfaz.
+
+### Pantalla principal
+
+Muestra el buscador, la lista inicial de libros y la navegación entre **Inicio** y **Mis libros**.
+
+<img width="941" height="1672" alt="01-pantalla-principal" src="https://github.com/user-attachments/assets/9000cb2b-fc82-4a9f-9aa6-3ad09755adaf" />
+
+### Resultados de búsqueda
+
+Muestra los resultados de una búsqueda y permite seleccionar un libro para consultar su detalle.
+
+<img width="941" height="1672" alt="02-resultados" src="https://github.com/user-attachments/assets/f4403735-70f6-4926-bfb7-46987f16e3d2" />
+
+### Detalle de un libro no guardado
+
+Muestra la información del libro seleccionado y la opción **Guardar libro**.
+
+<img width="941" height="1672" alt="03-detalle-no-guardado" src="https://github.com/user-attachments/assets/205931c3-31c4-406b-a4e7-82029595fd97" />
+
+### Detalle de un libro guardado
+
+Muestra la información de un libro guardado y la opción **Eliminar de Mis libros**.
+
+<img width="941" height="1672" alt="04-mis-libros" src="https://github.com/user-attachments/assets/b7568132-028e-44f4-be32-34d895bcfe1d" />
+
+### Mis libros
+
+Muestra los libros que se encuentran guardados en la colección.
+
+<img width="941" height="1672" alt="05-detalle-guardado" src="https://github.com/user-attachments/assets/784b783f-d948-44a5-8bb1-91cb97f91c38" />
+
+### Mis libros vacío
+
+Muestra el estado de la sección cuando todavía no existen libros guardados.
+
+<img width="941" height="1672" alt="06-mis-libros-vacio" src="https://github.com/user-attachments/assets/7beac29c-e70e-4cd8-86a0-08563d5f0957" />
+
+### Estados de búsqueda
+
+#### Carga
+
+Muestra el estado utilizado mientras se obtienen los resultados de una búsqueda.
+
+<img width="941" height="1672" alt="07-cargando" src="https://github.com/user-attachments/assets/f441b56a-8f55-4bcb-af79-4cd62969084e" />
+
+#### Búsqueda sin resultados
+
+Muestra el estado utilizado cuando no se encuentran libros que coincidan con la búsqueda.
+
+<img width="941" height="1672" alt="08-no-resultados" src="https://github.com/user-attachments/assets/a80647df-3a93-47a4-bb42-9883a9712b98" />
+
+#### Error en la búsqueda
+
+Muestra el estado utilizado cuando ocurre un problema al obtener los resultados.
+
+<img width="941" height="1672" alt="09-error" src="https://github.com/user-attachments/assets/ac6c4726-265b-4c22-84cd-2c316f16477e" />
+
+### Libro sin portada
+
+Muestra el elemento visual sustituto utilizado cuando un libro no cuenta con una portada disponible.
+
+<img width="941" height="1672" alt="10-sin-portada" src="https://github.com/user-attachments/assets/7d89a443-d41a-4d5b-b5e3-a766f45defe6" />
+
 
 ## Estado actual del proyecto
 
