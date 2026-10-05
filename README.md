@@ -327,7 +327,7 @@ Muestra el estado utilizado mientras se obtienen los resultados de una búsqueda
   </tr>
 </table>
 
-#### Búsqueda sin resultados
+### Búsqueda sin resultados
 
 Muestra el estado utilizado cuando no se encuentran libros que coincidan con la búsqueda.
 
@@ -339,7 +339,7 @@ Muestra el estado utilizado cuando no se encuentran libros que coincidan con la 
   </tr>
 </table>
   
-#### Error en la búsqueda
+### Error en la búsqueda
 
 Muestra el estado utilizado cuando ocurre un problema al obtener los resultados.
 
