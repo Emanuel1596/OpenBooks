@@ -276,9 +276,9 @@ Muestra el estado de la sección cuando todavía no existen libros guardados.
 
 <img width="260" alt="06-mis-libros-vacio" src="https://github.com/user-attachments/assets/7beac29c-e70e-4cd8-86a0-08563d5f0957" />
 
-### Estados de búsqueda
+## Estados de búsqueda
 
-#### Carga
+### Carga
 
 Muestra el estado utilizado mientras se obtienen los resultados de una búsqueda.
 
