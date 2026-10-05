@@ -2,10 +2,6 @@ name: Screenshot OpenBooks
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - build-openbooks
-      - main
 
 jobs:
   screenshot:
@@ -49,7 +45,7 @@ jobs:
           xcrun simctl boot "$SIMULATOR_UDID" || true
           xcrun simctl bootstatus "$SIMULATOR_UDID" -b
 
-      - name: Capturar estados pendientes
+      - name: Capturar pantallas actuales
         shell: bash
         run: |
           set -euo pipefail
@@ -165,13 +161,67 @@ jobs:
               "$SIMULATOR_UDID" \
               "$BUNDLE_ID"
 
-            sleep 3
+            sleep 5
 
             xcrun simctl io \
               "$SIMULATOR_UDID" \
               screenshot \
               "screenshots/$NAME.png"
           }
+
+          capture \
+            "home" \
+            "home" \
+            "" \
+            "content" \
+            "nil" \
+            "true" \
+            "false"
+
+          capture \
+            "results" \
+            "results" \
+            "Harry Potter" \
+            "content" \
+            "nil" \
+            "true" \
+            "false"
+
+          capture \
+            "detail" \
+            "detail" \
+            "Harry Potter" \
+            "content" \
+            "3" \
+            "true" \
+            "false"
+
+          capture \
+            "detail-saved" \
+            "detail" \
+            "" \
+            "content" \
+            "0" \
+            "false" \
+            "true"
+
+          capture \
+            "my-books" \
+            "myBooks" \
+            "" \
+            "content" \
+            "nil" \
+            "false" \
+            "true"
+
+          capture \
+            "my-books-empty" \
+            "myBooks" \
+            "" \
+            "content" \
+            "nil" \
+            "false" \
+            "false"
 
           capture \
             "loading" \
@@ -192,12 +242,21 @@ jobs:
             "false"
 
           capture \
-            "my-books-empty" \
-            "myBooks" \
-            "" \
+            "error" \
+            "results" \
+            "Harry Potter" \
+            "error" \
+            "nil" \
+            "true" \
+            "false"
+
+          capture \
+            "no-cover" \
+            "results" \
+            "Orgullo y prejuicio" \
             "content" \
             "nil" \
-            "false" \
+            "true" \
             "false"
 
           git checkout -- "$SOURCE"
