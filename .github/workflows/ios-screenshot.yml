@@ -45,7 +45,7 @@ jobs:
           xcrun simctl boot "$SIMULATOR_UDID" || true
           xcrun simctl bootstatus "$SIMULATOR_UDID" -b
 
-      - name: Capturar pantallas actuales
+      - name: Capturar Error y Mis libros vacío
         shell: bash
         run: |
           set -euo pipefail
@@ -161,58 +161,13 @@ jobs:
               "$SIMULATOR_UDID" \
               "$BUNDLE_ID"
 
-            sleep 5
+            sleep 10
 
             xcrun simctl io \
               "$SIMULATOR_UDID" \
               screenshot \
               "screenshots/$NAME.png"
           }
-
-          capture \
-            "home" \
-            "home" \
-            "" \
-            "content" \
-            "nil" \
-            "true" \
-            "false"
-
-          capture \
-            "results" \
-            "results" \
-            "Harry Potter" \
-            "content" \
-            "nil" \
-            "true" \
-            "false"
-
-          capture \
-            "detail" \
-            "detail" \
-            "Harry Potter" \
-            "content" \
-            "3" \
-            "true" \
-            "false"
-
-          capture \
-            "detail-saved" \
-            "detail" \
-            "" \
-            "content" \
-            "0" \
-            "false" \
-            "true"
-
-          capture \
-            "my-books" \
-            "myBooks" \
-            "" \
-            "content" \
-            "nil" \
-            "false" \
-            "true"
 
           capture \
             "my-books-empty" \
@@ -224,37 +179,10 @@ jobs:
             "false"
 
           capture \
-            "loading" \
-            "results" \
-            "Harry Potter" \
-            "loading" \
-            "nil" \
-            "true" \
-            "false"
-
-          capture \
-            "no-results" \
-            "results" \
-            "Otra busqueda" \
-            "noResults" \
-            "nil" \
-            "true" \
-            "false"
-
-          capture \
             "error" \
             "results" \
             "Harry Potter" \
             "error" \
-            "nil" \
-            "true" \
-            "false"
-
-          capture \
-            "no-cover" \
-            "results" \
-            "Orgullo y prejuicio" \
-            "content" \
             "nil" \
             "true" \
             "false"
