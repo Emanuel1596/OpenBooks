@@ -325,12 +325,13 @@ Los casos principales son:
 
 Cuando el usuario guarde o elimine un libro:
 
-1. Detalle modifica la fuente de verdad de libros guardados.
-2. Mis libros utiliza ese mismo estado compartido.
-3. La interfaz de Mis libros refleja el cambio.
-4. De acuerdo con el flujo definido para el proyecto, el usuario puede continuar hacia Mis libros.
+1. Detalle solicita guardar o eliminar el libro.
+2. `ContentView` modifica `isSaved` del libro seleccionado dentro de la colección `books`.
+3. Mis libros utiliza ese mismo estado compartido.
+4. La interfaz de Mis libros refleja el cambio.
+5. De acuerdo con el flujo definido para el proyecto, el usuario puede continuar hacia Mis libros.
 
-No se necesita crear una copia diferente del libro guardado para cada pantalla.
+No se necesita crear una copia diferente del estado de guardado para cada pantalla.
 
 ---
 
