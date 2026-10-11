@@ -242,11 +242,13 @@ La aplicación debe evitar que un mismo dato tenga varios dueños.
 
 El caso más importante es **Mis libros**. Si la lista de guardados y la pantalla de detalle mantuvieran copias diferentes de la información de guardado, podrían dejar de coincidir.
 
-Por eso, la colección `books` de `ContentView` mantiene la fuente de verdad del estado de guardado. Cuando Detalle solicita guardar o eliminar un libro, `ContentView` modifica su propiedad `isSaved`. Detalle y Mis libros utilizan después ese mismo estado actualizado.
+Por eso, la colección de libros guardados debe ser la fuente de verdad.
 
-Mientras el proyecto sea pequeño, el estado puede mantenerse por encima de las vistas que lo necesitan y compartirse con `@Binding` cuando una vista hija deba editarlo.
+Actualmente, la colección compartida se encuentra organizada en `BooksState`, un objeto `@Observable`, lo que permite mantener una sola fuente de verdad para los libros utilizados por las diferentes vistas.
 
-Si el estado compartido crece y comienza a ser utilizado por varias pantallas, puede organizarse en un objeto `@Observable` y proporcionarse a las vistas descendientes mediante `@Environment`. Cuando una vista necesite crear bindings hacia propiedades de ese objeto observable, puede utilizarse `@Bindable`.
+`ContentView` mantiene una instancia de `BooksState`. Cuando el usuario guarda o elimina un libro desde Detalle, se modifica `isSaved` dentro de `booksState.books`. Después, Mis libros utiliza esa misma colección actualizada.
+
+De esta forma, Detalle y Mis libros trabajan con el mismo estado y no necesitan mantener copias independientes de la información de guardado.
 
 La idea es que cada dato viva en el nivel más bajo desde el que pueda compartirse correctamente, sin duplicar la fuente de verdad.
 
@@ -335,20 +337,21 @@ No se necesita crear una copia diferente del estado de guardado para cada pantal
 
 ---
 
-## 5. Relación con el prototipo actual
+## 5. Relación con la implementación actual
 
-El prototipo actual de OpenBooks ya permite cambiar entre Inicio, Resultados, Detalle y Mis libros mediante un `enum` que representa la pantalla actual y varios valores `@State` almacenados en `ContentView`.
+Las decisiones de navegación y organización del estado definidas anteriormente ya se encuentran aplicadas en el prototipo actual de OpenBooks.
 
-También utiliza `@Binding` para compartir el texto de búsqueda con vistas hijas.
+La aplicación utiliza `NavigationStack` como contenedor del flujo principal y una ruta almacenada en `ContentView` para representar los destinos que se encuentran dentro de la pila de navegación.
 
-Ese prototipo permite validar el flujo y las pantallas. Sin embargo, conforme avance el proyecto, conviene separar con mayor claridad:
+Las filas de libros utilizan `NavigationLink` para abrir el detalle correspondiente y `navigationDestination` relaciona los valores de navegación con las pantallas de Resultados y Detalle.
 
-- El estado de navegación.
-- El estado compartido de búsqueda.
-- La colección de libros guardados.
-- Los datos propios de cada libro.
+El texto de búsqueda continúa compartiéndose mediante `@Binding` entre las vistas que necesitan leerlo o modificarlo.
 
-En esta etapa no es necesario modificar el código. El objetivo es dejar definida la organización que seguirá la implementación posterior.
+Para la colección de libros se utiliza `BooksState`, definido como un objeto `@Observable`. `ContentView` mantiene una instancia de este estado y proporciona la misma colección a las vistas que la necesitan.
+
+Cuando el usuario guarda o elimina un libro desde Detalle, se modifica `isSaved` dentro de `booksState.books`. Después, Mis libros utiliza esa misma colección actualizada.
+
+De esta forma existe una sola fuente de verdad para el estado de guardado y el cambio realizado en una vista puede reflejarse en otra.
 
 ---
 

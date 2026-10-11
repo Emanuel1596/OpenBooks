@@ -235,6 +235,22 @@ Este documento incluye:
 - La estrategia de navegación propuesta para SwiftUI.
 - La relación entre la propuesta y el prototipo actual de OpenBooks.
 
+### Propuesta de arquitectura MVVM
+
+El análisis de separación de responsabilidades y la propuesta de organización basada en MVVM se encuentra en:
+
+[`Docs/mvvm-proposal.md`](Docs/mvvm-proposal.md)
+
+Este documento incluye:
+
+- La revisión de la estructura actual del proyecto.
+- La separación entre interfaz, datos y lógica.
+- La relación entre Model, View y ViewModel.
+- Las responsabilidades que podrían salir de las vistas.
+- Una propuesta de organización para el proyecto.
+- La distinción entre estado local y estado compartido.
+- Los primeros cambios que podrían realizarse durante una futura refactorización.
+
 ## Pantallas actuales
 
 Las siguientes capturas muestran el estado actual de las pantallas implementadas en OpenBooks.
@@ -362,22 +378,6 @@ Muestra el elemento visual sustituto utilizado cuando un libro no cuenta con una
     </td>
   </tr>
 </table>
-
-### Propuesta de arquitectura MVVM
-
-El análisis de separación de responsabilidades y la propuesta de organización basada en MVVM se encuentra en:
-
-[`Docs/mvvm-proposal.md`](Docs/mvvm-proposal.md)
-
-Este documento incluye:
-
-- La revisión de la estructura actual del proyecto.
-- La separación entre interfaz, datos y lógica.
-- La relación entre Model, View y ViewModel.
-- Las responsabilidades que podrían salir de las vistas.
-- Una propuesta de organización para el proyecto.
-- La distinción entre estado local y estado compartido.
-- Los primeros cambios que podrían realizarse durante una futura refactorización.
 
 ## Estado actual del proyecto
 
