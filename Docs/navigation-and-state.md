@@ -1,6 +1,6 @@
 # Diseño de navegación y estado
 
-Este documento define cómo se organizarán la navegación y el estado de OpenBooks antes de continuar con su implementación.
+Este documento define la organización de la navegación y el estado de OpenBooks y registra cómo estas decisiones se relacionan con la implementación actual del proyecto.
 
 La propuesta parte del MVP del proyecto y busca dejar claro qué pantallas existen, cómo se relacionan entre sí, qué información utiliza cada una y dónde debería vivir cada dato para evitar duplicaciones o inconsistencias.
 
@@ -267,7 +267,7 @@ La implementación concreta de persistencia se realizará posteriormente. En est
 
 ## 4. Estrategia de navegación
 
-Para el flujo de OpenBooks se propone utilizar los mecanismos de navegación de SwiftUI que mejor se ajustan a la estructura del proyecto.
+Para el flujo de OpenBooks se utilizan los mecanismos de navegación de SwiftUI que mejor se ajustan a la estructura del proyecto.
 
 ### NavigationStack
 
@@ -328,7 +328,7 @@ Los casos principales son:
 Cuando el usuario guarde o elimine un libro:
 
 1. Detalle solicita guardar o eliminar el libro.
-2. `ContentView` modifica `isSaved` del libro seleccionado dentro de la colección `books`.
+2. `ContentView` modifica `isSaved` del libro seleccionado dentro de `booksState.books`.
 3. Mis libros utiliza ese mismo estado compartido.
 4. La interfaz de Mis libros refleja el cambio.
 5. De acuerdo con el flujo definido para el proyecto, el usuario puede continuar hacia Mis libros.
@@ -365,5 +365,5 @@ De esta forma existe una sola fuente de verdad para el estado de guardado y el c
 6. **Los libros guardados tendrán una sola fuente de verdad compartida**.
 7. **El texto de búsqueda y los resultados deberán mantenerse durante el flujo de búsqueda**.
 8. **El libro seleccionado viajará hacia Detalle como información de navegación**.
-9. **`NavigationStack`, `NavigationLink` y `navigationDestination` son los mecanismos previstos para organizar el flujo en SwiftUI**.
-10. **Estas decisiones se documentan antes de llevarlas a la implementación**.
+9. **`NavigationStack`, `NavigationLink` y `navigationDestination` son los mecanismos utilizados para organizar el flujo en SwiftUI**.
+10. **Las decisiones de navegación y estado definidas en este documento ya se encuentran aplicadas en la implementación actual del proyecto**.
