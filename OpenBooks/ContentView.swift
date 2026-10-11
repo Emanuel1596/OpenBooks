@@ -106,7 +106,7 @@ struct ContentView: View {
             SearchResultsView(
                 searchText: $searchText,
                 books: books,
-                state: resultsState,
+                state: searchViewState,
                 onBack: {
                     screen = .home
                 },
@@ -188,14 +188,14 @@ struct ContentView: View {
     }
 
     func searchBooks() {
-        if searchText == "Harry Potter" {
-            resultsState = .content
-        } else if searchText == "Orgullo y prejuicio" {
-            resultsState = .content
-        } else {
-            resultsState = .noResults
-        }
+    if searchText == "Harry Potter" {
+        searchViewState = .content
+    } else if searchText == "Orgullo y prejuicio" {
+        searchViewState = .content
+    } else {
+        searchViewState = .noResults
+    }
 
-        screen = .results
+    screen = .results
     }
 }

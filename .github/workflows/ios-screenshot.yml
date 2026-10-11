@@ -115,8 +115,8 @@ jobs:
           )
 
           replace_once(
-              "@State var resultsState: ResultsState = .content",
-              f"@State var resultsState: ResultsState = .{results_state}"
+              "@State var searchViewState: SearchViewState = .content",
+              f"@State var searchViewState: SearchViewState = .{results_state}"
           )
 
           replace_once(

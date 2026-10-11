@@ -3,8 +3,8 @@ import SwiftUI
 struct SearchResultsView: View {
     @Binding var searchText: String
     let books: [Book]
-    let state: ResultsState
-
+    let state: SearchViewState
+    
     let onBack: () -> Void
     let onSearch: () -> Void
     let onBookSelected: (Int) -> Void
