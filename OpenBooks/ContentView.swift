@@ -1,130 +1,110 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var screen: AppScreen = .home
-    @State var previousScreen: AppScreen = .home
-    @State var selectedBookIndex: Int? = nil
+    @State var path: [Int] = []
+    @State var showingMyBooks: Bool = false
     @State var searchText: String = ""
     @State var searchViewState: SearchViewState = .content
-    @State var detailHomeActive: Bool = true
-
     @State var books: [Book] = mockBooks
 
+    let resultsRoute: Int = -1
+
     var body: some View {
-        switch screen {
-
-        case .home:
-            HomeView(
-                searchText: $searchText,
-                books: books,
-                onSearch: {
-                    searchBooks()
-                },
-                onBookSelected: { index in
-                    selectedBookIndex = index
-                    previousScreen = .home
-                    detailHomeActive = true
-                    screen = .detail
-                },
-                onMyBooks: {
-                    screen = .myBooks
+        NavigationStack(path: $path) {
+            ZStack {
+                if showingMyBooks {
+                    MyBooksView(
+                        books: books,
+                        onBookSelected: { index in
+                            path.append(index)
+                        },
+                        onHome: {
+                            showingMyBooks = false
+                        },
+                        onSearch: {
+                            showingMyBooks = false
+                        }
+                    )
+                } else {
+                    HomeView(
+                        searchText: $searchText,
+                        books: books,
+                        onSearch: {
+                            searchBooks()
+                        },
+                        onBookSelected: { index in
+                            path.append(index)
+                        },
+                        onMyBooks: {
+                            showingMyBooks = true
+                        }
+                    )
                 }
-            )
-
-        case .results:
-            SearchResultsView(
-                searchText: $searchText,
-                books: books,
-                state: searchViewState,
-                onBack: {
-                    screen = .home
-                },
-                onSearch: {
-                    searchBooks()
-                },
-                onBookSelected: { index in
-                    selectedBookIndex = index
-                    previousScreen = .results
-                    detailHomeActive = true
-                    screen = .detail
-                },
-                onRetry: {
-                    searchBooks()
-                },
-                onHome: {
-                    screen = .home
-                },
-                onMyBooks: {
-                    screen = .myBooks
-                }
-            )
-
-        case .detail:
-            if let index = selectedBookIndex {
-                BookDetailView(
-                    book: books[index],
-                    homeActive: detailHomeActive,
-                    onBack: {
-                        screen = previousScreen
-                    },
-                    onSaveOrDelete: {
-                        books[index].isSaved.toggle()
-                        screen = .myBooks
-                    },
-                    onHome: {
-                        screen = .home
-                    },
-                    onMyBooks: {
-                        screen = .myBooks
-                    }
-                )
-            } else {
-                HomeView(
-                    searchText: $searchText,
-                    books: books,
-                    onSearch: {
-                        searchBooks()
-                    },
-                    onBookSelected: { index in
-                        selectedBookIndex = index
-                        previousScreen = .home
-                        detailHomeActive = true
-                        screen = .detail
-                    },
-                    onMyBooks: {
-                        screen = .myBooks
-                    }
-                )
             }
-
-        case .myBooks:
-            MyBooksView(
-                books: books,
-                onBookSelected: { index in
-                    selectedBookIndex = index
-                    previousScreen = .myBooks
-                    detailHomeActive = false
-                    screen = .detail
-                },
-                onHome: {
-                    screen = .home
-                },
-                onSearch: {
-                    screen = .home
+            .navigationDestination(for: Int.self) { route in
+                if route == resultsRoute {
+                    SearchResultsView(
+                        searchText: $searchText,
+                        books: books,
+                        state: searchViewState,
+                        onBack: {
+                            path.removeLast()
+                        },
+                        onSearch: {
+                            searchBooks()
+                        },
+                        onBookSelected: { index in
+                            path.append(index)
+                        },
+                        onRetry: {
+                            searchBooks()
+                        },
+                        onHome: {
+                            path = []
+                            showingMyBooks = false
+                        },
+                        onMyBooks: {
+                            path = []
+                            showingMyBooks = true
+                        }
+                    )
+                } else {
+                    BookDetailView(
+                        book: books[route],
+                        homeActive: !showingMyBooks,
+                        onBack: {
+                            path.removeLast()
+                        },
+                        onSaveOrDelete: {
+                            books[route].isSaved.toggle()
+                            path = []
+                            showingMyBooks = true
+                        },
+                        onHome: {
+                            path = []
+                            showingMyBooks = false
+                        },
+                        onMyBooks: {
+                            path = []
+                            showingMyBooks = true
+                        }
+                    )
                 }
-            )
+            }
         }
     }
 
     func searchBooks() {
-    if searchText == "Harry Potter" {
-        searchViewState = .content
-    } else if searchText == "Orgullo y prejuicio" {
-        searchViewState = .content
-    } else {
-        searchViewState = .noResults
-    }
+        if searchText == "Harry Potter" {
+            searchViewState = .content
+        } else if searchText == "Orgullo y prejuicio" {
+            searchViewState = .content
+        } else {
+            searchViewState = .noResults
+        }
 
-    screen = .results
+        if path.isEmpty {
+            path.append(resultsRoute)
+        }
     }
 }

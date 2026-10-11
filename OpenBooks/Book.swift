@@ -8,12 +8,7 @@ struct Book {
     var isSaved: Bool
 }
 
-enum AppScreen {
-    case home
-    case results
-    case detail
-    case myBooks
-}
+
 
 enum SearchViewState {
     case loading
