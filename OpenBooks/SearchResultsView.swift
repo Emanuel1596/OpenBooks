@@ -7,7 +7,6 @@ struct SearchResultsView: View {
 
     
     let onSearch: () -> Void
-    let onBookSelected: (Int) -> Void
     let onRetry: () -> Void
     let onHome: () -> Void
     let onMyBooks: () -> Void
@@ -47,10 +46,9 @@ struct SearchResultsView: View {
                         VStack(spacing: 0) {
                             ForEach(7..<10) { index in
                                 BookRowView(
-                                    book: books[index]
-                                ) {
-                                    onBookSelected(index)
-                                }
+                                    book: books[index],
+                                    destination: index
+                                )
 
                                 if index < 9 {
                                     RoundedRectangle(cornerRadius: 0)
@@ -64,10 +62,9 @@ struct SearchResultsView: View {
                         VStack(spacing: 0) {
                             ForEach(3..<7) { index in
                                 BookRowView(
-                                    book: books[index]
-                                ) {
-                                    onBookSelected(index)
-                                }
+                                    book: books[index],
+                                    destination: index
+                                )
 
                                 if index < 6 {
                                     RoundedRectangle(cornerRadius: 0)

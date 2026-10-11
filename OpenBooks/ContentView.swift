@@ -15,9 +15,6 @@ struct ContentView: View {
                 if showingMyBooks {
                     MyBooksView(
                         books: books,
-                        onBookSelected: { index in
-                            path.append(index)
-                        },
                         onHome: {
                             showingMyBooks = false
                         },
@@ -31,9 +28,6 @@ struct ContentView: View {
                         books: books,
                         onSearch: {
                             searchBooks()
-                        },
-                        onBookSelected: { index in
-                            path.append(index)
                         },
                         onMyBooks: {
                             showingMyBooks = true
@@ -49,9 +43,6 @@ struct ContentView: View {
                         state: searchViewState,
                         onSearch: {
                             searchBooks()
-                        },
-                        onBookSelected: { index in
-                            path.append(index)
                         },
                         onRetry: {
                             searchBooks()
