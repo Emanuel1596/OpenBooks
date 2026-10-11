@@ -5,7 +5,7 @@ appId: com.openbooks.app
 
 - assertVisible: "OpenBooks"
 
-- tapOn: "Cien años de soledad"
+- tapOn: "1984"
 
 - assertVisible: "Detalle del libro"
 
@@ -15,11 +15,11 @@ appId: com.openbooks.app
 
 - assertVisible: "Mis libros"
 
-- assertVisible: "Cien años de soledad"
+- assertVisible: "1984"
 
 - takeScreenshot: "mis-libros-guardado"
 
-- tapOn: "Cien años de soledad"
+- tapOn: "1984"
 
 - assertVisible: "Detalle del libro"
 
