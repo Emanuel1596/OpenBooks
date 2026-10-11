@@ -4,8 +4,8 @@ struct SearchResultsView: View {
     @Binding var searchText: String
     let books: [Book]
     let state: SearchViewState
+
     
-    let onBack: () -> Void
     let onSearch: () -> Void
     let onBookSelected: (Int) -> Void
     let onRetry: () -> Void
@@ -15,13 +15,7 @@ struct SearchResultsView: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 20) {
-                Button {
-                    onBack()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 24))
-                        .foregroundStyle(.black)
-                }
+
 
                 Text("Resultados")
                     .font(.largeTitle)

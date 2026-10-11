@@ -47,9 +47,6 @@ struct ContentView: View {
                         searchText: $searchText,
                         books: books,
                         state: searchViewState,
-                        onBack: {
-                            path.removeLast()
-                        },
                         onSearch: {
                             searchBooks()
                         },
@@ -72,9 +69,7 @@ struct ContentView: View {
                     BookDetailView(
                         book: books[route],
                         homeActive: !showingMyBooks,
-                        onBack: {
-                            path.removeLast()
-                        },
+                        
                         onSaveOrDelete: {
                             books[route].isSaved.toggle()
                             path = []
