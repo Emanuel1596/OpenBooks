@@ -1,4 +1,5 @@
 import SwiftUI
+import Observation
 
 struct Book {
     let title: String
@@ -8,7 +9,10 @@ struct Book {
     var isSaved: Bool
 }
 
-
+@Observable
+class BooksState {
+    var books: [Book] = mockBooks
+}
 
 enum SearchViewState {
     case loading

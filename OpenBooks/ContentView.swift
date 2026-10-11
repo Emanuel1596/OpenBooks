@@ -5,7 +5,7 @@ struct ContentView: View {
     @State var showingMyBooks: Bool = false
     @State var searchText: String = ""
     @State var searchViewState: SearchViewState = .content
-    @State var books: [Book] = mockBooks
+    @State var booksState = BooksState()
 
     let resultsRoute: Int = -1
 
@@ -14,7 +14,7 @@ struct ContentView: View {
             ZStack {
                 if showingMyBooks {
                     MyBooksView(
-                        books: books,
+                        books: booksState.books,
                         onHome: {
                             showingMyBooks = false
                         },
@@ -25,7 +25,7 @@ struct ContentView: View {
                 } else {
                     HomeView(
                         searchText: $searchText,
-                        books: books,
+                        books: booksState.books,
                         onSearch: {
                             searchBooks()
                         },
@@ -39,7 +39,7 @@ struct ContentView: View {
                 if route == resultsRoute {
                     SearchResultsView(
                         searchText: $searchText,
-                        books: books,
+                        books: booksState.books,
                         state: searchViewState,
                         onSearch: {
                             searchBooks()
@@ -58,11 +58,11 @@ struct ContentView: View {
                     )
                 } else {
                     BookDetailView(
-                        book: books[route],
+                        book: booksState.books[route],
                         homeActive: !showingMyBooks,
                         
                         onSaveOrDelete: {
-                            books[route].isSaved.toggle()
+                            booksState.books[route].isSaved.toggle()
                             path = []
                             showingMyBooks = true
                         },
