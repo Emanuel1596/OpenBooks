@@ -187,7 +187,7 @@ Mostrar los libros que el usuario ha marcado como guardados.
 
 **Recibe:**
 
-- La colección `books` proporcionada por `ContentView`.
+- La colección de libros compartida proporcionada desde `booksState.books`.
 - A partir de esa colección muestra únicamente los libros cuyo estado `isSaved` indica que están guardados.
 
 **Modifica:**
@@ -197,11 +197,11 @@ Mostrar los libros que el usuario ha marcado como guardados.
 
 **Necesita conservar:**
 
-- Necesita que la colección `books` y el estado de guardado de sus libros permanezcan disponibles mientras el usuario navega por la aplicación.
-- La fuente de verdad de esta información permanece en `ContentView`; Mis libros solamente la recibe y la muestra.
+- Necesita que la colección compartida y el estado de guardado de sus libros permanezcan disponibles mientras el usuario navega por la aplicación.
+- La fuente de verdad de esta información se encuentra en `BooksState`, cuya instancia es mantenida por `ContentView`. Mis libros solamente recibe la colección y la muestra.
 - Posteriormente, esta información deberá persistirse localmente para conservarse entre ejecuciones de la aplicación.
 
-Mis libros no es la pantalla encargada de guardar o eliminar libros. Cuando el usuario realiza esa acción desde Detalle, `ContentView` modifica `isSaved` dentro de la colección `books`. Mis libros recibe después el estado actualizado y muestra los libros correspondientes.
+Mis libros no es la pantalla encargada de guardar o eliminar libros. Cuando el usuario realiza esa acción desde Detalle, `ContentView` modifica `isSaved` dentro de `booksState.books`. Mis libros recibe después el estado actualizado y muestra los libros correspondientes.
 
 ---
 
@@ -216,8 +216,8 @@ La organización propuesta es la siguiente:
 | Texto de búsqueda | Inicio y Resultados | Usuario desde Inicio o Resultados | `ContentView` | `ContentView` mantiene una sola fuente de verdad mediante `@State`. Inicio y Resultados acceden al mismo texto mediante `@Binding`, evitando crear copias diferentes. |
 | Resultados de búsqueda | Resultados y Detalle | La lógica encargada de realizar la búsqueda | Estado compartido del flujo de búsqueda | Deben seguir disponibles si el usuario abre un detalle y después regresa a Resultados. |
 | Estado de búsqueda: loading, content, noResults o error | Resultados | La lógica de búsqueda | Estado compartido del flujo de búsqueda | La interfaz de Resultados depende directamente de este valor. Al cambiar, cambia lo que se muestra. |
-| Libros guardados | Mis libros y Detalle | `ContentView`, a partir de la acción solicitada desde Detalle | `ContentView` | Ambas vistas necesitan consultar el mismo estado. `ContentView` mantiene una sola fuente de verdad y actualiza el estado de guardado del libro seleccionado. |
-| Estado de guardado de un libro | Detalle y Mis libros | `ContentView`, cuando Detalle solicita guardar o eliminar | Dentro de la colección `books` de `ContentView` | El valor `isSaved` pertenece al libro almacenado en la colección compartida. Detalle lo muestra y solicita su cambio, pero no mantiene una copia independiente. |
+| Libros guardados | Mis libros y Detalle | `ContentView`, a partir de la acción solicitada desde Detalle | `BooksState` | Ambas vistas necesitan consultar el mismo estado. `BooksState` mantiene una sola fuente de verdad y `ContentView` actualiza el estado de guardado del libro seleccionado. |
+| Estado de guardado de un libro | Detalle y Mis libros | `ContentView`, cuando Detalle solicita guardar o eliminar | Dentro de `booksState.books` | El valor `isSaved` pertenece al libro almacenado en la colección compartida. Detalle lo muestra y solicita su cambio, pero no mantiene una copia independiente. |
 | Libro seleccionado | Detalle | La pantalla desde la que se selecciona el libro | Se pasa durante la navegación | Solo se necesita para abrir el detalle correspondiente; no es necesario mantener otra copia global permanente. |
 | Sección principal activa: Inicio o Mis libros | Barra inferior y vista raíz | Usuario al cambiar de sección | Estado local de la vista que contiene ambas secciones | La vista raíz es la responsable de esta decisión de navegación. |
 | Título, autor, año y portada | Inicio, Resultados, Detalle y Mis libros | Open Library o los datos locales de prueba | Modelo `Book` | Son datos propios del libro. Las vistas los reciben y los muestran, pero no necesitan crear una copia de estado por pantalla. |
