@@ -15,7 +15,7 @@ enum AppScreen {
     case myBooks
 }
 
-enum ResultsState {
+enum SearchViewState {
     case loading
     case content
     case noResults

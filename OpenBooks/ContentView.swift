@@ -5,7 +5,7 @@ struct ContentView: View {
     @State var previousScreen: AppScreen = .home
     @State var selectedBookIndex: Int? = nil
     @State var searchText: String = ""
-    @State var resultsState: ResultsState = .content
+    @State var searchViewState: SearchViewState = .content
     @State var detailHomeActive: Bool = true
 
     @State var books: [Book] = [

@@ -284,7 +284,7 @@ Muestra la información de un libro guardado y la opción **Eliminar de Mis libr
 <table align="center">
   <tr>
     <td>
-      <img width="260" alt="04-mis-libros" src="https://github.com/user-attachments/assets/b7568132-028e-44f4-be32-34d895bcfe1d" />
+      <img width="260" alt="05-detalle-guardado" src="https://github.com/user-attachments/assets/784b783f-d948-44a5-8bb1-91cb97f91c38" />
     </td>
   </tr>
 </table>
@@ -296,7 +296,7 @@ Muestra los libros que se encuentran guardados en la colección.
 <table align="center">
   <tr>
     <td>
-      <img width="260" alt="05-detalle-guardado" src="https://github.com/user-attachments/assets/784b783f-d948-44a5-8bb1-91cb97f91c38" />
+      <img width="260" alt="04-mis-libros" src="https://github.com/user-attachments/assets/b7568132-028e-44f4-be32-34d895bcfe1d" />
     </td>
   </tr>
 </table>
