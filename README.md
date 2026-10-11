@@ -363,6 +363,22 @@ Muestra el elemento visual sustituto utilizado cuando un libro no cuenta con una
   </tr>
 </table>
 
+### Propuesta de arquitectura MVVM
+
+El análisis de separación de responsabilidades y la propuesta de organización basada en MVVM se encuentra en:
+
+[`Docs/mvvm-proposal.md`](Docs/mvvm-proposal.md)
+
+Este documento incluye:
+
+- La revisión de la estructura actual del proyecto.
+- La separación entre interfaz, datos y lógica.
+- La relación entre Model, View y ViewModel.
+- Las responsabilidades que podrían salir de las vistas.
+- Una propuesta de organización para el proyecto.
+- La distinción entre estado local y estado compartido.
+- Los primeros cambios que podrían realizarse durante una futura refactorización.
+
 ## Estado actual del proyecto
 
 Actualmente se encuentran desarrollados:
@@ -372,13 +388,22 @@ Actualmente se encuentran desarrollados:
 - El flujo principal de usuario.
 - Los wireframes iniciales de las principales pantallas.
 - Las vistas principales de la aplicación en SwiftUI.
-- La navegación inicial entre **Inicio**, **Resultados**, **Detalle del libro** y **Mis libros**.
+- La navegación principal entre **Inicio**, **Resultados**, **Detalle del libro** y **Mis libros** mediante `NavigationStack`, `NavigationLink` y `navigationDestination`.
+- El regreso entre pantallas mediante la navegación de SwiftUI.
+- Un caso real de estado compartido para la colección de libros.
+- Una sola fuente de verdad para el estado de guardado de los libros mediante `BooksState`.
+- La actualización de **Mis libros** al guardar o eliminar un libro desde su detalle.
 - La representación de los estados de carga, error, búsqueda sin resultados, libro sin portada y lista de libros guardados vacía.
 - La planificación de accesibilidad mediante VoiceOver.
 - La documentación del diseño de navegación y organización del estado.
+- El análisis de separación de responsabilidades y la propuesta de arquitectura basada en MVVM.
 - Las capturas del estado actual de las pantallas implementadas.
 
-La integración con Open Library, la persistencia local y las demás funcionalidades del MVP se desarrollarán progresivamente durante el proyecto.
+La navegación y el estado compartido definidos durante el diseño ya se encuentran implementados en el prototipo actual.
+
+La propuesta basada en MVVM se mantiene únicamente como análisis de arquitectura. Su implementación se realizará posteriormente conforme avance el proyecto.
+
+La integración con Open Library, la persistencia local y las demás funcionalidades pendientes del MVP se desarrollarán progresivamente durante el proyecto.
 
 ## Ejecución del proyecto
 
