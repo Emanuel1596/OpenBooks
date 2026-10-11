@@ -1,0 +1,34 @@
+appId: com.openbooks.app
+---
+- launchApp:
+    clearState: true
+
+- assertVisible: "OpenBooks"
+
+- tapOn: "Cien años de soledad"
+
+- assertVisible: "Detalle del libro"
+
+- assertVisible: "Guardar libro"
+
+- tapOn: "Guardar libro"
+
+- assertVisible: "Mis libros"
+
+- assertVisible: "Cien años de soledad"
+
+- takeScreenshot: "mis-libros-guardado"
+
+- tapOn: "Cien años de soledad"
+
+- assertVisible: "Detalle del libro"
+
+- assertVisible: "Eliminar de Mis libros"
+
+- tapOn: "Eliminar de Mis libros"
+
+- assertVisible: "Mis libros"
+
+- assertVisible: "Todavía no tienes libros guardados"
+
+- takeScreenshot: "mis-libros-vacio"

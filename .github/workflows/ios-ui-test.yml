@@ -1,0 +1,93 @@
+name: UI Test OpenBooks
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ui-test:
+    runs-on: macos-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v7
+
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Mostrar version de Xcode
+        run: xcodebuild -version
+
+      - name: Instalar XcodeGen
+        run: brew install xcodegen
+
+      - name: Generar proyecto de Xcode
+        run: xcodegen generate
+
+      - name: Instalar Maestro
+        run: |
+          curl -fsSL "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+
+      - name: Buscar un iPhone Simulator
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json
+          import sys
+
+          data = json.load(sys.stdin)
+
+          for devices in data["devices"].values():
+              for device in devices:
+                  if device.get("isAvailable") and device["name"].startswith("iPhone"):
+                      print(device["udid"])
+                      sys.exit(0)
+
+          sys.exit(1)
+          ')
+
+          echo "SIMULATOR_UDID=$UDID" >> "$GITHUB_ENV"
+          echo "Simulator seleccionado: $UDID"
+
+      - name: Encender Simulator
+        run: |
+          xcrun simctl boot "$SIMULATOR_UDID" || true
+          xcrun simctl bootstatus "$SIMULATOR_UDID" -b
+
+      - name: Compilar OpenBooks
+        run: |
+          rm -rf build
+
+          xcodebuild \
+            -project OpenBooks.xcodeproj \
+            -scheme OpenBooks \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Instalar OpenBooks
+        run: |
+          xcrun simctl install \
+            "$SIMULATOR_UDID" \
+            "build/Build/Products/Debug-iphonesimulator/OpenBooks.app"
+
+      - name: Ejecutar prueba de estado compartido
+        run: |
+          maestro \
+            --device="$SIMULATOR_UDID" \
+            test \
+            .maestro/shared-state.yaml \
+            --test-output-dir=maestro-output
+
+      - name: Guardar evidencias
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: OpenBooks-UI-Test
+          path: maestro-output
+          if-no-files-found: warn
+          retention-days: 7
