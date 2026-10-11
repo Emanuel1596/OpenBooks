@@ -23,6 +23,8 @@ OpenBooks
 │   │
 │   ├── Seleccionar un libro
 │   │   └── Detalle del libro
+│   │       ├── Regresar → Inicio
+│   │       └── Guardar libro → Mis libros
 │   │
 │   ├── Realizar búsqueda
 │   │   └── Resultados
@@ -30,29 +32,27 @@ OpenBooks
 │   │       ├── Contenido
 │   │       │   └── Seleccionar un libro
 │   │       │       └── Detalle del libro
+│   │       │           ├── Regresar → Resultados
+│   │       │           └── Guardar libro → Mis libros
 │   │       ├── Sin resultados
 │   │       └── Error
 │   │
 │   └── Ir a Mis libros
 │       └── Mis libros
 │
-├── Mis libros
-│   │
-│   ├── Seleccionar un libro guardado
-│   │   └── Detalle del libro
-│   │
-│   └── Lista vacía
-│       └── Buscar libros
-│           └── Inicio
-│
-└── Detalle del libro
-    ├── Regresar
-    │   └── Pantalla desde la que se abrió el detalle
-    ├── Guardar libro
-    │   └── Actualizar libros guardados → Mis libros
-    └── Eliminar de Mis libros
-        └── Actualizar libros guardados → Mis libros
+└── Mis libros
+    │
+    ├── Seleccionar un libro guardado
+    │   └── Detalle del libro
+    │       ├── Regresar → Mis libros
+    │       └── Eliminar de Mis libros → Mis libros
+    │
+    └── Lista vacía
+        └── Buscar libros
+            └── Inicio
 ```
+
+**Detalle del libro** se repite dentro de los distintos recorridos únicamente para mostrar desde dónde puede abrirse y a qué pantalla regresa. Corresponde a una misma pantalla reutilizable y no a una tercera sección principal de la aplicación.
 
 Los estados **Carga**, **Sin resultados** y **Error** no se consideran pantallas independientes. Son estados de la pantalla **Resultados**.
 
@@ -80,17 +80,22 @@ Permitir al usuario comenzar una búsqueda, consultar la lista inicial de libros
 
 **Recibe:**
 
-- Texto actual de búsqueda.
+- El texto de búsqueda desde `ContentView`, que mantiene la fuente de verdad de este dato.
 - Libros que se mostrarán en la lista inicial.
 
 **Modifica:**
 
-- Texto de búsqueda cuando el usuario escribe.
-- Flujo de navegación cuando el usuario busca, selecciona un libro o entra a Mis libros.
+- El texto de búsqueda compartido cuando el usuario escribe en el campo de búsqueda mediante `@Binding`.
+
+Las acciones de buscar, seleccionar un libro o entrar a Mis libros solicitan cambios de navegación a `ContentView`, que es donde actualmente se encuentra el estado que controla la pantalla mostrada.
 
 **Necesita conservar:**
 
 - El texto de búsqueda mientras el usuario pasa de Inicio a Resultados.
+
+El texto de búsqueda pertenece a `ContentView`. Inicio recibe acceso de lectura y escritura mediante `@Binding`, por lo que no mantiene una segunda copia del dato.
+
+Escribir en el campo únicamente modifica el texto de búsqueda. La búsqueda comienza cuando el usuario presiona el botón de la lupa.
 
 ---
 
@@ -110,15 +115,19 @@ Mostrar el resultado de una búsqueda realizada en Open Library.
 
 **Recibe:**
 
-- Texto de búsqueda.
-- Resultados obtenidos.
-- Estado actual de la búsqueda.
+- El mismo texto de búsqueda compartido cuya fuente de verdad se encuentra en `ContentView`.
+- La colección de libros proporcionada por `ContentView`.
+- El estado actual de la búsqueda proporcionado por `ContentView`.
 
 **Modifica:**
 
-- Texto de búsqueda si el usuario lo cambia.
-- Estado de búsqueda cuando se realiza o se repite una consulta.
-- Flujo de navegación cuando se selecciona un libro.
+- El texto de búsqueda compartido si el usuario escribe un nuevo valor mediante `@Binding`.
+
+Resultados no modifica directamente el estado de la búsqueda. Cuando el usuario presiona el botón de la lupa o intenta nuevamente, la vista solicita una nueva búsqueda mediante la acción recibida desde `ContentView`. `ContentView` es quien ejecuta la búsqueda y actualiza el estado correspondiente.
+
+Resultados tampoco crea una copia independiente del texto. Recibe acceso al mismo dato mediante `@Binding`.
+
+Si el usuario cambia el texto, la nueva búsqueda no se realiza automáticamente. El texto queda actualizado y la búsqueda se ejecuta cuando el usuario presiona nuevamente el botón de la lupa.
 
 **Necesita conservar:**
 
@@ -147,7 +156,12 @@ Mostrar la información del libro seleccionado y permitir guardarlo o eliminarlo
 
 **Modifica:**
 
-- Estado compartido de los libros guardados.
+- No modifica directamente los datos del libro como título, autor, año o portada.
+- Cuando el usuario presiona Guardar libro o Eliminar de Mis libros, solicita a `ContentView` cambiar el estado `isSaved` del libro seleccionado.
+
+`BookDetailView` muestra el libro recibido, pero la colección de libros y su estado de guardado pertenecen a `ContentView`.
+
+La vista de detalle solicita el cambio mediante la acción `onSaveOrDelete`, y `ContentView` modifica el libro correspondiente dentro de la colección compartida.
 
 **Necesita conservar:**
 
@@ -160,8 +174,8 @@ La pantalla de detalle no debe crear una segunda copia independiente del estado 
 
 ### Mis libros
 
-**Propósito:**  
-Mostrar los libros que el usuario ha guardado localmente.
+**Propósito:**
+Mostrar los libros que el usuario ha marcado como guardados.
 
 **Muestra:**
 
@@ -173,17 +187,21 @@ Mostrar los libros que el usuario ha guardado localmente.
 
 **Recibe:**
 
-- Colección compartida de libros guardados.
+- La colección `books` proporcionada por `ContentView`.
+- A partir de esa colección muestra únicamente los libros cuyo estado `isSaved` indica que están guardados.
 
 **Modifica:**
 
-- No necesita modificar directamente la colección desde la lista.
-- Modifica únicamente la navegación al seleccionar un libro o regresar a Inicio.
+- No modifica directamente la colección de libros ni el estado `isSaved`.
+- Únicamente solicita cambios de navegación cuando el usuario selecciona un libro, regresa a Inicio o utiliza la acción Buscar libros.
 
 **Necesita conservar:**
 
-- La colección de libros guardados.
-- Esta información debe mantenerse entre pantallas y, posteriormente, persistirse localmente para conservarse entre ejecuciones de la aplicación.
+- Necesita que la colección `books` y el estado de guardado de sus libros permanezcan disponibles mientras el usuario navega por la aplicación.
+- La fuente de verdad de esta información permanece en `ContentView`; Mis libros solamente la recibe y la muestra.
+- Posteriormente, esta información deberá persistirse localmente para conservarse entre ejecuciones de la aplicación.
+
+Mis libros no es la pantalla encargada de guardar o eliminar libros. Cuando el usuario realiza esa acción desde Detalle, `ContentView` modifica `isSaved` dentro de la colección `books`. Mis libros recibe después el estado actualizado y muestra los libros correspondientes.
 
 ---
 
@@ -195,11 +213,11 @@ La organización propuesta es la siguiente:
 
 | Dato | Quién lo utiliza | Quién lo modifica | Dónde debería vivir | Justificación |
 | --- | --- | --- | --- | --- |
-| Texto de búsqueda | Inicio y Resultados | Inicio y Resultados | En un nivel superior compartido por ambas vistas | Las dos pantallas leen y modifican el mismo texto. Tener una copia en cada pantalla podría provocar valores diferentes. |
+| Texto de búsqueda | Inicio y Resultados | Usuario desde Inicio o Resultados | `ContentView` | `ContentView` mantiene una sola fuente de verdad mediante `@State`. Inicio y Resultados acceden al mismo texto mediante `@Binding`, evitando crear copias diferentes. |
 | Resultados de búsqueda | Resultados y Detalle | La lógica encargada de realizar la búsqueda | Estado compartido del flujo de búsqueda | Deben seguir disponibles si el usuario abre un detalle y después regresa a Resultados. |
 | Estado de búsqueda: loading, content, noResults o error | Resultados | La lógica de búsqueda | Estado compartido del flujo de búsqueda | La interfaz de Resultados depende directamente de este valor. Al cambiar, cambia lo que se muestra. |
-| Libros guardados | Mis libros y Detalle | Detalle al guardar o eliminar | Estado compartido por encima de ambas vistas | Varias vistas necesitan leer el mismo dato y Detalle necesita modificarlo. Debe existir una sola fuente de verdad. |
-| Estado de guardado de un libro | Detalle y Mis libros | Detalle | Debe obtenerse de la colección de libros guardados | Evita mantener un `isSaved` independiente en varias vistas y reduce el riesgo de inconsistencias. |
+| Libros guardados | Mis libros y Detalle | `ContentView`, a partir de la acción solicitada desde Detalle | `ContentView` | Ambas vistas necesitan consultar el mismo estado. `ContentView` mantiene una sola fuente de verdad y actualiza el estado de guardado del libro seleccionado. |
+| Estado de guardado de un libro | Detalle y Mis libros | `ContentView`, cuando Detalle solicita guardar o eliminar | Dentro de la colección `books` de `ContentView` | El valor `isSaved` pertenece al libro almacenado en la colección compartida. Detalle lo muestra y solicita su cambio, pero no mantiene una copia independiente. |
 | Libro seleccionado | Detalle | La pantalla desde la que se selecciona el libro | Se pasa durante la navegación | Solo se necesita para abrir el detalle correspondiente; no es necesario mantener otra copia global permanente. |
 | Sección principal activa: Inicio o Mis libros | Barra inferior y vista raíz | Usuario al cambiar de sección | Estado local de la vista que contiene ambas secciones | La vista raíz es la responsable de esta decisión de navegación. |
 | Título, autor, año y portada | Inicio, Resultados, Detalle y Mis libros | Open Library o los datos locales de prueba | Modelo `Book` | Son datos propios del libro. Las vistas los reciben y los muestran, pero no necesitan crear una copia de estado por pantalla. |
@@ -224,7 +242,7 @@ La aplicación debe evitar que un mismo dato tenga varios dueños.
 
 El caso más importante es **Mis libros**. Si la lista de guardados y la pantalla de detalle mantuvieran copias diferentes de la información de guardado, podrían dejar de coincidir.
 
-Por eso, la colección de libros guardados debe ser la fuente de verdad. La pantalla Detalle la modifica y Mis libros la lee.
+Por eso, la colección `books` de `ContentView` mantiene la fuente de verdad del estado de guardado. Cuando Detalle solicita guardar o eliminar un libro, `ContentView` modifica su propiedad `isSaved`. Detalle y Mis libros utilizan después ese mismo estado actualizado.
 
 Mientras el proyecto sea pequeño, el estado puede mantenerse por encima de las vistas que lo necesitan y compartirse con `@Binding` cuando una vista hija deba editarlo.
 
