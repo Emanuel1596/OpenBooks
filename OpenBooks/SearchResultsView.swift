@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct SearchResultsView: View {
-    @Binding var searchText: String
+    let searchText: String
     let books: [Book]
     let state: SearchViewState
 
-    
-    let onSearch: () -> Void
+
+    let onOpenSearch: () -> Void
     let onRetry: () -> Void
     let onHome: () -> Void
     let onMyBooks: () -> Void
@@ -16,14 +16,21 @@ struct SearchResultsView: View {
             VStack(alignment: .leading, spacing: 20) {
 
 
-                Text("Resultados")
-                    .font(.largeTitle)
-                    .bold()
+                HStack {
+                    Text("Resultados")
+                        .font(.largeTitle)
+                        .bold()
 
-                SearchFieldView(
-                    text: $searchText,
-                    onSearch: onSearch
-                )
+                    Spacer()
+
+                    Button {
+                        onOpenSearch()
+                    } label: {
+                        Image(systemName: "magnifyingglass")
+                            .font(.system(size: 24))
+                            .foregroundStyle(.black)
+                    }
+                }
             }
             .padding(.horizontal, 20)
             .padding(.top, 24)

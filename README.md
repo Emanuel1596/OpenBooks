@@ -48,13 +48,15 @@ La aplicación tendrá dos secciones principales:
 - **Inicio**
 - **Mis libros**
 
-Desde la pantalla principal, el usuario podrá seleccionar directamente un libro de la lista para consultar su detalle o realizar una búsqueda.
+Desde la pantalla principal, el usuario podrá seleccionar directamente un libro de la lista para consultar su detalle o tocar la lupa para abrir la vista Buscar.
 
-Al realizar una búsqueda, la aplicación mostrará un estado de carga mientras obtiene la información de Open Library.
+En Buscar, el usuario podrá escribir el texto de su consulta. La búsqueda se ejecutará cuando presione Enter en el teclado.
+
+Después de ejecutar la búsqueda, la aplicación mostrará un estado de carga mientras obtiene la información de Open Library.
 
 Si se obtienen resultados, el usuario podrá seleccionar un libro para acceder a su detalle.
 
-Si la búsqueda no devuelve coincidencias, se mostrará un estado sin resultados y el usuario podrá modificar la búsqueda para intentarlo nuevamente.
+Si la búsqueda no devuelve coincidencias, se mostrará un estado sin resultados. El usuario podrá volver a abrir Buscar desde la lupa para escribir otra consulta.
 
 Si ocurre un problema durante la consulta a Open Library, se mostrará un estado de error con la opción de volver a intentarlo.
 
@@ -65,7 +67,7 @@ Desde la pantalla de detalle, la aplicación comprobará si el libro ya se encue
 
 La sección **Mis libros** mostrará los libros almacenados localmente. Desde esta sección el usuario también podrá seleccionar un libro para consultar su detalle.
 
-Si todavía no existen libros guardados, se mostrará un estado de lista vacía que permitirá al usuario regresar a la búsqueda de libros.
+Si todavía no existen libros guardados, se mostrará un estado de lista vacía que permitirá al usuario abrir Buscar y realizar una consulta.
 
 Cuando un libro no tenga una portada disponible en Open Library, se mostrará un elemento visual sustituto en lugar de la imagen.
 
@@ -85,7 +87,9 @@ Los siguientes wireframes representan la estructura inicial de las principales p
 
 ### Pantalla principal
 
-La pantalla principal contiene el buscador, una lista inicial de libros y el acceso a la sección **Mis libros**.
+La pantalla principal del wireframe inicial contiene el buscador, una lista inicial de libros y el acceso a la sección **Mis libros**.
+
+En la implementación actual, el campo de búsqueda ya no permanece visible en Inicio. La pantalla muestra una lupa que abre una vista Buscar dedicada antes de mostrar Resultados.
 
 <img width="941" height="1672" alt="01-pantalla-principal" src="https://github.com/user-attachments/assets/aeec5ced-9d0f-40c3-9ad7-566936d6f885" />
 
@@ -163,8 +167,9 @@ Las etiquetas de accesibilidad serán breves, claras y describirán directamente
 
 | Pantalla o estado | Información relevante para VoiceOver |
 | --- | --- |
-| Pantalla principal | OpenBooks, Buscar libros, Libros, título y autor de cada libro, Inicio y Mis libros. |
-| Resultados | Resultados, acción para regresar, Buscar libros, valor actual de la búsqueda y título y autor de cada resultado. |
+| Pantalla principal | OpenBooks, acción Buscar libros, Libros, título y autor de cada libro, Inicio y Mis libros. |
+| Buscar | Acción para regresar, campo Buscar libros y texto actual de la consulta. |
+| Resultados | Resultados, acción para regresar, acción Buscar libros y título y autor de cada resultado. |
 | Detalle del libro | Acción para regresar, Detalle del libro, título, autor, año cuando esté disponible y Guardar libro o Eliminar de Mis libros, según corresponda. |
 | Mis libros | Mis libros, título y autor de cada libro guardado, Inicio y Mis libros. |
 | Mis libros vacío | Mis libros, Todavía no tienes libros guardados, Busca un libro y guárdalo para verlo aquí y Buscar libros. |
@@ -185,7 +190,7 @@ Los elementos que sean únicamente decorativos o que repitan información dispon
 
 Esto incluye:
 
-- La lupa del buscador.
+- La lupa que aparece dentro del campo de texto de la vista Buscar, porque es únicamente visual.
 - Las flechas utilizadas como indicadores visuales.
 - El icono utilizado en el estado Mis libros vacío.
 - Las portadas cuando el libro ya pueda identificarse mediante su título y autor.
@@ -253,12 +258,14 @@ Este documento incluye:
 
 ## Pantallas actuales
 
-Las siguientes capturas muestran el estado actual de las pantallas implementadas en OpenBooks.
+Las siguientes capturas corresponden al último registro visual guardado del proyecto.
 Estas imágenes se actualizarán conforme avance el proyecto para mantener un registro visual de los cambios realizados en la interfaz.
+
+Después del ajuste del flujo de búsqueda, las capturas de Inicio y Resultados deberán actualizarse porque el campo de búsqueda dejó de mostrarse de forma permanente en esas pantallas.
 
 ### Pantalla principal
 
-Muestra el buscador, la lista inicial de libros y la navegación entre **Inicio** y **Mis libros**.
+Muestra el acceso a Buscar mediante una lupa, la lista inicial de libros y la navegación entre **Inicio** y **Mis libros**.
 
 <table align="center">
   <tr>
@@ -268,9 +275,15 @@ Muestra el buscador, la lista inicial de libros y la navegación entre **Inicio*
   </tr>
 </table>
 
+### Buscar
+
+Es la vista dedicada para escribir una consulta. El usuario accede a ella desde la lupa, escribe el texto de búsqueda y presiona Enter para mostrar Resultados.
+
+Actualmente no se incluye una captura nueva de esta vista en el README. Se agregará cuando se actualice el registro visual del proyecto.
+
 ### Resultados de búsqueda
 
-Muestra los resultados de una búsqueda y permite seleccionar un libro para consultar su detalle.
+Muestra los resultados de una búsqueda, permite seleccionar un libro para consultar su detalle y ofrece una lupa para abrir nuevamente Buscar.
 
 
 <table align="center">
@@ -292,7 +305,7 @@ Muestra la información del libro seleccionado y la opción **Guardar libro**.
     </td>
   </tr>
 </table>
-  
+
 ### Detalle de un libro guardado
 
 Muestra la información de un libro guardado y la opción **Eliminar de Mis libros**.
@@ -354,7 +367,7 @@ Muestra el estado utilizado cuando no se encuentran libros que coincidan con la 
     </td>
   </tr>
 </table>
-  
+
 ### Error en la búsqueda
 
 Muestra el estado utilizado cuando ocurre un problema al obtener los resultados.
@@ -388,7 +401,9 @@ Actualmente se encuentran desarrollados:
 - El flujo principal de usuario.
 - Los wireframes iniciales de las principales pantallas.
 - Las vistas principales de la aplicación en SwiftUI.
-- La navegación principal entre **Inicio**, **Resultados**, **Detalle del libro** y **Mis libros** mediante `NavigationStack`, `NavigationLink` y `navigationDestination`.
+- La navegación principal entre **Inicio**, **Buscar**, **Resultados**, **Detalle del libro** y **Mis libros** mediante `NavigationStack`, `NavigationLink` y `navigationDestination`.
+- Una vista Buscar dedicada que se abre desde la lupa de Inicio, Resultados o la acción Buscar libros de Mis libros.
+- La ejecución de la búsqueda al presionar Enter en el teclado desde la vista Buscar.
 - El regreso entre pantallas mediante la navegación de SwiftUI.
 - Un caso real de estado compartido para la colección de libros.
 - Una sola fuente de verdad para el estado de guardado de los libros mediante `BooksState`.

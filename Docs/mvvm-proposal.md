@@ -35,7 +35,7 @@ Actualmente se encarga de:
 - Mantener el texto de búsqueda.
 - Mantener el estado de la búsqueda.
 - Mantener el estado compartido de los libros.
-- Conectar las diferentes vistas.
+- Conectar Inicio, Buscar, Resultados, Detalle y Mis libros.
 - Ejecutar la lógica actual de búsqueda.
 - Modificar el estado de guardado de un libro.
 
@@ -48,11 +48,13 @@ Representa la pantalla principal.
 Muestra:
 
 - El nombre de la aplicación.
-- El campo de búsqueda.
+- La lupa que permite abrir Buscar.
 - La lista inicial de libros.
 - El acceso a Mis libros.
 
 También utiliza `NavigationLink` para navegar hacia el detalle de un libro.
+
+Dentro del mismo archivo se encuentra `SearchView`, una vista dedicada a escribir la consulta. Esta vista recibe el texto mediante `@Binding` y solicita ejecutar la búsqueda cuando el usuario presiona Enter.
 
 ### `SearchResultsView.swift`
 
@@ -66,6 +68,8 @@ Puede mostrar:
 - Contenido.
 - Sin resultados.
 - Error.
+
+También muestra una lupa que permite abrir nuevamente Buscar cuando el usuario quiere escribir otra consulta.
 
 ### `BookDetailView.swift`
 
@@ -98,6 +102,7 @@ Corresponde a las vistas que muestran información y permiten que el usuario int
 Por ejemplo:
 
 - `HomeView`.
+- `SearchView`.
 - `SearchResultsView`.
 - `BookDetailView`.
 - `MyBooksView`.
@@ -150,6 +155,7 @@ En OpenBooks las principales View son:
 
 - `ContentView`.
 - `HomeView`.
+- `SearchView`.
 - `SearchResultsView`.
 - `BookDetailView`.
 - `MyBooksView`.
@@ -202,7 +208,7 @@ Sus responsabilidades serían:
 - Mantener los resultados.
 - Cambiar entre carga, contenido, sin resultados o error.
 
-De esta forma, `HomeView` y `SearchResultsView` podrían concentrarse principalmente en mostrar la interfaz.
+De esta forma, `SearchView` y `SearchResultsView` podrían concentrarse principalmente en mostrar la interfaz y comunicar las acciones del usuario.
 
 ### `BooksViewModel`
 
@@ -229,6 +235,7 @@ OpenBooks
 ├── View
 │   ├── ContentView
 │   ├── HomeView
+│   ├── SearchView
 │   ├── SearchResultsView
 │   ├── BookDetailView
 │   └── MyBooksView
@@ -300,7 +307,7 @@ Por esta razón, solamente se proponen los ViewModel que actualmente tienen una 
 
 ## 6. Conclusión
 
-OpenBooks ya cuenta con sus principales pantallas separadas, navegación mediante SwiftUI y un caso de estado compartido para los libros guardados.
+OpenBooks ya cuenta con sus principales vistas separadas, una vista dedicada para escribir búsquedas, navegación mediante SwiftUI y un caso de estado compartido para los libros guardados.
 
 Sin embargo, `ContentView` comienza a concentrar responsabilidades relacionadas con navegación, búsqueda y estado compartido.
 

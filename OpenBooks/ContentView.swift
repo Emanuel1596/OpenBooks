@@ -8,6 +8,7 @@ struct ContentView: View {
     @State var booksState = BooksState()
 
     let resultsRoute: Int = -1
+    let searchRoute: Int = -2
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -20,14 +21,14 @@ struct ContentView: View {
                         },
                         onSearch: {
                             showingMyBooks = false
+                            path.append(searchRoute)
                         }
                     )
                 } else {
                     HomeView(
-                        searchText: $searchText,
                         books: booksState.books,
-                        onSearch: {
-                            searchBooks()
+                        onOpenSearch: {
+                            path.append(searchRoute)
                         },
                         onMyBooks: {
                             showingMyBooks = true
@@ -36,13 +37,20 @@ struct ContentView: View {
                 }
             }
             .navigationDestination(for: Int.self) { route in
-                if route == resultsRoute {
-                    SearchResultsView(
+                if route == searchRoute {
+                    SearchView(
                         searchText: $searchText,
-                        books: booksState.books,
-                        state: searchViewState,
                         onSearch: {
                             searchBooks()
+                        }
+                    )
+                } else if route == resultsRoute {
+                    SearchResultsView(
+                        searchText: searchText,
+                        books: booksState.books,
+                        state: searchViewState,
+                        onOpenSearch: {
+                            path.append(searchRoute)
                         },
                         onRetry: {
                             searchBooks()
@@ -60,7 +68,7 @@ struct ContentView: View {
                     BookDetailView(
                         book: booksState.books[route],
                         homeActive: !showingMyBooks,
-                        
+
                         onSaveOrDelete: {
                             booksState.books[route].isSaved.toggle()
                             path = []
@@ -89,8 +97,6 @@ struct ContentView: View {
             searchViewState = .noResults
         }
 
-        if path.isEmpty {
-            path.append(resultsRoute)
-        }
+        path = [resultsRoute]
     }
 }

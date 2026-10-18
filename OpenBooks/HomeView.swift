@@ -1,24 +1,29 @@
 import SwiftUI
 
 struct HomeView: View {
-    @Binding var searchText: String
     let books: [Book]
-    let onSearch: () -> Void
+    let onOpenSearch: () -> Void
     let onMyBooks: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    Text("OpenBooks")
-                        .font(.largeTitle)
-                        .bold()
+                    HStack {
+                        Text("OpenBooks")
+                            .font(.largeTitle)
+                            .bold()
 
-                    SearchFieldView(
-                        text: $searchText,
-                        onSearch: onSearch
-                    )
+                        Spacer()
 
+                        Button {
+                            onOpenSearch()
+                        } label: {
+                            Image(systemName: "magnifyingglass")
+                                .font(.system(size: 24))
+                                .foregroundStyle(.black)
+                        }
+                    }
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Libros")
                             .font(.system(size: 24))
@@ -53,6 +58,24 @@ struct HomeView: View {
     }
 }
 
+struct SearchView: View {
+    @Binding var searchText: String
+    let onSearch: () -> Void
+
+    var body: some View {
+        VStack(spacing: 0) {
+            SearchFieldView(
+                text: $searchText,
+                onSearch: onSearch
+            )
+            .padding(.horizontal, 20)
+            .padding(.top, 24)
+
+            Spacer()
+        }
+    }
+}
+
 struct SearchFieldView: View {
     @Binding var text: String
     let onSearch: () -> Void
@@ -63,16 +86,15 @@ struct SearchFieldView: View {
                 .foregroundStyle(.gray)
 
             HStack(spacing: 12) {
-                Button {
-                    onSearch()
-                } label: {
-                    Image(systemName: "magnifyingglass")
-                        .font(.system(size: 20))
-                        .foregroundStyle(.black)
-                }
+                Image(systemName: "magnifyingglass")
+                    .font(.system(size: 20))
+                    .foregroundStyle(.black)
 
                 TextField(text: $text) {
                     Text("Buscar libros")
+                }
+                .onSubmit {
+                    onSearch()
                 }
             }
             .padding(.horizontal, 16)
