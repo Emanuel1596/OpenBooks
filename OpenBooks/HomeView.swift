@@ -23,6 +23,7 @@ struct HomeView: View {
                                 .font(.system(size: 24))
                                 .foregroundStyle(.black)
                         }
+                        .accessibilityLabel("Buscar libros")
                     }
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Libros")
@@ -93,6 +94,7 @@ struct SearchFieldView: View {
                 TextField(text: $text) {
                     Text("Buscar libros")
                 }
+                .accessibilityLabel("Buscar libros")
                 .onSubmit {
                     onSearch()
                 }

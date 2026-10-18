@@ -83,6 +83,14 @@ jobs:
             .maestro/shared-state.yaml \
             --test-output-dir=maestro-output
 
+      - name: Ejecutar prueba del buscador
+        run: |
+          maestro \
+            --device="$SIMULATOR_UDID" \
+            test \
+            .maestro/search-flow.yaml \
+            --test-output-dir=maestro-output
+
       - name: Guardar evidencias
         if: always()
         uses: actions/upload-artifact@v7

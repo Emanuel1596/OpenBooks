@@ -1,0 +1,32 @@
+
+appId: com.openbooks.app
+---
+- launchApp:
+    clearState: true
+
+- assertVisible: "OpenBooks"
+
+- tapOn: "Buscar libros"
+
+- assertVisible: "Buscar libros"
+- tapOn: "Buscar libros"
+- inputText: "Harry Potter"
+- pressKey: enter
+
+- assertVisible: "Resultados"
+- assertVisible: "Harry Potter y la piedra filosofal"
+- takeScreenshot: "resultados-harry-potter"
+
+- tapOn: "Buscar libros"
+
+- assertVisible: "Buscar libros"
+- tapOn: "Buscar libros"
+- eraseText: 50
+- inputText: "Orgullo y prejuicio"
+- pressKey: enter
+
+- assertVisible: "Resultados"
+- assertVisible: "Orgullo y prejuicio"
+- assertVisible: "Emma"
+- assertNotVisible: "Harry Potter y la piedra filosofal"
+- takeScreenshot: "resultados-orgullo-y-prejuicio"

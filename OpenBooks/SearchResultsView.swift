@@ -30,6 +30,7 @@ struct SearchResultsView: View {
                             .font(.system(size: 24))
                             .foregroundStyle(.black)
                     }
+                    .accessibilityLabel("Buscar libros")
                 }
             }
             .padding(.horizontal, 20)
