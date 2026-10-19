@@ -3,14 +3,15 @@ import SwiftUI
 struct ContentView: View {
     @State var path: [Int] = []
     @State var showingMyBooks: Bool = false
-    @State var searchText: String = ""
-    @State var searchViewState: SearchViewState = .content
+    @State var searchViewModel = SearchViewModel()
     @State var booksState = BooksState()
 
     let resultsRoute: Int = -1
     let searchRoute: Int = -2
 
     var body: some View {
+        @Bindable var search = searchViewModel
+
         NavigationStack(path: $path) {
             ZStack {
                 if showingMyBooks {
@@ -39,16 +40,16 @@ struct ContentView: View {
             .navigationDestination(for: Int.self) { route in
                 if route == searchRoute {
                     SearchView(
-                        searchText: $searchText,
+                        searchText: $search.searchText,
                         onSearch: {
                             searchBooks()
                         }
                     )
                 } else if route == resultsRoute {
                     SearchResultsView(
-                        searchText: searchText,
+                        resultIndices: searchViewModel.resultIndices,
                         books: booksState.books,
-                        state: searchViewState,
+                        state: searchViewModel.state,
                         onOpenSearch: {
                             path.append(searchRoute)
                         },
@@ -89,14 +90,7 @@ struct ContentView: View {
     }
 
     func searchBooks() {
-        if searchText == "Harry Potter" {
-            searchViewState = .content
-        } else if searchText == "Orgullo y prejuicio" {
-            searchViewState = .content
-        } else {
-            searchViewState = .noResults
-        }
-
+        searchViewModel.searchBooks()
         path = [resultsRoute]
     }
 }
