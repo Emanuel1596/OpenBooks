@@ -416,4 +416,4 @@ De esta forma existe una sola fuente de verdad para el estado de guardado y el c
 9. **El texto y el estado de búsqueda pertenecen a `SearchViewModel`**; Buscar modifica el texto mediante `@Binding` y `ContentView` conserva la navegación.
 10. **El libro seleccionado viajará hacia Detalle como información de navegación**.
 11. **`NavigationStack`, `NavigationLink` y `navigationDestination` son los mecanismos utilizados para organizar el flujo en SwiftUI**.
-12. **La práctica 5 comenzó la reorganización hacia MVVM**: `SearchViewModel` concentra la búsqueda y `BooksState` contiene la operación de guardar o eliminar. La integración con Open Library y la persistencia siguen pendientes.
+12. **La organización de responsabilidades se realiza de forma gradual**: `SearchViewModel` concentra la búsqueda y `BooksState` contiene la operación de guardar o eliminar. La integración con Open Library y la persistencia siguen pendientes.

@@ -1,8 +1,8 @@
 # Propuesta de arquitectura MVVM
 
-Este documento presenta el análisis de la estructura de OpenBooks y los cambios realizados durante la práctica 5 para comenzar a organizar el proyecto mediante MVVM.
+Este documento analiza la estructura actual de OpenBooks y la organización de sus responsabilidades mediante MVVM.
 
-Los cambios se realizaron de forma gradual. Se organizó la búsqueda mediante una vista Buscar dedicada y se separaron algunas responsabilidades que antes estaban dentro de las vistas, sin rehacer toda la aplicación.
+La intención es separar gradualmente el estado y la lógica de las vistas cuando sea necesario, sin modificar el funcionamiento de las pantallas que ya están implementadas.
 
 ## 1. Estructura actual del proyecto
 
@@ -20,7 +20,7 @@ Contiene el modelo `Book`, que representa la información de cada libro:
 
 También contiene `SearchViewState`, que representa los estados de búsqueda, y `BooksState`, un objeto `@Observable` que mantiene la colección compartida de libros.
 
-Durante la práctica 5 se agregó a `BooksState` el método `toggleSaved(at:)`, encargado de cambiar el estado `isSaved` del libro seleccionado.
+También incluye el método `toggleSaved(at:)`, encargado de cambiar el estado `isSaved` del libro seleccionado.
 
 ### `MockBooks.swift`
 
@@ -40,7 +40,7 @@ Actualmente se encarga de:
 - Solicitar la búsqueda al ViewModel y navegar a Resultados.
 - Solicitar a `BooksState` que guarde o elimine un libro y navegar a Mis libros.
 
-Antes de esta práctica también contenía las condiciones que decidían el estado de cada búsqueda y modificaba directamente `isSaved`. Esas responsabilidades ya se trasladaron fuera de la vista.
+La lógica que determina los resultados de búsqueda se encuentra en `SearchViewModel` y la modificación de `isSaved` se realiza mediante `BooksState`, evitando concentrar estas operaciones en la vista raíz.
 
 ### `HomeView.swift`
 
@@ -73,7 +73,7 @@ También puede representar los estados de carga, contenido, sin resultados y err
 
 ### `ViewModels/SearchViewModel.swift`
 
-Es el archivo agregado durante la práctica 5. Contiene `SearchViewModel`, definido mediante `@Observable`.
+Contiene `SearchViewModel`, definido mediante `@Observable`.
 
 Se encarga de:
 
@@ -104,7 +104,7 @@ Es el punto de entrada de la aplicación y muestra `ContentView` como contenido 
 
 ## 2. Separación de responsabilidades
 
-Durante la revisión se identificaron tres responsabilidades principales:
+Dentro del proyecto existen tres tipos principales de responsabilidades:
 
 ### Interfaz
 
@@ -161,7 +161,7 @@ En OpenBooks, las principales vistas son `ContentView`, `HomeView`, `SearchView`
 
 Mantiene el estado y la lógica que necesita la interfaz.
 
-En la práctica 5 se incorporó `SearchViewModel` para el flujo de búsqueda. `BooksState` sigue siendo un objeto de estado compartido y ahora contiene también la operación de guardar o eliminar libros.
+En OpenBooks, `SearchViewModel` se encarga del flujo de búsqueda. `BooksState` mantiene el estado compartido y contiene la operación de guardar o eliminar libros.
 
 De manera sencilla, el flujo de búsqueda queda así:
 
@@ -185,19 +185,15 @@ Al presionar Enter, `ContentView` llama a `searchViewModel.searchBooks()` y desp
 
 ## 4. Organización de MVVM en OpenBooks
 
-No fue necesario crear un ViewModel para cada pantalla ni reorganizar todas las carpetas del proyecto.
+No se considera necesario crear un ViewModel para cada pantalla ni reorganizar todas las carpetas del proyecto.
 
 ### Búsqueda: `SearchViewModel`
-
-**Ya implementado en la práctica 5.**
 
 El ViewModel mantiene una sola fuente de verdad para el texto, el estado y los índices de resultados. Las vistas no contienen las condiciones que deciden qué libros corresponden a una búsqueda.
 
 Los índices siguen haciendo referencia a los libros de `MockBooks.swift` disponibles en `BooksState`. Por ahora, la búsqueda no se conecta a Open Library.
 
 ### Libros guardados: `BooksState`
-
-**Responsabilidad reorganizada en la práctica 5.**
 
 `BooksState` ya mantenía la colección compartida mediante `@Observable`. Ahora también tiene el método `toggleSaved(at:)`, que cambia `isSaved` del libro seleccionado.
 
@@ -233,23 +229,23 @@ Así evitamos tener varias copias independientes de la misma información.
 
 ---
 
-## 5. Cambios realizados durante la práctica 5
+## 5. Organización actual y posibles mejoras
 
-### Primera refactorización: búsqueda
+### Búsqueda
 
-1. Se creó `ViewModels/SearchViewModel.swift` con `@Observable`.
-2. Se trasladaron las condiciones de búsqueda que estaban en `ContentView` al método `searchBooks()` del ViewModel.
-3. Se trasladó la selección de los índices que estaba en `SearchResultsView` al ViewModel.
-4. `ContentView` ahora utiliza `@Bindable` para conectar el texto editable con `SearchView` y continúa controlando la navegación.
-5. `SearchResultsView` recibe los índices y el estado para mostrar la información, sin decidir qué libros corresponden a cada consulta.
+`SearchViewModel` mantiene el texto, el estado y los índices de resultados de búsqueda mediante `@Observable`.
 
-### Segunda refactorización: libros guardados
+`ContentView` conserva la navegación y utiliza `@Bindable` para conectar el texto editable de `SearchView` con el ViewModel. Cuando el usuario realiza una consulta, el ViewModel determina qué libros de prueba corresponden a la búsqueda y `SearchResultsView` presenta los resultados recibidos.
 
-1. Se agregó el método `toggleSaved(at:)` a `BooksState`, dentro de `Book.swift`.
-2. Se reemplazó la modificación directa de `isSaved` en `ContentView` por la llamada `booksState.toggleSaved(at: route)`.
-3. Se conservaron la colección compartida, las pantallas y el comportamiento de guardar o eliminar libros.
+De esta forma, las condiciones de búsqueda no se repiten dentro de las vistas.
 
-### Beneficios de la refactorización
+### Libros guardados
+
+`BooksState` mantiene la colección compartida mediante `@Observable` y utiliza `toggleSaved(at:)` para modificar el estado de guardado de un libro.
+
+`ContentView` solicita esta operación a `BooksState` y conserva la responsabilidad de navegación. Las pantallas utilizan la misma colección, sin mantener copias independientes del estado de guardado.
+
+### Beneficios
 
 Con estos cambios:
 
@@ -266,13 +262,13 @@ La separación también requiere identificar correctamente quién mantiene cada 
 
 La organización podrá seguir mejorándose conforme se avance en el proyecto. Por ejemplo, se podría revisar la forma en que `MyBooksView` determina qué libros mostrar o valorar si conviene separar más responsabilidades de `BooksState`.
 
-No se considera necesario realizar esos cambios en esta etapa si no aportan una mejora concreta. Tampoco se implementaron nuevas funcionalidades, servicios ni persistencia durante esta práctica.
+Estos cambios se valorarán conforme crezca el proyecto y exista una necesidad concreta. La conexión con Open Library y la persistencia todavía no están implementadas.
 
 ---
 
 ## 6. Conclusión
 
-Durante la práctica 5 comenzamos a aplicar MVVM de manera progresiva en OpenBooks.
+La organización basada en MVVM se está aplicando de manera progresiva en OpenBooks.
 
 `SearchViewModel` reúne la lógica del flujo de búsqueda y `BooksState` se encarga de modificar el estado de guardado de los libros. `ContentView` conserva la navegación y coordina las acciones entre las vistas y los objetos que mantienen el estado.
 

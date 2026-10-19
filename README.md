@@ -255,7 +255,7 @@ Este documento incluye:
 - La revisión de la estructura actual del proyecto.
 - La separación entre interfaz, datos y lógica.
 - La relación entre Model, View y ViewModel.
-- Los cambios realizados durante la práctica 5 para comenzar a aplicar MVVM.
+- La organización de las responsabilidades de búsqueda mediante `SearchViewModel`.
 - Las responsabilidades que ahora tiene `SearchViewModel`.
 - La organización de la colección de libros mediante `BooksState`.
 - La distinción entre estado local y estado compartido.
@@ -416,12 +416,12 @@ Actualmente se encuentran desarrollados:
 - Los estados de búsqueda sin resultados, libro sin portada y lista de libros guardados vacía.
 - La planificación de accesibilidad mediante VoiceOver.
 - La documentación del diseño de navegación y organización del estado.
-- La primera refactorización hacia MVVM realizada durante la práctica 5, separando la lógica de búsqueda en `SearchViewModel` y la operación de guardar o eliminar libros en `BooksState`.
+- La separación de la lógica de búsqueda en `SearchViewModel` y la operación de guardar o eliminar libros en `BooksState`.
 - Las capturas de las pantallas implementadas y los estados previstos, con algunas imágenes pendientes de actualizar al flujo actual.
 
 La navegación y el estado compartido definidos durante el diseño ya se encuentran implementados en el prototipo actual.
 
-La organización basada en MVVM comenzó a implementarse durante la práctica 5. `SearchViewModel`, definido con `@Observable`, mantiene el texto, el estado y los índices de los resultados de búsqueda. `ContentView` conserva la navegación y utiliza `@Bindable` para conectar el campo de Buscar con el texto del ViewModel.
+La organización basada en MVVM se está incorporando de forma gradual. `SearchViewModel`, definido con `@Observable`, mantiene el texto, el estado y los índices de los resultados de búsqueda. `ContentView` conserva la navegación y utiliza `@Bindable` para conectar el campo de Buscar con el texto del ViewModel.
 
 Por su parte, `BooksState` continúa manteniendo la colección compartida y ahora incluye `toggleSaved(at:)`, que cambia el estado de guardado del libro seleccionado. `ContentView` solicita esa operación, sin modificar directamente `isSaved`. Esta reorganización es incremental: todavía no se ha implementado una arquitectura MVVM completa ni se ha creado un `BooksViewModel` independiente.
 
