@@ -427,18 +427,6 @@ Por su parte, `BooksState` continúa manteniendo la colección compartida y ahor
 
 La integración con Open Library, la persistencia local y las demás funcionalidades pendientes del MVP se desarrollarán progresivamente durante el proyecto.
 
-## Pruebas del prototipo
-
-Se utilizaron GitHub Actions y Maestro para comprobar el funcionamiento del prototipo en un simulador de iPhone. Después de las dos refactorizaciones de la práctica 5 se volvieron a ejecutar las pruebas sobre la rama `practica-5-mvvm`. Las pruebas completadas fueron:
-
-- Guardar un libro, consultarlo en Mis libros y eliminarlo.
-- Buscar «Harry Potter» y después «Orgullo y prejuicio», comprobando que cambian los resultados.
-- Recorrer las pantallas principales, abrir detalles, comprobar la vista sin portada y realizar una búsqueda sin resultados. Este recorrido también se grabó en video.
-
-Estas pruebas permiten comprobar que los recorridos incluidos siguen funcionando después de reorganizar el código. Se realizan con datos locales y no comprueban todavía las consultas a Open Library, la persistencia entre ejecuciones ni los estados de carga y error.
-
-Los archivos utilizados para las pruebas están en `.maestro` y el workflow correspondiente se encuentra en `.github/workflows/ios-ui-test.yml`.
-
 ## Ejecución del proyecto
 
 1. Clonar o descargar el repositorio.

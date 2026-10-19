@@ -2,7 +2,7 @@
 
 Este documento presenta el análisis de la estructura de OpenBooks y los cambios realizados durante la práctica 5 para comenzar a organizar el proyecto mediante MVVM.
 
-La refactorización se realizó de forma gradual. No se reescribió la aplicación ni se modificaron sus pantallas; únicamente se separaron responsabilidades que antes estaban dentro de las vistas.
+Los cambios se realizaron de forma gradual. Se organizó la búsqueda mediante una vista Buscar dedicada y se separaron algunas responsabilidades que antes estaban dentro de las vistas, sin rehacer toda la aplicación.
 
 ## 1. Estructura actual del proyecto
 
@@ -248,14 +248,6 @@ Así evitamos tener varias copias independientes de la misma información.
 1. Se agregó el método `toggleSaved(at:)` a `BooksState`, dentro de `Book.swift`.
 2. Se reemplazó la modificación directa de `isSaved` en `ContentView` por la llamada `booksState.toggleSaved(at: route)`.
 3. Se conservaron la colección compartida, las pantallas y el comportamiento de guardar o eliminar libros.
-
-### Comprobación de los cambios
-
-Después de cada refactorización se ejecutó el workflow `UI Test OpenBooks` en GitHub Actions sobre la rama `practica-5-mvvm`.
-
-Se completaron las pruebas de Maestro para guardar y eliminar libros, realizar dos búsquedas consecutivas y recorrer las pantallas principales. El recorrido también se grabó en video.
-
-Estas pruebas comprueban los recorridos del prototipo con datos locales. No demuestran todavía integración con Open Library ni persistencia entre ejecuciones.
 
 ### Beneficios de la refactorización
 
