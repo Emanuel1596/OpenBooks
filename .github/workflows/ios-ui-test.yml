@@ -91,6 +91,14 @@ jobs:
             .maestro/search-flow.yaml \
             --test-output-dir=maestro-output
 
+      - name: Grabar recorrido completo
+        run: |
+          maestro \
+            --device="$SIMULATOR_UDID" \
+            test \
+            .maestro/recorrido-completo.yaml \
+            --test-output-dir=maestro-output
+
       - name: Guardar evidencias
         if: always()
         uses: actions/upload-artifact@v7

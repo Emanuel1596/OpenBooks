@@ -1,0 +1,55 @@
+
+appId: com.openbooks.app
+---
+- launchApp:
+    clearState: true
+
+- assertVisible: "OpenBooks"
+- startRecording: recorrido-completo
+
+# Abrir, guardar y eliminar un libro
+- tapOn: "1984"
+- assertVisible: "Detalle del libro"
+- tapOn: "Guardar libro"
+- assertVisible: "Mis libros"
+- tapOn: "1984"
+- assertVisible: "Eliminar de Mis libros"
+- tapOn: "Eliminar de Mis libros"
+- assertVisible: "Todavía no tienes libros guardados"
+
+# Regresar a Inicio y buscar Harry Potter
+- tapOn: "Inicio"
+- assertVisible: "OpenBooks"
+- tapOn: "Buscar libros"
+- tapOn: "Buscar libros"
+- inputText: "Harry Potter"
+- pressKey: enter
+- assertVisible: "Resultados"
+- assertVisible: "Harry Potter y la piedra filosofal"
+- tapOn: "Harry Potter y la piedra filosofal"
+- assertVisible: "Detalle del libro"
+
+# Cambiar la búsqueda y abrir un libro sin portada
+- tapOn: "Inicio"
+- assertVisible: "OpenBooks"
+- tapOn: "Buscar libros"
+- tapOn: "Buscar libros"
+- eraseText: 50
+- inputText: "Orgullo y prejuicio"
+- pressKey: enter
+- assertVisible: "Orgullo y prejuicio"
+- tapOn: "Orgullo y prejuicio"
+- assertVisible: "Sin portada"
+
+# Comprobar la pantalla sin resultados
+- tapOn: "Inicio"
+- tapOn: "Buscar libros"
+- tapOn: "Buscar libros"
+- eraseText: 50
+- inputText: "Libro que no existe 12345"
+- pressKey: enter
+- assertVisible: "No se encontraron libros"
+
+# Terminar el recorrido
+- tapOn: "Inicio"
+- stopRecording
