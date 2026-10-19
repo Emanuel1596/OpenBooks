@@ -71,7 +71,7 @@ struct ContentView: View {
                         homeActive: !showingMyBooks,
 
                         onSaveOrDelete: {
-                            booksState.books[route].isSaved.toggle()
+                            booksState.toggleSaved(at: route)
                             path = []
                             showingMyBooks = true
                         },
