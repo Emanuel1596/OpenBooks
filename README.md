@@ -52,6 +52,8 @@ Desde la pantalla principal, el usuario podrá seleccionar directamente un libro
 
 En Buscar, el usuario podrá escribir el texto de su consulta. La búsqueda se ejecutará cuando presione Enter en el teclado.
 
+En el prototipo actual, la búsqueda utiliza los libros de prueba definidos en `MockBooks.swift`. Todavía no se realizan consultas a Open Library.
+
 Después de ejecutar la búsqueda, la aplicación mostrará un estado de carga mientras obtiene la información de Open Library.
 
 Si se obtienen resultados, el usuario podrá seleccionar un libro para acceder a su detalle.
@@ -95,7 +97,7 @@ En la implementación actual, el campo de búsqueda ya no permanece visible en I
 
 ### Resultados de búsqueda
 
-Muestra los libros encontrados después de realizar una búsqueda en Open Library.
+El wireframe muestra cómo se presentarán los libros encontrados después de realizar una búsqueda en Open Library. Por ahora, la pantalla utiliza libros de prueba.
 
 <img width="941" height="1672" alt="02-resultados" src="https://github.com/user-attachments/assets/2832437b-cfa3-40a6-b506-cfcec5a5204c" />
 
@@ -158,6 +160,8 @@ Cuando Open Library no tenga una portada disponible para un libro, se mostrará 
 ## Accesibilidad con VoiceOver
 
 La accesibilidad se consideró desde el diseño de los wireframes y del flujo de usuario de OpenBooks.
+
+En el prototipo actual se añadieron etiquetas descriptivas a las lupas de Inicio y Resultados, así como al campo de la vista Buscar. Las demás consideraciones de esta sección forman parte de la planificación y todavía no se han comprobado por completo con VoiceOver.
 
 El criterio principal es que VoiceOver comunique la información necesaria para comprender y utilizar la aplicación, evitando anunciar de forma independiente elementos decorativos o información que ya esté representada mediante texto.
 
@@ -258,10 +262,9 @@ Este documento incluye:
 
 ## Pantallas actuales
 
-Las siguientes capturas corresponden al último registro visual guardado del proyecto.
-Estas imágenes se actualizarán conforme avance el proyecto para mantener un registro visual de los cambios realizados en la interfaz.
+Las siguientes capturas se conservaron como registro visual de una versión anterior del prototipo. No todas representan el flujo de búsqueda actual.
 
-Después del ajuste del flujo de búsqueda, las capturas de Inicio y Resultados deberán actualizarse porque el campo de búsqueda dejó de mostrarse de forma permanente en esas pantallas.
+Después del ajuste de navegación, Inicio y Resultados muestran una lupa para abrir Buscar, y el campo editable se encuentra únicamente en esa vista. Las capturas de Inicio y Resultados están pendientes de actualizarse y todavía falta incorporar una captura de Buscar en este README.
 
 ### Pantalla principal
 
@@ -346,7 +349,7 @@ Muestra el estado de la sección cuando todavía no existen libros guardados.
 
 ### Carga
 
-Muestra el estado utilizado mientras se obtienen los resultados de una búsqueda.
+Muestra la vista de carga que ya está preparada en el código. Todavía no se activa durante las búsquedas con datos de prueba; se utilizará cuando se integre la consulta a Open Library.
 
 <table align="center">
   <tr>
@@ -370,7 +373,7 @@ Muestra el estado utilizado cuando no se encuentran libros que coincidan con la 
 
 ### Error en la búsqueda
 
-Muestra el estado utilizado cuando ocurre un problema al obtener los resultados.
+Muestra la vista de error que ya está preparada en el código. Todavía no se activa durante las búsquedas con datos de prueba; se utilizará cuando la aplicación pueda presentar errores de consulta.
 
 <table align="center">
   <tr>
@@ -382,7 +385,7 @@ Muestra el estado utilizado cuando ocurre un problema al obtener los resultados.
 
 ### Libro sin portada
 
-Muestra el elemento visual sustituto utilizado cuando un libro no cuenta con una portada disponible.
+Muestra el elemento visual sustituto cuando un libro no tiene portada. Por ahora no se descargan imágenes reales: en los libros de prueba con `hasCover` igual a `true` aparece una X como marcador provisional y, cuando es `false`, aparece el texto «Sin portada».
 
 <table align="center">
   <tr>
@@ -397,7 +400,7 @@ Muestra el elemento visual sustituto utilizado cuando un libro no cuenta con una
 Actualmente se encuentran desarrollados:
 
 - El objetivo y alcance del proyecto.
-- El MVP.
+- La definición del MVP.
 - El flujo principal de usuario.
 - Los wireframes iniciales de las principales pantallas.
 - Las vistas principales de la aplicación en SwiftUI.
@@ -408,17 +411,30 @@ Actualmente se encuentran desarrollados:
 - Un caso real de estado compartido para la colección de libros.
 - Una sola fuente de verdad para el estado de guardado de los libros mediante `BooksState`.
 - La actualización de **Mis libros** al guardar o eliminar un libro desde su detalle.
-- La representación de los estados de carga, error, búsqueda sin resultados, libro sin portada y lista de libros guardados vacía.
+- Las vistas de carga y error preparadas, aunque todavía no se activan durante las búsquedas del prototipo.
+- Los estados de búsqueda sin resultados, libro sin portada y lista de libros guardados vacía.
 - La planificación de accesibilidad mediante VoiceOver.
 - La documentación del diseño de navegación y organización del estado.
 - El análisis de separación de responsabilidades y la propuesta de arquitectura basada en MVVM.
-- Las capturas del estado actual de las pantallas implementadas.
+- Las capturas de las pantallas implementadas y los estados previstos, con algunas imágenes pendientes de actualizar al flujo actual.
 
 La navegación y el estado compartido definidos durante el diseño ya se encuentran implementados en el prototipo actual.
 
 La propuesta basada en MVVM se mantiene únicamente como análisis de arquitectura. Su implementación se realizará posteriormente conforme avance el proyecto.
 
 La integración con Open Library, la persistencia local y las demás funcionalidades pendientes del MVP se desarrollarán progresivamente durante el proyecto.
+
+## Pruebas del prototipo
+
+Se utilizaron GitHub Actions y Maestro para comprobar el funcionamiento de la versión actual en un simulador de iPhone. Las pruebas completadas fueron:
+
+- Guardar un libro, consultarlo en Mis libros y eliminarlo.
+- Buscar «Harry Potter» y después «Orgullo y prejuicio», comprobando que cambian los resultados.
+- Recorrer las pantallas principales, abrir detalles, comprobar la vista sin portada y realizar una búsqueda sin resultados. Este recorrido también se grabó en video.
+
+Estas pruebas comprueban la navegación y el estado compartido del prototipo con datos locales. No comprueban todavía las consultas a Open Library, la persistencia entre ejecuciones ni los estados de carga y error.
+
+Los archivos utilizados para las pruebas están en `.maestro` y el workflow correspondiente se encuentra en `.github/workflows/ios-ui-test.yml`.
 
 ## Ejecución del proyecto
 

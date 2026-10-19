@@ -66,7 +66,7 @@ OpenBooks
 
 **Detalle del libro** se repite dentro de los distintos recorridos únicamente para mostrar desde dónde puede abrirse y a qué pantalla regresa. Corresponde a una misma pantalla reutilizable y no a una tercera sección principal de la aplicación.
 
-Los estados **Carga**, **Sin resultados** y **Error** no se consideran pantallas independientes. Son estados de la pantalla **Resultados**.
+Los estados **Carga**, **Sin resultados** y **Error** no se consideran pantallas independientes. Son estados de la pantalla **Resultados**. En el prototipo, el estado sin resultados ya se utiliza; las vistas de carga y error están preparadas, pero todavía no se activan durante la búsqueda.
 
 De la misma forma, **Lista vacía** pertenece a **Mis libros** y **Sin portada** es una condición de presentación de un libro, no una pantalla adicional.
 
@@ -140,16 +140,16 @@ Escribir únicamente modifica el texto. La búsqueda comienza cuando el usuario 
 ### Resultados
 
 **Propósito:**
-Mostrar el resultado de una búsqueda realizada en Open Library.
+Mostrar el resultado de una búsqueda. Actualmente se utilizan libros de prueba; la conexión con Open Library se realizará después.
 
 **Muestra:**
 
-- Texto de la búsqueda.
-- Lista de libros encontrados.
-- Estado de carga.
+- Título de la pantalla: Resultados.
+- Lista de libros de prueba correspondiente a la consulta.
+- Vista de carga preparada, todavía no activada por la búsqueda actual.
 - Estado sin resultados.
-- Estado de error.
-- Acción para volver a intentar la búsqueda.
+- Vista de error preparada, todavía no activada por la búsqueda actual.
+- Acción para volver a intentar la búsqueda, dentro de la vista de error.
 - Botón de búsqueda representado por una lupa.
 
 **Recibe:**
@@ -165,12 +165,12 @@ Mostrar el resultado de una búsqueda realizada en Open Library.
 - Solicita abrir Buscar cuando el usuario toca la lupa.
 - Solicita navegación cuando el usuario selecciona un libro.
 
-Resultados recibe el texto únicamente para presentar la información correspondiente a la búsqueda actual. Si el usuario quiere escribir una consulta diferente, abre nuevamente la vista Buscar mediante la lupa.
+Resultados recibe el texto para determinar qué libros de prueba debe mostrar. No presenta la consulta como un texto independiente en pantalla. Si el usuario quiere escribir una consulta diferente, abre nuevamente la vista Buscar mediante la lupa.
 
 **Necesita conservar:**
 
 - Texto de búsqueda.
-- Resultados obtenidos.
+- Los libros de prueba que se muestran como resultados. Por ahora no se descargan ni guardan resultados de una consulta externa.
 - Estado de la búsqueda mientras el usuario entra a un detalle y posteriormente regresa.
 
 ---
@@ -252,13 +252,13 @@ La organización propuesta es la siguiente:
 | Dato | Quién lo utiliza | Quién lo modifica | Dónde debería vivir | Justificación |
 | --- | --- | --- | --- | --- |
 | Texto de búsqueda | Buscar y Resultados | Usuario desde Buscar | `ContentView` | `ContentView` mantiene una sola fuente de verdad mediante `@State`. Buscar puede editar el mismo valor mediante `@Binding` y Resultados lo recibe para representar la búsqueda actual. |
-| Resultados de búsqueda | Resultados y Detalle | La lógica encargada de realizar la búsqueda | Estado compartido del flujo de búsqueda | Deben seguir disponibles si el usuario abre un detalle y después regresa a Resultados. |
-| Estado de búsqueda: loading, content, noResults o error | Resultados | La lógica de búsqueda | Estado compartido del flujo de búsqueda | La interfaz de Resultados depende directamente de este valor. Al cambiar, cambia lo que se muestra. |
+| Resultados de búsqueda | Resultados y Detalle | Actualmente, `ContentView` determina el estado y `SearchResultsView` selecciona qué libros mostrar | Ahora se utilizan `booksState.books` y el texto de búsqueda; después podrá organizarse como estado del flujo de búsqueda | En el prototipo no se obtiene una lista nueva de Open Library. Se muestran libros de prueba según el texto escrito y siguen disponibles al regresar de Detalle. |
+| Estado de búsqueda: loading, content, noResults o error | Resultados | `ContentView`, mediante `searchBooks()` | `ContentView`, como `searchViewState` | Resultados muestra una vista según el estado recibido. Actualmente la búsqueda establece `.content` o `.noResults`; `.loading` y `.error` tienen vistas preparadas, pero no se asignan desde `searchBooks()`. |
 | Libros guardados | Mis libros y Detalle | `ContentView`, a partir de la acción solicitada desde Detalle | `BooksState` | Ambas vistas necesitan consultar el mismo estado. `BooksState` mantiene una sola fuente de verdad y `ContentView` actualiza el estado de guardado del libro seleccionado. |
 | Estado de guardado de un libro | Detalle y Mis libros | `ContentView`, cuando Detalle solicita guardar o eliminar | Dentro de `booksState.books` | El valor `isSaved` pertenece al libro almacenado en la colección compartida. Detalle lo muestra y solicita su cambio, pero no mantiene una copia independiente. |
-| Libro seleccionado | Detalle | La pantalla desde la que se selecciona el libro | Se pasa durante la navegación | Solo se necesita para abrir el detalle correspondiente; no es necesario mantener otra copia global permanente. |
+| Libro seleccionado | Detalle | La pantalla desde la que se selecciona el libro | Se identifica mediante un índice `Int` durante la navegación | `NavigationLink` envía el índice del libro; `ContentView` lo busca en `booksState.books` y pasa el `Book` a Detalle. No hace falta mantener otra colección para la selección. |
 | Sección principal activa: Inicio o Mis libros | Barra inferior y vista raíz | Usuario al cambiar de sección | Estado local de la vista que contiene ambas secciones | La vista raíz es la responsable de esta decisión de navegación. |
-| Título, autor, año y portada | Inicio, Resultados, Detalle y Mis libros | Open Library o los datos locales de prueba | Modelo `Book` | Son datos propios del libro. Las vistas los reciben y los muestran, pero no necesitan crear una copia de estado por pantalla. |
+| Título, autor, año y disponibilidad de portada | Inicio, Resultados, Detalle y Mis libros | Actualmente, los datos locales de prueba; más adelante, Open Library | Modelo `Book` | Son datos propios del libro. `hasCover` indica si se muestra un marcador provisional o el estado «Sin portada»; todavía no se descargan portadas reales. |
 
 ### Estado local y estado compartido
 
@@ -333,7 +333,7 @@ En OpenBooks puede utilizarse para:
 - Abrir el detalle de un resultado.
 - Abrir el detalle de un libro guardado.
 
-La información que necesita la pantalla siguiente debe viajar con la navegación. En estos casos, Detalle necesita recibir el libro seleccionado.
+En la implementación actual, cada fila usa `NavigationLink` con un índice `Int` que identifica al libro. `ContentView` obtiene el elemento correspondiente de `booksState.books` y lo entrega a `BookDetailView` para mostrar el detalle.
 
 ### navigationDestination
 
@@ -341,7 +341,7 @@ La información que necesita la pantalla siguiente debe viajar con la navegació
 
 Para OpenBooks resulta útil porque **Detalle del libro es una misma pantalla que puede abrirse desde diferentes lugares**: Inicio, Resultados y Mis libros.
 
-En lugar de diseñar tres pantallas de detalle diferentes, se mantiene una sola pantalla y se le proporciona la información del libro seleccionado.
+En lugar de diseñar tres pantallas de detalle diferentes, se mantiene una sola pantalla. `navigationDestination` recibe el índice y `ContentView` le proporciona el libro correspondiente a `BookDetailView`.
 
 También se utiliza para organizar los destinos del flujo de búsqueda. En la implementación actual, la ruta puede abrir Buscar o Resultados según la acción realizada por el usuario.
 
@@ -387,9 +387,9 @@ La aplicación utiliza `NavigationStack` como contenedor del flujo principal y u
 
 Las filas de libros utilizan `NavigationLink` para abrir el detalle correspondiente y `navigationDestination` relaciona los valores de navegación con las pantallas Buscar, Resultados y Detalle.
 
-Inicio y Resultados muestran una lupa que abre la vista Buscar. El campo editable se encuentra únicamente en Buscar. El texto de búsqueda pertenece a `ContentView` mediante `@State` y Buscar lo modifica mediante `@Binding`. Resultados recibe el texto actual para representar la búsqueda correspondiente.
+Inicio y Resultados muestran una lupa que abre la vista Buscar. El campo editable se encuentra únicamente en Buscar. El texto de búsqueda pertenece a `ContentView` mediante `@State` y Buscar lo modifica mediante `@Binding`. Resultados utiliza el texto actual para elegir qué libros de prueba mostrar, sin mostrar la consulta como un encabezado independiente.
 
-Cuando el usuario presiona Enter desde Buscar, se ejecuta la búsqueda y la ruta se actualiza para mostrar Resultados.
+Cuando el usuario presiona Enter desde Buscar, se ejecuta `searchBooks()` y la ruta se actualiza para mostrar Resultados. Por ahora, esta función reconoce las búsquedas «Harry Potter» y «Orgullo y prejuicio» y muestra el estado sin resultados para las demás consultas. No realiza solicitudes a Open Library ni activa los estados de carga o error.
 
 Para la colección de libros se utiliza `BooksState`, definido como un objeto `@Observable`. `ContentView` mantiene una instancia de este estado y proporciona la misma colección a las vistas que la necesitan.
 
