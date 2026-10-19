@@ -255,10 +255,11 @@ Este documento incluye:
 - La revisión de la estructura actual del proyecto.
 - La separación entre interfaz, datos y lógica.
 - La relación entre Model, View y ViewModel.
-- Las responsabilidades que podrían salir de las vistas.
-- Una propuesta de organización para el proyecto.
+- Los cambios realizados durante la práctica 5 para comenzar a aplicar MVVM.
+- Las responsabilidades que ahora tiene `SearchViewModel`.
+- La organización de la colección de libros mediante `BooksState`.
 - La distinción entre estado local y estado compartido.
-- Los primeros cambios que podrían realizarse durante una futura refactorización.
+- Las mejoras que podrán realizarse después, sin adelantar funcionalidades del MVP.
 
 ## Pantallas actuales
 
@@ -415,24 +416,26 @@ Actualmente se encuentran desarrollados:
 - Los estados de búsqueda sin resultados, libro sin portada y lista de libros guardados vacía.
 - La planificación de accesibilidad mediante VoiceOver.
 - La documentación del diseño de navegación y organización del estado.
-- El análisis de separación de responsabilidades y la propuesta de arquitectura basada en MVVM.
+- La primera refactorización hacia MVVM realizada durante la práctica 5, separando la lógica de búsqueda en `SearchViewModel` y la operación de guardar o eliminar libros en `BooksState`.
 - Las capturas de las pantallas implementadas y los estados previstos, con algunas imágenes pendientes de actualizar al flujo actual.
 
 La navegación y el estado compartido definidos durante el diseño ya se encuentran implementados en el prototipo actual.
 
-La propuesta basada en MVVM se mantiene únicamente como análisis de arquitectura. Su implementación se realizará posteriormente conforme avance el proyecto.
+La organización basada en MVVM comenzó a implementarse durante la práctica 5. `SearchViewModel`, definido con `@Observable`, mantiene el texto, el estado y los índices de los resultados de búsqueda. `ContentView` conserva la navegación y utiliza `@Bindable` para conectar el campo de Buscar con el texto del ViewModel.
+
+Por su parte, `BooksState` continúa manteniendo la colección compartida y ahora incluye `toggleSaved(at:)`, que cambia el estado de guardado del libro seleccionado. `ContentView` solicita esa operación, sin modificar directamente `isSaved`. Esta reorganización es incremental: todavía no se ha implementado una arquitectura MVVM completa ni se ha creado un `BooksViewModel` independiente.
 
 La integración con Open Library, la persistencia local y las demás funcionalidades pendientes del MVP se desarrollarán progresivamente durante el proyecto.
 
 ## Pruebas del prototipo
 
-Se utilizaron GitHub Actions y Maestro para comprobar el funcionamiento de la versión actual en un simulador de iPhone. Las pruebas completadas fueron:
+Se utilizaron GitHub Actions y Maestro para comprobar el funcionamiento del prototipo en un simulador de iPhone. Después de las dos refactorizaciones de la práctica 5 se volvieron a ejecutar las pruebas sobre la rama `practica-5-mvvm`. Las pruebas completadas fueron:
 
 - Guardar un libro, consultarlo en Mis libros y eliminarlo.
 - Buscar «Harry Potter» y después «Orgullo y prejuicio», comprobando que cambian los resultados.
 - Recorrer las pantallas principales, abrir detalles, comprobar la vista sin portada y realizar una búsqueda sin resultados. Este recorrido también se grabó en video.
 
-Estas pruebas comprueban la navegación y el estado compartido del prototipo con datos locales. No comprueban todavía las consultas a Open Library, la persistencia entre ejecuciones ni los estados de carga y error.
+Estas pruebas permiten comprobar que los recorridos incluidos siguen funcionando después de reorganizar el código. Se realizan con datos locales y no comprueban todavía las consultas a Open Library, la persistencia entre ejecuciones ni los estados de carga y error.
 
 Los archivos utilizados para las pruebas están en `.maestro` y el workflow correspondiente se encuentra en `.github/workflows/ios-ui-test.yml`.
 
