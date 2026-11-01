@@ -176,7 +176,9 @@ struct SearchFieldView: View {
                 .tint(Color("Accent"))
                 .submitLabel(.search)
                 .accessibilityLabel("Buscar libros")
-                .onSubmit(perform: onSearch)
+                .onSubmit {
+                    onSearch()
+                }
         }
         .padding(.horizontal, 16)
         .frame(minHeight: 52)
