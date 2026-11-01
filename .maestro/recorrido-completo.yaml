@@ -10,12 +10,12 @@ appId: com.openbooks.app
 # Abrir, guardar y eliminar un libro
 - tapOn: "1984"
 - assertVisible: "Detalle del libro"
-- tapOn: "Guardar libro"
-- assertVisible: "Mis libros"
+- tapOn: "Agregar a favoritos"
+- assertVisible: "Mis favoritos"
 - tapOn: "1984"
-- assertVisible: "Eliminar de Mis libros"
-- tapOn: "Eliminar de Mis libros"
-- assertVisible: "Todavía no tienes libros guardados"
+- assertVisible: "Quitar de favoritos"
+- tapOn: "Quitar de favoritos"
+- assertVisible: "Todavía no tienes favoritos"
 
 # Regresar a Inicio y buscar Harry Potter
 - tapOn: "Inicio"

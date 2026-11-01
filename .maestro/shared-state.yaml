@@ -9,11 +9,11 @@ appId: com.openbooks.app
 
 - assertVisible: "Detalle del libro"
 
-- assertVisible: "Guardar libro"
+- assertVisible: "Agregar a favoritos"
 
-- tapOn: "Guardar libro"
+- tapOn: "Agregar a favoritos"
 
-- assertVisible: "Mis libros"
+- assertVisible: "Mis favoritos"
 
 - assertVisible: "1984"
 
@@ -23,12 +23,12 @@ appId: com.openbooks.app
 
 - assertVisible: "Detalle del libro"
 
-- assertVisible: "Eliminar de Mis libros"
+- assertVisible: "Quitar de favoritos"
 
-- tapOn: "Eliminar de Mis libros"
+- tapOn: "Quitar de favoritos"
 
-- assertVisible: "Mis libros"
+- assertVisible: "Mis favoritos"
 
-- assertVisible: "Todavía no tienes libros guardados"
+- assertVisible: "Todavía no tienes favoritos"
 
 - takeScreenshot: "mis-libros-vacio"

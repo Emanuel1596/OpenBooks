@@ -15,6 +15,8 @@
 		D16D5863C9CFDED9C641AFE1 /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F8842AC2160C56AD5E3FE6 /* Book.swift */; };
 		ED02DC1AA9ABC7A1E6CE9347 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F55F04A70EDDC74EB0C28D /* ContentView.swift */; };
 		F7DC327706B2DEAB1005C560 /* BookDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2F58D2D64D5530CBC15834 /* BookDetailView.swift */; };
+		2CC9F47EC05A430DB1C808AA /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4162582EFACD4411B74333E4 /* SearchViewModel.swift */; };
+		968DCB991EE34ECDAF55CC12 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2EC06E7ADD4840E4857405D2 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +29,8 @@
 		A86C70B9F2C383FCB7FB1EFC /* MyBooksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBooksView.swift; sourceTree = "<group>"; };
 		C3F55F04A70EDDC74EB0C28D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		DED88229DF037BF669500C58 /* OpenBooksApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBooksApp.swift; sourceTree = "<group>"; };
+		4162582EFACD4411B74333E4 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		2EC06E7ADD4840E4857405D2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -49,9 +53,19 @@
 				A86C70B9F2C383FCB7FB1EFC /* MyBooksView.swift */,
 				DED88229DF037BF669500C58 /* OpenBooksApp.swift */,
 				1DFFBBADE798DBC3DCDF2CDA /* SearchResultsView.swift */,
+				2105600932F8415DA0B391CF /* ViewModels */,
+				2EC06E7ADD4840E4857405D2 /* Assets.xcassets */,
 			);
 			path = OpenBooks;
 			sourceTree = "<group>";
+		};
+		2105600932F8415DA0B391CF /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				4162582EFACD4411B74333E4 /* SearchViewModel.swift */,
+			);
+			path = ViewModels;
+		sourceTree = "<group>";
 		};
 		A80989A7527ECD98F99711BD = {
 			isa = PBXGroup;
@@ -69,6 +83,7 @@
 			buildConfigurationList = 9B424E32291D31832A556EBA /* Build configuration list for PBXNativeTarget "OpenBooks" */;
 			buildPhases = (
 				A9390473F0C2692897DE3817 /* Sources */,
+				FBD4DE49FAC648D69CB5F56C /* Resources */,
 			);
 			buildRules = (
 			);
@@ -111,6 +126,17 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		FBD4DE49FAC648D69CB5F56C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				968DCB991EE34ECDAF55CC12 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A9390473F0C2692897DE3817 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -124,6 +150,7 @@
 				80B77C2187440571B116FCC5 /* MyBooksView.swift in Sources */,
 				B8664D3ACE2D806AB35A8592 /* OpenBooksApp.swift in Sources */,
 				7C66C4C58F197BC5957685A0 /* SearchResultsView.swift in Sources */,
+				2CC9F47EC05A430DB1C808AA /* SearchViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

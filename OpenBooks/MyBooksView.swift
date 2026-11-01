@@ -9,7 +9,8 @@ struct MyBooksView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("Mis libros")
+                Text("Mis favoritos")
+                    .foregroundStyle(Color("Ink"))
                     .font(.largeTitle)
                     .bold()
 
@@ -32,7 +33,7 @@ struct MyBooksView: View {
                                 if hasSavedBookAfter(index: index) {
                                     RoundedRectangle(cornerRadius: 0)
                                         .frame(height: 1)
-                                        .foregroundStyle(.gray)
+                                        .foregroundStyle(Color("Muted"))
                                 }
                             }
                         }
@@ -58,6 +59,7 @@ struct MyBooksView: View {
                 onMyBooks: {}
             )
         }
+        .background(Color("Canvas").ignoresSafeArea())
     }
 
     func hasSavedBooks() -> Bool {
@@ -91,7 +93,7 @@ struct EmptyMyBooksView: View {
 
                 Image(systemName: "book")
                     .font(.system(size: 60))
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(Color("Muted"))
 
                 Spacer()
             }
@@ -99,7 +101,8 @@ struct EmptyMyBooksView: View {
             HStack {
                 Spacer()
 
-                Text("Todavía no tienes libros guardados")
+                Text("Todavía no tienes favoritos")
+                    .foregroundStyle(Color("Ink"))
                     .font(.system(size: 20))
                     .bold()
 
@@ -109,37 +112,21 @@ struct EmptyMyBooksView: View {
             HStack {
                 Spacer()
 
-                Text("Busca un libro y guárdalo para verlo aquí.")
-                    .foregroundStyle(.gray)
+                Text("Busca un libro y agrégalo a tus favoritos.")
+                    .foregroundStyle(Color("Muted"))
 
                 Spacer()
             }
 
-            Button {
-                onSearch()
-            } label: {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 14)
-                        .foregroundStyle(.black)
-
-                    HStack {
-                        Spacer()
-
-                        Text("Buscar libros")
-                            .font(.system(size: 18))
-                            .foregroundStyle(.black)
-
-                        Spacer()
-                    }
-                    .padding(.vertical, 14)
-                    .background(.white)
-                    .clipShape(
-                        RoundedRectangle(cornerRadius: 13)
-                    )
-                    .padding(1)
-                }
-                .frame(height: 52)
+            Button(action: onSearch) {
+                Text("Buscar libros")
+                    .font(.headline)
+                    .foregroundStyle(Color("Canvas"))
+                    .frame(maxWidth: .infinity)
+                    .frame(minHeight: 52)
+                    .background(Color("Accent"), in: RoundedRectangle(cornerRadius: 14))
             }
+            .buttonStyle(.plain)
         }
     }
 }

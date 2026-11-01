@@ -16,15 +16,14 @@ struct BookDetailView: View {
 
 
                     Text("Detalle del libro")
+                        .foregroundStyle(Color("Ink"))
                         .font(.largeTitle)
                         .bold()
 
                     HStack {
                         Spacer()
 
-                        LargeBookCoverView(
-                            hasCover: book.hasCover
-                        )
+                        LargeBookCoverView(book: book)
 
                         Spacer()
                     }
@@ -34,17 +33,18 @@ struct BookDetailView: View {
 
                         VStack(spacing: 10) {
                             Text(book.title)
+                                .foregroundStyle(Color("Ink"))
                                 .font(.system(size: 24))
                                 .bold()
 
                             Text(book.author)
                                 .font(.system(size: 20))
-                                .foregroundStyle(.gray)
+                                .foregroundStyle(Color("Muted"))
 
                             if let year = book.year {
                                 Text("Año: \(year)")
                                     .font(.system(size: 20))
-                                    .foregroundStyle(.gray)
+                                    .foregroundStyle(Color("Muted"))
                             }
                         }
 
@@ -58,19 +58,19 @@ struct BookDetailView: View {
                             Spacer()
 
                             if book.isSaved {
-                                Text("Eliminar de Mis libros")
+                                Text("Quitar de favoritos")
                                     .font(.system(size: 18))
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(Color("Canvas"))
                             } else {
-                                Text("Guardar libro")
+                                Text("Agregar a favoritos")
                                     .font(.system(size: 18))
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(Color("Canvas"))
                             }
 
                             Spacer()
                         }
                         .padding(.vertical, 16)
-                        .background(.black)
+                        .background(Color("Accent"))
                         .clipShape(
                             RoundedRectangle(cornerRadius: 14)
                         )
@@ -86,36 +86,16 @@ struct BookDetailView: View {
                 onMyBooks: onMyBooks
             )
         }
+        .background(Color("Canvas").ignoresSafeArea())
     }
 }
 
 struct LargeBookCoverView: View {
-    let hasCover: Bool
+    let book: Book
 
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 3)
-                .foregroundStyle(.gray)
-
-            RoundedRectangle(cornerRadius: 3)
-                .foregroundStyle(.white)
-                .padding(1)
-
-            if hasCover {
-                Image(systemName: "xmark")
-                    .font(.system(size: 60))
-                    .foregroundStyle(.gray)
-            } else {
-                VStack(spacing: 8) {
-                    Image(systemName: "book")
-                        .font(.system(size: 50))
-
-                    Text("Sin portada")
-                        .font(.system(size: 18))
-                }
-                .foregroundStyle(.gray)
-            }
-        }
-        .frame(width: 220, height: 280)
+        BookCoverArtworkView(book: book)
+            .frame(width: 220, height: 280)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
