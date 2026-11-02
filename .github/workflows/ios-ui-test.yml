@@ -96,6 +96,36 @@ jobs:
             "$SIMULATOR_UDID" \
             "build/Build/Products/Debug-iphonesimulator/OpenBooks.app"
 
+      - name: Comprobar aspecto claro y oscuro
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p capturas-aspecto
+
+          xcrun simctl ui "$SIMULATOR_UDID" appearance light
+          xcrun simctl launch "$SIMULATOR_UDID" com.openbooks.app
+          sleep 5
+          xcrun simctl io "$SIMULATOR_UDID" screenshot "capturas-aspecto/01-inicio-claro.png"
+
+          xcrun simctl terminate "$SIMULATOR_UDID" com.openbooks.app
+          xcrun simctl ui "$SIMULATOR_UDID" appearance dark
+          xcrun simctl launch "$SIMULATOR_UDID" com.openbooks.app
+          sleep 5
+          xcrun simctl io "$SIMULATOR_UDID" screenshot "capturas-aspecto/02-inicio-oscuro.png"
+
+          test -s "capturas-aspecto/01-inicio-claro.png"
+          test -s "capturas-aspecto/02-inicio-oscuro.png"
+          xcrun simctl terminate "$SIMULATOR_UDID" com.openbooks.app
+
+      - name: Guardar capturas de ambos aspectos
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: OpenBooks-Claro-Oscuro
+          path: capturas-aspecto/*.png
+          if-no-files-found: warn
+          retention-days: 7
+
       - name: Ejecutar prueba de estado compartido
         run: |
           maestro \
