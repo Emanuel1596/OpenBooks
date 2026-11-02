@@ -287,7 +287,7 @@ struct BottomNavigationView: View {
         Button(action: action) {
             VStack(spacing: 4) {
                 Image(systemName: symbol)
-                    .font(.title3)
+                    .font(title == "Mis favoritos" ? .system(size: 23, weight: .semibold) : .title3)
                     .accessibilityHidden(true)
                 Text(title)
                     .font(.caption.weight(selected ? .semibold : .regular))
