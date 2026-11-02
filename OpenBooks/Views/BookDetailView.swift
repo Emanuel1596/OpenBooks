@@ -89,13 +89,3 @@ struct BookDetailView: View {
         .background(Color("Canvas").ignoresSafeArea())
     }
 }
-
-struct LargeBookCoverView: View {
-    let book: Book
-
-    var body: some View {
-        BookCoverArtworkView(book: book)
-            .frame(width: 220, height: 280)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-    }
-}
