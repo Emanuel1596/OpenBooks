@@ -9,103 +9,94 @@ struct BookDetailView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ScrollViewReader { scrollProxy in
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 24) {
-                        Text("Detalle del libro")
-                            .font(.largeTitle.bold())
+            // Toda la ficha se consulta desplazando la pantalla de forma natural.
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Detalle del libro")
+                        .font(.largeTitle.bold())
+                        .foregroundStyle(Color("Ink"))
+                        .accessibilityAddTraits(.isHeader)
+                        .padding(.bottom, 20)
+
+                    LargeBookCoverView(book: book)
+                        .frame(maxWidth: .infinity)
+                        .padding(.bottom, 20)
+
+                    Text(book.title)
+                        .font(.system(.title2, design: .serif, weight: .bold))
+                        .foregroundStyle(Color("Ink"))
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityAddTraits(.isHeader)
+                        .padding(.bottom, 22)
+
+                    VStack(alignment: .leading, spacing: 15) {
+                        Text("Información")
+                            .font(.headline)
                             .foregroundStyle(Color("Ink"))
                             .accessibilityAddTraits(.isHeader)
+                            .padding(.bottom, 2)
 
-                        // Acceso visible a los datos que quedan debajo de la portada.
-                        Button {
-                            withAnimation {
-                                scrollProxy.scrollTo("informacionLibro", anchor: .top)
-                            }
-                        } label: {
-                            HStack(spacing: 8) {
-                                Text("Ver información y sinopsis")
-                                Image(systemName: "arrow.down")
-                                    .accessibilityHidden(true)
-                            }
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(Color("Accent"))
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 12)
-                            .background(Color("Card"), in: Capsule())
+                        DetailInformationRow(label: "Autor", value: book.author)
+
+                        if let year = book.year {
+                            DetailInformationRow(label: "Primera publicación", value: year)
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityHint("Desplaza el detalle hasta los datos y la descripción del libro")
 
-                        LargeBookCoverView(book: book)
-                            .frame(maxWidth: .infinity)
+                        if let genre = book.genre {
+                            DetailInformationRow(label: "Género", value: genre)
+                        }
 
-                        Text(book.title)
-                            .font(.system(.title2, design: .serif, weight: .bold))
+                        if let originalLanguage = book.originalLanguage {
+                            DetailInformationRow(label: "Idioma original", value: originalLanguage)
+                        }
+
+                        if let originalTitle = book.originalTitle {
+                            // Los títulos extensos tienen toda la anchura para no quedar apretados.
+                            DetailInformationRow(label: "Título original", value: originalTitle, stacked: true)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(20)
+                    .background(Color("Card"), in: RoundedRectangle(cornerRadius: 16))
+                    .padding(.bottom, 28)
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Sobre este libro")
+                            .font(.headline)
                             .foregroundStyle(Color("Ink"))
                             .accessibilityAddTraits(.isHeader)
 
+                        Text(book.synopsis ?? "Todavía no hay una descripción disponible para este libro.")
+                            .font(.body)
+                            .foregroundStyle(Color("Muted"))
+                            .lineSpacing(3)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 26)
+
+                    if !book.themes.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Información")
+                            Text("Temas principales")
                                 .font(.headline)
                                 .foregroundStyle(Color("Ink"))
                                 .accessibilityAddTraits(.isHeader)
 
-                            DetailInformationRow(label: "Autor", value: book.author)
-
-                            if let year = book.year {
-                                DetailInformationRow(label: "Primera publicación", value: year)
-                            }
-
-                            if let genre = book.genre {
-                                DetailInformationRow(label: "Género", value: genre)
-                            }
-
-                            if let originalLanguage = book.originalLanguage {
-                                DetailInformationRow(label: "Idioma original", value: originalLanguage)
-                            }
-
-                            if let originalTitle = book.originalTitle {
-                                DetailInformationRow(label: "Título original", value: originalTitle)
-                            }
-                        }
-                        .font(.subheadline)
-                        .padding(16)
-                        .background(Color("Card"), in: RoundedRectangle(cornerRadius: 14))
-                        .id("informacionLibro")
-
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("Sobre este libro")
-                                .font(.headline)
-                                .foregroundStyle(Color("Ink"))
-                                .accessibilityAddTraits(.isHeader)
-
-                            Text(book.synopsis ?? "Todavía no hay una descripción disponible para este libro.")
-                                .font(.body)
+                            Text(book.themes.joined(separator: " · "))
+                                .font(.subheadline)
                                 .foregroundStyle(Color("Muted"))
                                 .fixedSize(horizontal: false, vertical: true)
                         }
-
-                        if !book.themes.isEmpty {
-                            VStack(alignment: .leading, spacing: 10) {
-                                Text("Temas principales")
-                                    .font(.headline)
-                                    .foregroundStyle(Color("Ink"))
-                                    .accessibilityAddTraits(.isHeader)
-
-                                Text(book.themes.joined(separator: " · "))
-                                    .font(.subheadline)
-                                    .foregroundStyle(Color("Muted"))
-                                    .fixedSize(horizontal: false, vertical: true)
-                            }
-                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 24)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 20)
+                .padding(.top, 24)
+                .padding(.bottom, 36)
             }
 
-            // La acción principal permanece visible aunque el detalle sea largo.
+            // El botón de favoritos permanece accesible sin ocultar el final de la ficha.
             Button(action: onSaveOrDelete) {
                 Text(book.isSaved ? "Quitar de favoritos" : "Agregar a favoritos")
                     .font(.headline)
@@ -128,19 +119,36 @@ struct BookDetailView: View {
     }
 }
 
-// Componente de presentación reutilizable para no duplicar filas de información.
+// Reutiliza el mismo estilo para los datos de la ficha.
 private struct DetailInformationRow: View {
     let label: String
     let value: String
+    var stacked: Bool = false
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline) {
-            Text(label)
-                .foregroundStyle(Color("Muted"))
-            Spacer(minLength: 12)
-            Text(value)
-                .foregroundStyle(Color("Ink"))
-                .multilineTextAlignment(.trailing)
+        Group {
+            if stacked {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(label)
+                        .foregroundStyle(Color("Muted"))
+                    Text(value)
+                        .foregroundStyle(Color("Ink"))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            } else {
+                HStack(alignment: .firstTextBaseline, spacing: 12) {
+                    Text(label)
+                        .foregroundStyle(Color("Muted"))
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer(minLength: 8)
+                    Text(value)
+                        .foregroundStyle(Color("Ink"))
+                        .multilineTextAlignment(.trailing)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
         }
+        .font(.subheadline)
     }
 }

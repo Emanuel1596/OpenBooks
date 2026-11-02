@@ -11,9 +11,7 @@ appId: com.openbooks.app
 - tapOn: "1984"
 - assertVisible: "Detalle del libro"
 
-# Demostrar en el video cómo se consulta la ficha, sin adivinar que hay que desplazar.
-- assertVisible: "Ver información y sinopsis"
-- tapOn: "Ver información y sinopsis"
+# Desplazar la ficha de forma natural y demostrarla en el video.
 - scrollUntilVisible:
     element: "Novela distópica"
     direction: DOWN
@@ -44,11 +42,14 @@ appId: com.openbooks.app
 - assertVisible: "Harry Potter y la piedra filosofal"
 - tapOn: "Harry Potter y la piedra filosofal"
 - assertVisible: "Detalle del libro"
-- tapOn: "Ver información y sinopsis"
 - scrollUntilVisible:
     element: "Fantasía juvenil"
     direction: DOWN
 - assertVisible: "Fantasía juvenil"
+- scrollUntilVisible:
+    element: "Harry Potter and the Philosopher's Stone"
+    direction: DOWN
+- assertVisible: "Harry Potter and the Philosopher's Stone"
 - takeScreenshot: "detalle-harry-potter-informacion"
 
 # Cambiar la búsqueda y abrir un libro sin portada
@@ -62,11 +63,14 @@ appId: com.openbooks.app
 - assertVisible: "Orgullo y prejuicio"
 - tapOn: "Orgullo y prejuicio"
 - assertVisible: "Sin portada"
-- tapOn: "Ver información y sinopsis"
 - scrollUntilVisible:
     element: "Novela romántica"
     direction: DOWN
 - assertVisible: "Novela romántica"
+- scrollUntilVisible:
+    element: "Pride and Prejudice"
+    direction: DOWN
+- assertVisible: "Pride and Prejudice"
 - takeScreenshot: "detalle-orgullo-informacion"
 
 # Comprobar la pantalla sin resultados
