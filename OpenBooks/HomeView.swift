@@ -286,9 +286,24 @@ struct BottomNavigationView: View {
     private func tabButton(title: String, symbol: String, selected: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(spacing: 4) {
-                Image(systemName: symbol)
-                    .font(title == "Mis favoritos" ? .system(size: 23, weight: .semibold) : .title3)
-                    .accessibilityHidden(true)
+                if title == "Mis favoritos" {
+                    // Silueta ancha del marcador del diseño aprobado.
+                    // El trazo no se engrosa al cambiar de pantalla.
+                    WideBookmarkShape()
+                        .fill(selected ? Color("Accent") : Color.clear)
+                        .overlay {
+                            WideBookmarkShape()
+                                .stroke(selected ? Color("Accent") : Color("Muted"),
+                                        style: StrokeStyle(lineWidth: 1.9, lineJoin: .round))
+                        }
+                        .frame(width: 27, height: 32)
+                        .accessibilityHidden(true)
+                } else {
+                    Image(systemName: symbol)
+                        .font(.title3)
+                        .frame(height: 32)
+                        .accessibilityHidden(true)
+                }
                 Text(title)
                     .font(.caption.weight(selected ? .semibold : .regular))
                     .lineLimit(1)
@@ -302,5 +317,28 @@ struct BottomNavigationView: View {
         .buttonStyle(.plain)
         .accessibilityLabel(title)
         .accessibilityAddTraits(selected ? [.isSelected] : [])
+    }
+}
+
+// Marcador de proporciones más anchas, basado en la referencia visual.
+// Es una forma vectorial nativa de SwiftUI: no se deforma según el dispositivo.
+private struct WideBookmarkShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        let x = rect.width / 28
+        let y = rect.height / 32
+        var path = Path()
+
+        path.move(to: CGPoint(x: 5 * x, y: 2 * y))
+        path.addLine(to: CGPoint(x: 23 * x, y: 2 * y))
+        path.addQuadCurve(to: CGPoint(x: 26 * x, y: 5 * y),
+                          control: CGPoint(x: 26 * x, y: 2 * y))
+        path.addLine(to: CGPoint(x: 26 * x, y: 30 * y))
+        path.addLine(to: CGPoint(x: 14 * x, y: 22 * y))
+        path.addLine(to: CGPoint(x: 2 * x, y: 30 * y))
+        path.addLine(to: CGPoint(x: 2 * x, y: 5 * y))
+        path.addQuadCurve(to: CGPoint(x: 5 * x, y: 2 * y),
+                          control: CGPoint(x: 2 * x, y: 2 * y))
+        path.closeSubpath()
+        return path
     }
 }
