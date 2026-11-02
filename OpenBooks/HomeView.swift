@@ -296,12 +296,13 @@ struct BottomNavigationView: View {
                                 .stroke(selected ? Color("Accent") : Color("Muted"),
                                         style: StrokeStyle(lineWidth: 1.9, lineJoin: .round))
                         }
-                        .frame(width: 27, height: 32)
+                        .frame(width: 25, height: 27)
+                        .frame(width: 28, height: 28)
                         .accessibilityHidden(true)
                 } else {
                     Image(systemName: symbol)
-                        .font(.title3)
-                        .frame(height: 32)
+                        .font(.system(size: 25, weight: .regular))
+                        .frame(width: 28, height: 28)
                         .accessibilityHidden(true)
                 }
                 Text(title)
