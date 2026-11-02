@@ -16,16 +16,18 @@ let mockBooks: [Book] = [
     Book(
         title: "1984",
         author: "George Orwell",
-        year: nil,
+        year: "1949",
         hasCover: true,
-        isSaved: false
+        isSaved: false,
+        synopsis: "En una sociedad sometida a vigilancia constante, Winston Smith comienza a cuestionar el poder que controla cada aspecto de la vida."
     ),
     Book(
         title: "Harry Potter y la piedra filosofal",
         author: "J. K. Rowling",
         year: "1997",
         hasCover: true,
-        isSaved: false
+        isSaved: false,
+        synopsis: "Harry descubre que es un mago e ingresa a Hogwarts, donde conoce nuevos amigos y se enfrenta a un misterio relacionado con la piedra filosofal."
     ),
     Book(
         title: "Harry Potter y la cámara secreta",
@@ -51,9 +53,10 @@ let mockBooks: [Book] = [
     Book(
         title: "Orgullo y prejuicio",
         author: "Jane Austen",
-        year: nil,
+        year: "1813",
         hasCover: false,
-        isSaved: false
+        isSaved: false,
+        synopsis: "Elizabeth Bennet y Fitzwilliam Darcy se enfrentan a sus prejuicios y a las expectativas sociales mientras cambia su relación."
     ),
     Book(
         title: "Emma",

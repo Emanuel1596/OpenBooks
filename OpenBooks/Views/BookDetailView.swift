@@ -3,8 +3,6 @@ import SwiftUI
 struct BookDetailView: View {
     let book: Book
     let homeActive: Bool
-
-
     let onSaveOrDelete: () -> Void
     let onHome: () -> Void
     let onMyBooks: () -> Void
@@ -13,68 +11,69 @@ struct BookDetailView: View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-
-
                     Text("Detalle del libro")
+                        .font(.largeTitle.bold())
                         .foregroundStyle(Color("Ink"))
-                        .font(.largeTitle)
-                        .bold()
+                        .accessibilityAddTraits(.isHeader)
 
-                    HStack {
-                        Spacer()
+                    LargeBookCoverView(book: book)
+                        .frame(maxWidth: .infinity)
 
-                        LargeBookCoverView(book: book)
+                    Text(book.title)
+                        .font(.system(.title2, design: .serif, weight: .bold))
+                        .foregroundStyle(Color("Ink"))
+                        .accessibilityAddTraits(.isHeader)
 
-                        Spacer()
-                    }
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Información")
+                            .font(.headline)
+                            .foregroundStyle(Color("Ink"))
+                            .accessibilityAddTraits(.isHeader)
 
-                    HStack {
-                        Spacer()
-
-                        VStack(spacing: 10) {
-                            Text(book.title)
-                                .foregroundStyle(Color("Ink"))
-                                .font(.system(size: 24))
-                                .bold()
-
-                            Text(book.author)
-                                .font(.system(size: 20))
+                        HStack(alignment: .firstTextBaseline) {
+                            Text("Autor")
                                 .foregroundStyle(Color("Muted"))
+                            Spacer(minLength: 12)
+                            Text(book.author)
+                                .foregroundStyle(Color("Ink"))
+                                .multilineTextAlignment(.trailing)
+                        }
 
-                            if let year = book.year {
-                                Text("Año: \(year)")
-                                    .font(.system(size: 20))
+                        if let year = book.year {
+                            HStack(alignment: .firstTextBaseline) {
+                                Text("Año de publicación")
                                     .foregroundStyle(Color("Muted"))
+                                Spacer(minLength: 12)
+                                Text(year)
+                                    .foregroundStyle(Color("Ink"))
                             }
                         }
+                    }
+                    .font(.subheadline)
+                    .padding(16)
+                    .background(Color("Card"), in: RoundedRectangle(cornerRadius: 14))
 
-                        Spacer()
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Sobre este libro")
+                            .font(.headline)
+                            .foregroundStyle(Color("Ink"))
+                            .accessibilityAddTraits(.isHeader)
+
+                        Text(book.synopsis ?? "Todavía no hay una descripción disponible para este libro.")
+                            .font(.body)
+                            .foregroundStyle(Color("Muted"))
+                            .fixedSize(horizontal: false, vertical: true)
                     }
 
-                    Button {
-                        onSaveOrDelete()
-                    } label: {
-                        HStack {
-                            Spacer()
-
-                            if book.isSaved {
-                                Text("Quitar de favoritos")
-                                    .font(.system(size: 18))
-                                    .foregroundStyle(Color("Canvas"))
-                            } else {
-                                Text("Agregar a favoritos")
-                                    .font(.system(size: 18))
-                                    .foregroundStyle(Color("Canvas"))
-                            }
-
-                            Spacer()
-                        }
-                        .padding(.vertical, 16)
-                        .background(Color("Accent"))
-                        .clipShape(
-                            RoundedRectangle(cornerRadius: 14)
-                        )
+                    Button(action: onSaveOrDelete) {
+                        Text(book.isSaved ? "Quitar de favoritos" : "Agregar a favoritos")
+                            .font(.headline)
+                            .foregroundStyle(Color("Canvas"))
+                            .frame(maxWidth: .infinity)
+                            .frame(minHeight: 52)
+                            .background(Color("Accent"), in: RoundedRectangle(cornerRadius: 14))
                     }
+                    .buttonStyle(.plain)
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 24)

@@ -33,12 +33,12 @@ Es la vista raíz de la aplicación.
 Actualmente se encarga de:
 
 - Mantener el `NavigationStack` y su ruta de navegación.
-- Controlar el cambio entre Inicio y Mis libros.
+- Controlar el cambio entre Inicio y Mis favoritos.
 - Mantener una instancia de `SearchViewModel` mediante `@State`.
 - Mantener una instancia de `BooksState` mediante `@State`.
-- Conectar Inicio, Buscar, Resultados, Detalle y Mis libros.
+- Conectar Inicio, Buscar, Resultados, Detalle y Mis favoritos.
 - Solicitar la búsqueda al ViewModel y navegar a Resultados.
-- Solicitar a `BooksState` que guarde o elimine un libro y navegar a Mis libros.
+- Solicitar a `BooksState` que guarde o elimine un libro y navegar a Mis favoritos.
 
 La lógica que determina los resultados de búsqueda se encuentra en `SearchViewModel` y la modificación de `isSaved` se realiza mediante `BooksState`, evitando concentrar estas operaciones en la vista raíz.
 
@@ -51,7 +51,7 @@ Muestra:
 - El nombre de la aplicación.
 - La lupa que permite abrir Buscar.
 - La lista inicial de libros.
-- El acceso a Mis libros.
+- El acceso a Mis favoritos.
 
 También utiliza `NavigationLink` para abrir el detalle de un libro.
 
@@ -86,7 +86,7 @@ Por ahora reconoce «Harry Potter» y «Orgullo y prejuicio» usando los libros 
 
 ### `BookDetailView.swift`
 
-Representa el detalle del libro seleccionado y muestra la opción de guardarlo o eliminarlo de Mis libros.
+Representa el detalle del libro seleccionado y muestra la opción de guardarlo o eliminarlo de Mis favoritos.
 
 La vista solicita el cambio mediante `onSaveOrDelete`. `ContentView` recibe esa acción y llama a `booksState.toggleSaved(at:)`. De esta forma, el detalle no modifica por su cuenta la colección compartida.
 
@@ -197,7 +197,7 @@ Los índices siguen haciendo referencia a los libros de `MockBooks.swift` dispon
 
 `BooksState` ya mantenía la colección compartida mediante `@Observable`. Ahora también tiene el método `toggleSaved(at:)`, que cambia `isSaved` del libro seleccionado.
 
-Antes `ContentView` modificaba directamente ese valor. Ahora solamente solicita el cambio y se encarga de navegar hacia Mis libros.
+Antes `ContentView` modificaba directamente ese valor. Ahora solamente solicita el cambio y se encarga de navegar hacia Mis favoritos.
 
 No se creó un archivo `BooksViewModel.swift`. El proyecto conserva `BooksState` porque ya cumple la función de mantener y modificar el estado compartido que necesitamos en esta etapa.
 
@@ -275,3 +275,8 @@ La organización basada en MVVM se está aplicando de manera progresiva en OpenB
 Con estos cambios el código tiene responsabilidades más claras sin modificar el funcionamiento de las pantallas que ya estaban implementadas.
 
 La aplicación todavía no utiliza una arquitectura MVVM completa. La conexión con Open Library, la persistencia y otras funciones pendientes se incorporarán en las etapas correspondientes del proyecto.
+
+
+## Organización de archivos
+
+Para mantener separadas las responsabilidades, `Book` está definido en `Models/Book.swift`, `BooksState` y `SearchViewModel` en `ViewModels`, las pantallas en `Views` y los controles reutilizables en `Views/Components`. `MockBooks.swift` permanece en `Mocks` como origen temporal de datos para el prototipo, sin reemplazar la futura integración de Open Library.

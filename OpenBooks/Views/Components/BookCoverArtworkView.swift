@@ -44,7 +44,7 @@ struct SmallBookCoverView: View {
 
     var body: some View {
         BookCoverArtworkView(book: book)
-            .frame(width: 84, height: 108)
+            .frame(width: 96, height: 140)
             .clipShape(RoundedRectangle(cornerRadius: 6))
     }
 }
@@ -55,7 +55,7 @@ struct LargeBookCoverView: View {
 
     var body: some View {
         BookCoverArtworkView(book: book)
-            .frame(width: 220, height: 280)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .frame(width: 210, height: 300)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }

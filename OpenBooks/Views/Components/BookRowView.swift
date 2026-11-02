@@ -22,7 +22,7 @@ struct BookRowView: View {
                     .foregroundStyle(Color("Muted"))
                     .accessibilityHidden(true)
             }
-            .padding(.vertical, 10)
+            .padding(.vertical, 17)
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
