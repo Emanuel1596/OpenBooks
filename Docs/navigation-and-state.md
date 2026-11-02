@@ -423,4 +423,6 @@ De esta forma existe una sola fuente de verdad para el estado de guardado y el c
 
 Las pantallas se encuentran en `OpenBooks/Views`, y los controles visuales compartidos en `OpenBooks/Views/Components`. El modelo `Book` se mantiene en `OpenBooks/Models/Book.swift`. El estado observable de favoritos y la lógica de búsqueda están en `OpenBooks/ViewModels`. Los libros locales de demostración se encuentran en `OpenBooks/Mocks/MockBooks.swift`.
 
-El detalle muestra la portada, el título, el autor, el año cuando está disponible y una descripción breve si existe. Las descripciones actuales se usan solamente como datos de prueba; la búsqueda continúa sin conexión a Open Library.
+El detalle muestra la portada, el título, el autor y la primera fecha de publicación disponible. Cuando el modelo contiene datos, también presenta el género, el idioma y el título originales, una sinopsis y los temas principales. El botón de favoritos permanece visible fuera del área desplazable.
+
+Estos campos adicionales provienen de los diez libros locales de demostración; no se consultan a Open Library ni representan todavía una integración con su API. Los temas y géneros son categorías descriptivas de prueba, no información extraída automáticamente.

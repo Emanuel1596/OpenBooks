@@ -279,4 +279,4 @@ La aplicación todavía no utiliza una arquitectura MVVM completa. La conexión 
 
 ## Organización de archivos
 
-Para mantener separadas las responsabilidades, `Book` está definido en `Models/Book.swift`, `BooksState` y `SearchViewModel` en `ViewModels`, las pantallas en `Views` y los controles reutilizables en `Views/Components`. `MockBooks.swift` permanece en `Mocks` como origen temporal de datos para el prototipo, sin reemplazar la futura integración de Open Library.
+Para mantener separadas las responsabilidades, `Book` está definido en `Models/Book.swift`, `BooksState` y `SearchViewModel` en `ViewModels`, las pantallas en `Views` y los controles reutilizables en `Views/Components`. `MockBooks.swift` permanece en `Mocks` como origen temporal de datos para el prototipo, sin reemplazar la futura integración de Open Library. El modelo `Book` contiene metadatos opcionales, sinopsis y temas que `BookDetailView` presenta sin decidir cómo se obtienen. La información adicional es local y demostrativa, no procede de la API.

@@ -30,23 +30,22 @@ struct BookDetailView: View {
                             .foregroundStyle(Color("Ink"))
                             .accessibilityAddTraits(.isHeader)
 
-                        HStack(alignment: .firstTextBaseline) {
-                            Text("Autor")
-                                .foregroundStyle(Color("Muted"))
-                            Spacer(minLength: 12)
-                            Text(book.author)
-                                .foregroundStyle(Color("Ink"))
-                                .multilineTextAlignment(.trailing)
-                        }
+                        DetailInformationRow(label: "Autor", value: book.author)
 
                         if let year = book.year {
-                            HStack(alignment: .firstTextBaseline) {
-                                Text("Año de publicación")
-                                    .foregroundStyle(Color("Muted"))
-                                Spacer(minLength: 12)
-                                Text(year)
-                                    .foregroundStyle(Color("Ink"))
-                            }
+                            DetailInformationRow(label: "Primera publicación", value: year)
+                        }
+
+                        if let genre = book.genre {
+                            DetailInformationRow(label: "Género", value: genre)
+                        }
+
+                        if let originalLanguage = book.originalLanguage {
+                            DetailInformationRow(label: "Idioma original", value: originalLanguage)
+                        }
+
+                        if let originalTitle = book.originalTitle {
+                            DetailInformationRow(label: "Título original", value: originalTitle)
                         }
                     }
                     .font(.subheadline)
@@ -65,6 +64,19 @@ struct BookDetailView: View {
                             .fixedSize(horizontal: false, vertical: true)
                     }
 
+                    if !book.themes.isEmpty {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Temas principales")
+                                .font(.headline)
+                                .foregroundStyle(Color("Ink"))
+                                .accessibilityAddTraits(.isHeader)
+
+                            Text(book.themes.joined(separator: " · "))
+                                .font(.subheadline)
+                                .foregroundStyle(Color("Muted"))
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 24)
@@ -90,5 +102,22 @@ struct BookDetailView: View {
             )
         }
         .background(Color("Canvas").ignoresSafeArea())
+    }
+}
+
+// Componente de presentación reutilizable para no duplicar filas de información.
+private struct DetailInformationRow: View {
+    let label: String
+    let value: String
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text(label)
+                .foregroundStyle(Color("Muted"))
+            Spacer(minLength: 12)
+            Text(value)
+                .foregroundStyle(Color("Ink"))
+                .multilineTextAlignment(.trailing)
+        }
     }
 }
