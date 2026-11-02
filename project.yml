@@ -18,4 +18,19 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
 
-    scheme: {}
+    scheme:
+      testTargets:
+        - OpenBooksTests
+
+  OpenBooksTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: OpenBooksTests
+    dependencies:
+      - target: OpenBooks
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.openbooks.app.tests
+        GENERATE_INFOPLIST_FILE: YES

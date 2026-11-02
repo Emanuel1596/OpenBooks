@@ -69,6 +69,27 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             build
 
+      - name: Ejecutar pruebas unitarias XCTest
+        run: |
+          xcodebuild \
+            -project OpenBooks.xcodeproj \
+            -scheme OpenBooks \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
+            -derivedDataPath build \
+            -resultBundlePath unit-tests.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            test
+
+      - name: Guardar resultado de XCTest
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: OpenBooks-XCTest
+          path: unit-tests.xcresult
+          if-no-files-found: warn
+          retention-days: 7
+
       - name: Instalar OpenBooks
         run: |
           xcrun simctl install \
@@ -97,6 +118,14 @@ jobs:
             --device="$SIMULATOR_UDID" \
             test \
             .maestro/recorrido-completo.yaml \
+            --test-output-dir=maestro-output
+
+      - name: Verificar persistencia tras reiniciar la app
+        run: |
+          maestro \
+            --device="$SIMULATOR_UDID" \
+            test \
+            .maestro/persistence-flow.yaml \
             --test-output-dir=maestro-output
 
       - name: Guardar evidencias

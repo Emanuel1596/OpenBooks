@@ -1,11 +1,29 @@
 import Observation
 
+// BooksState coordina las vistas, pero SwiftData es la fuente persistente.
+@MainActor
 @Observable
 final class BooksState {
     var books: [Book] = mockBooks
 
-    func toggleSaved(at index: Int) {
+    func loadFavorites(using repository: SavedBooksRepository) throws {
+        let savedIDs = Set(try repository.savedBooks().map(\.bookID))
+        for index in books.indices {
+            books[index].isSaved = savedIDs.contains(books[index].id)
+        }
+    }
+
+    func toggleSaved(at index: Int, using repository: SavedBooksRepository) throws {
         guard books.indices.contains(index) else { return }
-        books[index].isSaved.toggle()
+
+        let book = books[index]
+        if book.isSaved {
+            try repository.delete(book)
+        } else {
+            try repository.save(book)
+        }
+
+        // Se lee el valor guardado; no se mantiene otra copia independiente.
+        try loadFavorites(using: repository)
     }
 }

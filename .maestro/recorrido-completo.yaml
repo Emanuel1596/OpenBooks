@@ -47,9 +47,9 @@ appId: com.openbooks.app
     direction: DOWN
 - assertVisible: "Fantasía juvenil"
 - scrollUntilVisible:
-    element: "Harry Potter and the Philosopher's Stone"
+    element: "Temas principales"
     direction: DOWN
-- assertVisible: "Harry Potter and the Philosopher's Stone"
+- assertVisible: "Magia · Amistad · Identidad"
 - takeScreenshot: "detalle-harry-potter-informacion"
 
 # Cambiar la búsqueda y abrir un libro sin portada
@@ -68,9 +68,9 @@ appId: com.openbooks.app
     direction: DOWN
 - assertVisible: "Novela romántica"
 - scrollUntilVisible:
-    element: "Pride and Prejudice"
+    element: "Temas principales"
     direction: DOWN
-- assertVisible: "Pride and Prejudice"
+- assertVisible: "Prejuicios · Clases sociales · Relaciones"
 - takeScreenshot: "detalle-orgullo-informacion"
 
 # Comprobar la pantalla sin resultados

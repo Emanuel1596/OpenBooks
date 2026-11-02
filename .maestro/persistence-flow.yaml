@@ -1,0 +1,24 @@
+appId: com.openbooks.app
+---
+# Demuestra persistencia real: cierre y reapertura SIN borrar datos.
+- launchApp:
+    clearState: true
+- assertVisible: "OpenBooks"
+- tapOn: "1984"
+- assertVisible: "Agregar a favoritos"
+- tapOn: "Agregar a favoritos"
+- assertVisible: "Mis favoritos"
+- assertVisible: "1984"
+- takeScreenshot: "persistencia-antes-de-reabrir"
+
+- stopApp
+- launchApp:
+    clearState: false
+- assertVisible: "OpenBooks"
+- tapOn: "Mis favoritos"
+- assertVisible: "1984"
+- takeScreenshot: "persistencia-despues-de-reabrir"
+- tapOn: "1984"
+- assertVisible: "Quitar de favoritos"
+- tapOn: "Quitar de favoritos"
+- assertVisible: "Todavía no tienes favoritos"

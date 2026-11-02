@@ -1,4 +1,6 @@
 struct Book {
+    // Identificador estable para los datos locales. Con Open Library se usará la clave de la API.
+    let id: String
     let title: String
     let author: String
     let year: String?
@@ -13,7 +15,8 @@ struct Book {
     init(title: String, author: String, year: String?, hasCover: Bool,
          isSaved: Bool, synopsis: String? = nil, genre: String? = nil,
          originalLanguage: String? = nil, originalTitle: String? = nil,
-         themes: [String] = []) {
+         themes: [String] = [], id: String? = nil) {
+        self.id = id ?? "\(author)|\(title)"
         self.title = title
         self.author = author
         self.year = year

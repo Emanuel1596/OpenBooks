@@ -39,21 +39,13 @@ struct BookDetailView: View {
                         DetailInformationRow(label: "Autor", value: book.author)
 
                         if let year = book.year {
-                            DetailInformationRow(label: "Primera publicación", value: year)
+                            DetailInformationRow(label: "Año de publicación", value: year)
                         }
 
                         if let genre = book.genre {
                             DetailInformationRow(label: "Género", value: genre)
                         }
 
-                        if let originalLanguage = book.originalLanguage {
-                            DetailInformationRow(label: "Idioma original", value: originalLanguage)
-                        }
-
-                        if let originalTitle = book.originalTitle {
-                            // Los títulos extensos tienen toda la anchura para no quedar apretados.
-                            DetailInformationRow(label: "Título original", value: originalTitle, stacked: true)
-                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(20)
@@ -119,35 +111,21 @@ struct BookDetailView: View {
     }
 }
 
-// Reutiliza el mismo estilo para los datos de la ficha.
+// Componente reutilizable para la información del libro.
 private struct DetailInformationRow: View {
     let label: String
     let value: String
-    var stacked: Bool = false
 
     var body: some View {
-        Group {
-            if stacked {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(label)
-                        .foregroundStyle(Color("Muted"))
-                    Text(value)
-                        .foregroundStyle(Color("Ink"))
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            } else {
-                HStack(alignment: .firstTextBaseline, spacing: 12) {
-                    Text(label)
-                        .foregroundStyle(Color("Muted"))
-                        .fixedSize(horizontal: false, vertical: true)
-                    Spacer(minLength: 8)
-                    Text(value)
-                        .foregroundStyle(Color("Ink"))
-                        .multilineTextAlignment(.trailing)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-            }
+        HStack(alignment: .firstTextBaseline, spacing: 12) {
+            Text(label)
+                .foregroundStyle(Color("Muted"))
+                .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 8)
+            Text(value)
+                .foregroundStyle(Color("Ink"))
+                .multilineTextAlignment(.trailing)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .font(.subheadline)
     }
