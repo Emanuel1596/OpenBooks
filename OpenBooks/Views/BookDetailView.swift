@@ -65,19 +65,23 @@ struct BookDetailView: View {
                             .fixedSize(horizontal: false, vertical: true)
                     }
 
-                    Button(action: onSaveOrDelete) {
-                        Text(book.isSaved ? "Quitar de favoritos" : "Agregar a favoritos")
-                            .font(.headline)
-                            .foregroundStyle(Color("Canvas"))
-                            .frame(maxWidth: .infinity)
-                            .frame(minHeight: 52)
-                            .background(Color("Accent"), in: RoundedRectangle(cornerRadius: 14))
-                    }
-                    .buttonStyle(.plain)
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 24)
             }
+
+            // La acción principal permanece visible aunque el detalle sea largo.
+            Button(action: onSaveOrDelete) {
+                Text(book.isSaved ? "Quitar de favoritos" : "Agregar a favoritos")
+                    .font(.headline)
+                    .foregroundStyle(Color("Canvas"))
+                    .frame(maxWidth: .infinity)
+                    .frame(minHeight: 52)
+                    .background(Color("Accent"), in: RoundedRectangle(cornerRadius: 14))
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 12)
 
             BottomNavigationView(
                 homeActive: homeActive,
