@@ -4,6 +4,7 @@ appId: com.openbooks.app
 - launchApp:
     clearState: true
 - assertVisible: "OpenBooks"
+- startRecording: persistencia-cierre-y-reapertura
 - tapOn: "1984"
 - assertVisible: "Agregar a favoritos"
 - tapOn: "Agregar a favoritos"
@@ -22,3 +23,4 @@ appId: com.openbooks.app
 - assertVisible: "Quitar de favoritos"
 - tapOn: "Quitar de favoritos"
 - assertVisible: "Todavía no tienes favoritos"
+- stopRecording
