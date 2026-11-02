@@ -10,6 +10,22 @@ appId: com.openbooks.app
 # Abrir, guardar y eliminar un libro
 - tapOn: "1984"
 - assertVisible: "Detalle del libro"
+
+# Demostrar en el video cómo se consulta la ficha, sin adivinar que hay que desplazar.
+- assertVisible: "Ver información y sinopsis"
+- tapOn: "Ver información y sinopsis"
+- scrollUntilVisible:
+    element: "Novela distópica"
+    direction: DOWN
+- assertVisible: "Novela distópica"
+- takeScreenshot: "detalle-1984-informacion"
+- scrollUntilVisible:
+    element: "Temas principales"
+    direction: DOWN
+- assertVisible: "Temas principales"
+- assertVisible: "Vigilancia · Libertad · Manipulación"
+- takeScreenshot: "detalle-1984-temas"
+
 - tapOn: "Agregar a favoritos"
 - assertVisible: "Mis favoritos"
 - tapOn: "1984"
@@ -28,6 +44,12 @@ appId: com.openbooks.app
 - assertVisible: "Harry Potter y la piedra filosofal"
 - tapOn: "Harry Potter y la piedra filosofal"
 - assertVisible: "Detalle del libro"
+- tapOn: "Ver información y sinopsis"
+- scrollUntilVisible:
+    element: "Fantasía juvenil"
+    direction: DOWN
+- assertVisible: "Fantasía juvenil"
+- takeScreenshot: "detalle-harry-potter-informacion"
 
 # Cambiar la búsqueda y abrir un libro sin portada
 - tapOn: "Inicio"
@@ -40,6 +62,12 @@ appId: com.openbooks.app
 - assertVisible: "Orgullo y prejuicio"
 - tapOn: "Orgullo y prejuicio"
 - assertVisible: "Sin portada"
+- tapOn: "Ver información y sinopsis"
+- scrollUntilVisible:
+    element: "Novela romántica"
+    direction: DOWN
+- assertVisible: "Novela romántica"
+- takeScreenshot: "detalle-orgullo-informacion"
 
 # Comprobar la pantalla sin resultados
 - tapOn: "Inicio"
