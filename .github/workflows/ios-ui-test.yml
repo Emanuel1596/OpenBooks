@@ -96,33 +96,75 @@ jobs:
             "$SIMULATOR_UDID" \
             "build/Build/Products/Debug-iphonesimulator/OpenBooks.app"
 
-      - name: Comprobar aspecto claro y oscuro
+      - name: Grabar cambio entre modo claro y oscuro
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p capturas-aspecto
 
-          xcrun simctl ui "$SIMULATOR_UDID" appearance light
-          xcrun simctl launch "$SIMULATOR_UDID" com.openbooks.app
-          sleep 5
-          xcrun simctl io "$SIMULATOR_UDID" screenshot "capturas-aspecto/01-inicio-claro.png"
+          python3 - <<'PYTHON'
+          import hashlib
+          import os
+          from pathlib import Path
+          import signal
+          import subprocess
+          import time
+
+          udid = os.environ["SIMULATOR_UDID"]
+          folder = Path("capturas-aspecto")
+          video = folder / "03-cambio-claro-oscuro.mp4"
+
+          def simctl(*args):
+              subprocess.run(["xcrun", "simctl", *args], check=True)
+
+          simctl("ui", udid, "appearance", "light")
+          # La aplicación ya está instalada por el paso anterior.
+          simctl("launch", udid, "com.openbooks.app")
+          time.sleep(4)
+
+          recorder = subprocess.Popen([
+              "xcrun", "simctl", "io", udid,
+              "recordVideo", "--codec=h264", str(video)
+          ])
+          try:
+              time.sleep(3)
+              simctl("io", udid, "screenshot", str(folder / "01-inicio-claro.png"))
+              time.sleep(2)
+
+              # Cambiar la apariencia del iPhone sin cerrar OpenBooks.
+              simctl("ui", udid, "appearance", "dark")
+              time.sleep(6)
+              simctl("io", udid, "screenshot", str(folder / "02-inicio-oscuro.png"))
+              time.sleep(2)
+
+              # Mostrar también el regreso al modo claro.
+              simctl("ui", udid, "appearance", "light")
+              time.sleep(5)
+          finally:
+              if recorder.poll() is None:
+                  recorder.send_signal(signal.SIGINT)
+              recorder.wait(timeout=30)
+
+          images = [folder / "01-inicio-claro.png", folder / "02-inicio-oscuro.png"]
+          for path in [*images, video]:
+              if not path.is_file() or path.stat().st_size < 1000:
+                  raise RuntimeError(f"No se generó correctamente: {path}")
+
+          checksums = [hashlib.sha256(path.read_bytes()).hexdigest() for path in images]
+          if checksums[0] == checksums[1]:
+              raise RuntimeError("Las capturas clara y oscura son idénticas")
+
+          print("Video y capturas de ambos aspectos generados")
+          PYTHON
 
           xcrun simctl terminate "$SIMULATOR_UDID" com.openbooks.app
-          xcrun simctl ui "$SIMULATOR_UDID" appearance dark
-          xcrun simctl launch "$SIMULATOR_UDID" com.openbooks.app
-          sleep 5
-          xcrun simctl io "$SIMULATOR_UDID" screenshot "capturas-aspecto/02-inicio-oscuro.png"
 
-          test -s "capturas-aspecto/01-inicio-claro.png"
-          test -s "capturas-aspecto/02-inicio-oscuro.png"
-          xcrun simctl terminate "$SIMULATOR_UDID" com.openbooks.app
-
-      - name: Guardar capturas de ambos aspectos
+      - name: Guardar video y capturas de ambos aspectos
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: OpenBooks-Claro-Oscuro
-          path: capturas-aspecto/*.png
+          path: capturas-aspecto/*
           if-no-files-found: warn
           retention-days: 7
 
