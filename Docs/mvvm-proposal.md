@@ -241,8 +241,6 @@ Por ahora no necesitamos crear un ViewModel por cada pantalla. Preferimos manten
 
 ---
 
-## 6. Conclusión
-
 Con esta organización, cada parte del proyecto tiene una función más clara. `SearchViewModel` resuelve las búsquedas, `BooksState` mantiene la colección compartida y `SavedBooksRepository` trabaja con SwiftData. Las vistas muestran información y comunican las acciones del usuario.
 
 El proyecto sigue utilizando libros de prueba. La conexión a Open Library será un cambio posterior, sin necesidad de volver a concentrar toda la lógica en `ContentView`.
