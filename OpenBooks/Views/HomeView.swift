@@ -1,7 +1,5 @@
 import SwiftUI
 
-// Diseño editorial de OpenBooks con recursos de la referencia aprobada.
-
 struct HomeView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -10,9 +8,6 @@ struct HomeView: View {
     let books: [Book]
     let onOpenSearch: () -> Void
     let onMyBooks: () -> Void
-
-    // Se utilizan índices existentes para conservar la búsqueda y el estado compartido.
-    // Así no cambiamos MockBooks ni las rutas usadas por las pruebas.
     private var featuredIndices: [Int] { [3, 2, 7] }
 
     private var visibleIndices: [Int] {
@@ -28,18 +23,15 @@ struct HomeView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 19) {
                     if dynamicTypeSize.isAccessibilitySize {
-                        // El texto real de SwiftUI se adapta cuando Dynamic Type es muy grande.
                         VStack(alignment: .leading, spacing: 10) {
                             Text("OpenBooks")
                                 .font(.system(.title, design: .serif, weight: .semibold))
                             Text("Encuentra tu próximo libro")
                                 .font(.system(.title, design: .serif, weight: .semibold))
                         }
-                        .foregroundStyle(Color("Ink"))
+                        .foregroundStyle(Color.appInk)
                         .padding(.top, 12)
                     } else {
-                        // Recurso extraído directamente del boceto aprobado:
-                        // mismo gato, dos libros y lámpara; solo cambia la iluminación.
                         Image(colorScheme == .dark ? "HeroReferenceNight" : "HeroReferenceDay")
                             .resizable()
                             .aspectRatio(494.0 / 341.0, contentMode: .fit)
@@ -57,11 +49,11 @@ struct HomeView: View {
                                 .font(.body)
                             Spacer()
                         }
-                        .foregroundStyle(Color("Ink"))
+                        .foregroundStyle(Color.appInk)
                         .padding(.horizontal, 20)
                         .frame(minHeight: 54)
-                        .background(Color("SearchSurface"), in: Capsule())
-                        .overlay(Capsule().stroke(Color("Border"), lineWidth: 0.8))
+                        .background(Color.appSearchSurface, in: Capsule())
+                        .overlay(Capsule().stroke(Color.appBorder, lineWidth: 0.8))
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel("Buscar libros")
@@ -71,7 +63,7 @@ struct HomeView: View {
                         HStack(alignment: .firstTextBaseline) {
                             Text("Sugerencias")
                                 .font(.system(.title2, design: .serif, weight: .semibold))
-                                .foregroundStyle(Color("Ink"))
+                                .foregroundStyle(Color.appInk)
                                 .accessibilityAddTraits(.isHeader)
                             Spacer()
                             Button {
@@ -83,7 +75,7 @@ struct HomeView: View {
                                         .font(.caption.weight(.semibold))
                                 }
                                 .font(.subheadline.weight(.medium))
-                                .foregroundStyle(Color("Accent"))
+                                .foregroundStyle(Color.appAccent)
                             }
                             .buttonStyle(.plain)
                             .accessibilityHint("Muestra u oculta los demás libros de prueba")
@@ -99,7 +91,7 @@ struct HomeView: View {
 
                                         Text(shortTitle(for: index))
                                             .font(.subheadline.weight(.medium))
-                                            .foregroundStyle(Color("Ink"))
+                                            .foregroundStyle(Color.appInk)
                                             .lineLimit(3)
                                             .multilineTextAlignment(.center)
                                             .frame(maxWidth: .infinity, alignment: .top)
@@ -122,7 +114,7 @@ struct HomeView: View {
 
             BottomNavigationView(homeActive: true, onHome: {}, onMyBooks: onMyBooks)
         }
-        .background(Color("Canvas").ignoresSafeArea())
+        .background(Color.appCanvas.ignoresSafeArea())
     }
 
     private func shortTitle(for index: Int) -> String {
@@ -132,8 +124,6 @@ struct HomeView: View {
 
     @ViewBuilder
     private func editorialCover(for index: Int) -> some View {
-        // Son exactamente los recortes de las tres portadas del boceto aprobado.
-        // Las imágenes de Inicio son ilustrativas y no alteran hasCover en el modelo.
         if index == 3 {
             Image("EditorialHarry").resizable().scaledToFit()
         } else if index == 2 {

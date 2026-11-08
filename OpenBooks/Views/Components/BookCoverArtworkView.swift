@@ -1,6 +1,4 @@
 import SwiftUI
-
-// Imágenes ilustrativas originales para tres libros locales; no son portadas oficiales.
 struct BookCoverArtworkView: View {
     let book: Book
 
@@ -21,7 +19,7 @@ struct BookCoverArtworkView: View {
                     .scaledToFit()
             } else {
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(Color("NavSurface"))
+                    .fill(Color.appNavSurface)
                     .overlay {
                         VStack(spacing: 7) {
                             Image(systemName: book.hasCover ? "book.closed" : "book")
@@ -30,7 +28,7 @@ struct BookCoverArtworkView: View {
                                 .font(.caption2)
                                 .multilineTextAlignment(.center)
                         }
-                        .foregroundStyle(Color("Muted"))
+                        .foregroundStyle(Color.appMuted)
                         .padding(6)
                     }
             }

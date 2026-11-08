@@ -1,7 +1,4 @@
 import SwiftData
-
-// Solo la colección del usuario se guarda en el dispositivo.
-// Book sigue representando los datos de los libros que se consultan.
 @Model
 final class SavedBook {
     @Attribute(.unique) var bookID: String

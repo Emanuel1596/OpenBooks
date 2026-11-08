@@ -416,7 +416,7 @@ Actualmente tenemos implementado lo siguiente:
 - La prevención de libros duplicados al guardar el mismo favorito.
 - La separación de modelos, vistas, estado de búsqueda y operaciones de favoritos en diferentes archivos.
 - Etiquetas y encabezados de accesibilidad en varias pantallas. Falta comprobar el recorrido completo con VoiceOver.
-- Ocho pruebas unitarias XCTest que cubren búsquedas y operaciones de favoritos.
+- Once pruebas unitarias XCTest que cubren búsquedas y operaciones de favoritos.
 - Los wireframes y las capturas originales de este README, conservados como registro del diseño inicial.
 
 La búsqueda utiliza los libros definidos en `MockBooks.swift`. `SearchViewModel` mantiene el texto, el estado y los resultados; `BooksState` actualiza la colección que utilizan las pantallas y recupera los favoritos guardados mediante `SavedBooksRepository` y `SavedBook`.

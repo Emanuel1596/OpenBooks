@@ -1,8 +1,14 @@
 import SwiftData
 
-// Separa las operaciones de SwiftData de las vistas y de BooksState.
 @MainActor
-final class SavedBooksRepository {
+protocol FavoriteBooksStore {
+    func savedBookIDs() throws -> Set<String>
+    func save(_ book: Book) throws -> Bool
+    func delete(_ book: Book) throws -> Bool
+}
+
+@MainActor
+final class SavedBooksRepository: FavoriteBooksStore {
     private let context: ModelContext
 
     init(context: ModelContext) {
@@ -13,9 +19,12 @@ final class SavedBooksRepository {
         try context.fetch(FetchDescriptor<SavedBook>())
     }
 
+    func savedBookIDs() throws -> Set<String> {
+        Set(try savedBooks().map(\.bookID))
+    }
+
     @discardableResult
     func save(_ book: Book) throws -> Bool {
-        // Dos pulsaciones del mismo libro no deben crear registros duplicados.
         guard try !savedBooks().contains(where: { $0.bookID == book.id }) else {
             return false
         }
