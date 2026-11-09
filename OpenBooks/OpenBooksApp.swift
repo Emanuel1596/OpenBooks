@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 import SwiftData
 
@@ -5,6 +6,7 @@ import SwiftData
 @MainActor
 struct OpenBooksApp: App {
     private let container: ModelContainer
+    private let searchService: any BookSearchService
     @State private var booksState: BooksState
 
     init() {
@@ -14,6 +16,8 @@ struct OpenBooksApp: App {
             _booksState = State(initialValue: BooksState(
                 store: SavedBooksRepository(context: modelContainer.mainContext)
             ))
+            searchService = ProcessInfo.processInfo.arguments.contains("useMockSearch")
+                ? MockBookSearchService() : OpenLibraryBookSearchService()
         } catch {
             fatalError("No se pudo iniciar el almacenamiento: \(error)")
         }
@@ -21,7 +25,7 @@ struct OpenBooksApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(booksState: booksState)
+            ContentView(booksState: booksState, searchService: searchService)
         }
         .modelContainer(container)
     }

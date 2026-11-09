@@ -78,11 +78,12 @@ struct SearchResultsView: View {
                     Spacer()
                 }
 
-            case .error:
+            case .error(let message):
                 VStack(spacing: 0) {
                     Spacer()
 
                     SearchErrorView(
+                        message: message,
                         onRetry: onRetry
                     )
                     .padding(.horizontal, 20)
@@ -171,6 +172,7 @@ struct NoResultsView: View {
 }
 
 struct SearchErrorView: View {
+    let message: String
     let onRetry: () -> Void
 
     var body: some View {
@@ -198,7 +200,7 @@ struct SearchErrorView: View {
             HStack {
                 Spacer()
 
-                Text("Ocurrió un error al obtener los resultados.")
+                Text(message)
                     .foregroundStyle(Color.appMuted)
 
                 Spacer()

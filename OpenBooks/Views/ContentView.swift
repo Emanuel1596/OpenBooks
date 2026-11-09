@@ -3,11 +3,20 @@ import SwiftUI
 struct ContentView: View {
     let booksState: BooksState
     @State var path: [Int] = []
-    @State var showingMyBooks: Bool = false
-    @State var searchViewModel = SearchViewModel()
+    @State var showingMyBooks = false
+    @State private var searchViewModel: SearchViewModel
+    @State private var activeSearch: Task<Void, Never>?
 
-    let resultsRoute: Int = -1
-    let searchRoute: Int = -2
+    let resultsRoute = -1
+    let searchRoute = -2
+
+    init(booksState: BooksState, searchService: any BookSearchService) {
+        self.booksState = booksState
+        _searchViewModel = State(initialValue: SearchViewModel(
+            service: searchService,
+            booksState: booksState
+        ))
+    }
 
     var body: some View {
         @Bindable var search = searchViewModel
@@ -18,9 +27,7 @@ struct ContentView: View {
                 if showingMyBooks {
                     MyBooksView(
                         books: booksState.books,
-                        onHome: {
-                            showingMyBooks = false
-                        },
+                        onHome: { showingMyBooks = false },
                         onSearch: {
                             showingMyBooks = false
                             path.append(searchRoute)
@@ -29,12 +36,8 @@ struct ContentView: View {
                 } else {
                     HomeView(
                         books: booksState.books,
-                        onOpenSearch: {
-                            path.append(searchRoute)
-                        },
-                        onMyBooks: {
-                            showingMyBooks = true
-                        }
+                        onOpenSearch: { path.append(searchRoute) },
+                        onMyBooks: { showingMyBooks = true }
                     )
                 }
             }
@@ -42,21 +45,15 @@ struct ContentView: View {
                 if route == searchRoute {
                     SearchView(
                         searchText: $search.searchText,
-                        onSearch: {
-                            searchBooks()
-                        }
+                        onSearch: { searchBooks() }
                     )
                 } else if route == resultsRoute {
                     SearchResultsView(
                         resultIndices: searchViewModel.resultIndices,
                         books: booksState.books,
                         state: searchViewModel.state,
-                        onOpenSearch: {
-                            path.append(searchRoute)
-                        },
-                        onRetry: {
-                            searchBooks()
-                        },
+                        onOpenSearch: { path.append(searchRoute) },
+                        onRetry: { searchBooks() },
                         onHome: {
                             path = []
                             showingMyBooks = false
@@ -66,7 +63,7 @@ struct ContentView: View {
                             showingMyBooks = true
                         }
                     )
-                } else {
+                } else if booksState.books.indices.contains(route) {
                     BookDetailView(
                         book: booksState.books[route],
                         homeActive: !showingMyBooks,
@@ -88,20 +85,19 @@ struct ContentView: View {
                 }
             }
         }
-        .onAppear {
-            booksState.loadFavorites()
-        }
+        .onAppear { booksState.loadFavorites() }
         .alert("No se pudieron actualizar los favoritos", isPresented: $favorites.showingPersistenceError) {
-            Button("Aceptar", role: .cancel) {
-                booksState.clearPersistenceError()
-            }
+            Button("Aceptar", role: .cancel) { booksState.clearPersistenceError() }
         } message: {
             Text(booksState.persistenceErrorMessage)
         }
     }
 
-    func searchBooks() {
-        searchViewModel.searchBooks()
+    private func searchBooks() {
+        activeSearch?.cancel()
         path = [resultsRoute]
+        activeSearch = Task {
+            await searchViewModel.searchBooks()
+        }
     }
 }
