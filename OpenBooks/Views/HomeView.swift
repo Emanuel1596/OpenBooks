@@ -3,7 +3,6 @@ import SwiftUI
 struct HomeView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-    @State private var showingAllSuggestions = false
 
     let books: [Book]
     let suggestionIndices: [Int]
@@ -13,21 +12,17 @@ struct HomeView: View {
     let onOpenSearch: () -> Void
     let onMyBooks: () -> Void
 
-    private var featuredIndices: [Int] {
-        usesMockSearch ? [3, 2, 7] : Array(suggestionIndices.prefix(3))
-    }
-
     private var visibleIndices: [Int] {
-        let main = featuredIndices.filter { books.indices.contains($0) }
-        if !showingAllSuggestions { return main }
         if usesMockSearch {
-            return main + books.indices.filter { !main.contains($0) }
+            let featured = [3, 2, 7].filter { books.indices.contains($0) }
+            return featured + books.indices.filter { !featured.contains($0) }
         }
         return suggestionIndices.filter { books.indices.contains($0) }
     }
 
-    private var hasMoreSuggestions: Bool {
-        usesMockSearch ? books.count > 3 : suggestionIndices.count > 3
+    private var suggestionColumns: [GridItem] {
+        [GridItem(.adaptive(minimum: dynamicTypeSize.isAccessibilitySize ? 220 : 145,
+                            maximum: dynamicTypeSize.isAccessibilitySize ? 360 : 180), spacing: 16)]
     }
 
     var body: some View {
@@ -72,28 +67,10 @@ struct HomeView: View {
                     .accessibilityHint("Abre la pantalla de búsqueda")
 
                     VStack(alignment: .leading, spacing: 18) {
-                        HStack(alignment: .firstTextBaseline) {
-                            Text("Sugerencias")
-                                .font(.system(.title2, design: .serif, weight: .semibold))
-                                .foregroundStyle(Color.appInk)
-                                .accessibilityAddTraits(.isHeader)
-                            Spacer()
-                            if hasMoreSuggestions && (usesMockSearch || suggestionsState == .content) {
-                                Button {
-                                    showingAllSuggestions.toggle()
-                                } label: {
-                                    HStack(spacing: 3) {
-                                        Text(showingAllSuggestions ? "Ver menos" : "Ver todo")
-                                        Image(systemName: "chevron.right")
-                                            .font(.caption.weight(.semibold))
-                                    }
-                                    .font(.subheadline.weight(.medium))
-                                    .foregroundStyle(Color.appAccent)
-                                }
-                                .buttonStyle(.plain)
-                                .accessibilityHint("Muestra u oculta más sugerencias")
-                            }
-                        }
+                        Text("Sugerencias")
+                            .font(.system(.title2, design: .serif, weight: .semibold))
+                            .foregroundStyle(Color.appInk)
+                            .accessibilityAddTraits(.isHeader)
 
                         if !usesMockSearch && suggestionsState == .content {
                             Text("De Open Library")
@@ -102,20 +79,29 @@ struct HomeView: View {
                         }
 
                         if usesMockSearch || suggestionsState == .content {
-                            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 14), count: 3), spacing: 20) {
+                            LazyVGrid(columns: suggestionColumns, alignment: .center, spacing: 24) {
                                 ForEach(visibleIndices, id: \.self) { index in
                                     NavigationLink(value: index) {
-                                        VStack(alignment: .leading, spacing: 8) {
-                                            editorialCover(for: index)
-                                                .aspectRatio(138.0 / 178.0, contentMode: .fit)
-                                                .clipShape(RoundedRectangle(cornerRadius: 11))
+                                        VStack(spacing: 9) {
+                                            ZStack {
+                                                RoundedRectangle(cornerRadius: 11)
+                                                    .fill(Color.appNavSurface)
+                                                editorialCover(for: index)
+                                                    .frame(maxWidth: .infinity, maxHeight: .infinity,
+                                                           alignment: .center)
+                                                    .padding(3)
+                                            }
+                                            .aspectRatio(2.0 / 3.0, contentMode: .fit)
+                                            .frame(maxWidth: .infinity)
+                                            .clipShape(RoundedRectangle(cornerRadius: 11))
 
                                             Text(shortTitle(for: index))
                                                 .font(.subheadline.weight(.medium))
                                                 .foregroundStyle(Color.appInk)
                                                 .lineLimit(3)
                                                 .multilineTextAlignment(.center)
-                                                .frame(maxWidth: .infinity, alignment: .top)
+                                                .frame(maxWidth: .infinity, minHeight: 60,
+                                                       alignment: .top)
                                         }
                                         .frame(maxWidth: .infinity, alignment: .top)
                                     }

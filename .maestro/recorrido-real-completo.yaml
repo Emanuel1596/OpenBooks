@@ -51,4 +51,11 @@ appId: com.openbooks.app
 - assertVisible: "Todavía no tienes favoritos"
 - takeScreenshot: "favoritos-vacios-al-final"
 - tapOn: "Inicio"
+- extendedWaitUntil:
+    visible: "De Open Library"
+    timeout: 30000
+- scroll
+- takeScreenshot: "inicio-sugerencias-desplazadas"
+- scroll
+- takeScreenshot: "inicio-mas-libros-al-bajar"
 - stopRecording

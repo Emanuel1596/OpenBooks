@@ -26,7 +26,7 @@ Es la vista principal. Controla la navegación entre Inicio, Buscar, Resultados,
 
 ### `Views/HomeView.swift`
 
-Muestra la pantalla Inicio, los libros sugeridos que proporciona Open Library y los accesos a Buscar y Mis favoritos. Presenta carga, contenido, sin resultados o error y permite reintentar. También utiliza el modo claro u oscuro del sistema para mostrar la ilustración del gato, los libros y la lámpara. El botón «Ver todo» muestra más resultados de la misma consulta.
+Muestra la pantalla Inicio, los libros sugeridos que proporciona Open Library y los accesos a Buscar y Mis favoritos. Presenta carga, contenido, sin resultados o error y permite reintentar. También utiliza el modo claro u oscuro del sistema para mostrar la ilustración del gato, los libros y la lámpara. Las sugerencias se distribuyen en una cuadrícula vertical y aparecen al desplazarse hacia abajo, sin tener que abrir otra pantalla.
 
 ### `Views/SearchView.swift`
 

@@ -85,8 +85,8 @@ Permitir al usuario consultar la lista inicial de libros, abrir la búsqueda y a
 
 - Nombre de la aplicación.
 - Botón de búsqueda representado por una lupa.
-- Lista inicial de libros.
-- Título y autor de cada libro.
+- Sugerencias de Open Library en una cuadrícula que se recorre hacia abajo.
+- Título de cada libro.
 - Portada cuando esté disponible.
 - Accesos a Inicio y Mis favoritos.
 
