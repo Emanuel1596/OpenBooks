@@ -1,0 +1,54 @@
+appId: com.openbooks.app
+---
+- launchApp:
+    clearState: true
+- assertVisible: "OpenBooks"
+- startRecording: recorrido-real-completo-open-library
+- extendedWaitUntil:
+    visible: "De Open Library"
+    timeout: 30000
+- takeScreenshot: "inicio-sugerencias-open-library"
+- tapOn:
+    id: "sugerencia-0"
+- assertVisible: "Detalle del libro"
+- takeScreenshot: "detalle-sugerencia-real"
+- tapOn: "Inicio"
+- assertVisible: "OpenBooks"
+- tapOn: "Buscar libros"
+- waitForAnimationToEnd
+- tapOn: "Buscar libros"
+- inputText: "The Hobbit"
+- pressKey: enter
+- extendedWaitUntil:
+    visible: "Resultados"
+    timeout: 20000
+- extendedWaitUntil:
+    visible: "The Hobbit"
+    timeout: 30000
+- takeScreenshot: "resultados-reales-the-hobbit"
+- tapOn:
+    text: "The Hobbit"
+    index: 0
+- assertVisible: "Detalle del libro"
+- assertVisible: "Agregar a favoritos"
+- takeScreenshot: "detalle-the-hobbit"
+- tapOn: "Agregar a favoritos"
+- assertVisible: "Mis favoritos"
+- assertVisible: "The Hobbit"
+- takeScreenshot: "favorito-guardado-the-hobbit"
+- stopApp
+- launchApp:
+    clearState: false
+- assertVisible: "OpenBooks"
+- tapOn: "Mis favoritos"
+- extendedWaitUntil:
+    visible: "The Hobbit"
+    timeout: 20000
+- takeScreenshot: "favorito-despues-de-reabrir"
+- tapOn: "The Hobbit"
+- assertVisible: "Quitar de favoritos"
+- tapOn: "Quitar de favoritos"
+- assertVisible: "Todavía no tienes favoritos"
+- takeScreenshot: "favoritos-vacios-al-final"
+- tapOn: "Inicio"
+- stopRecording
