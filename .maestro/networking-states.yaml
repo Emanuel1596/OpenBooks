@@ -6,10 +6,18 @@ appId: com.openbooks.app
       useMockSearch: "true"
 - assertVisible: "OpenBooks"
 - tapOn: "Buscar libros"
+- assertVisible: "Buscar libros"
 - tapOn: "Buscar libros"
 - inputText: "Error de prueba"
+- takeScreenshot: "error-antes-de-enter"
 - pressKey: enter
-- assertVisible: "No se pudieron cargar los libros"
+- takeScreenshot: "error-despues-de-enter"
+- extendedWaitUntil:
+    visible: "Resultados"
+    timeout: 20000
+- extendedWaitUntil:
+    visible: "No se pudieron cargar los libros"
+    timeout: 20000
 - assertVisible: "Intentar nuevamente"
 - takeScreenshot: "busqueda-error"
 - tapOn: "Intentar nuevamente"
