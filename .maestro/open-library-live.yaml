@@ -3,6 +3,7 @@ appId: com.openbooks.app
 - launchApp:
     clearState: true
 - assertVisible: "OpenBooks"
+- startRecording: busqueda-real-open-library
 - tapOn: "Buscar libros"
 - waitForAnimationToEnd
 - tapOn: "Buscar libros"
@@ -18,3 +19,4 @@ appId: com.openbooks.app
     timeout: 30000
 - assertVisible: "The Hobbit"
 - takeScreenshot: "open-library-resultados-reales"
+- stopRecording

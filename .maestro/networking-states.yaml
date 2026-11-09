@@ -5,6 +5,7 @@ appId: com.openbooks.app
     arguments:
       useMockSearch: "true"
 - assertVisible: "OpenBooks"
+- startRecording: estados-error-reintento-sin-resultados
 - tapOn: "Buscar libros"
 - assertVisible: "Buscar libros"
 - tapOn: "Buscar libros"
@@ -29,3 +30,4 @@ appId: com.openbooks.app
 - pressKey: enter
 - assertVisible: "No se encontraron libros"
 - takeScreenshot: "busqueda-sin-resultados"
+- stopRecording
