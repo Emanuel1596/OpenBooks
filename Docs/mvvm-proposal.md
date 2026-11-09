@@ -18,15 +18,15 @@ Define los datos que se guardan localmente con SwiftData. Cada favorito conserva
 
 ### `Mocks/MockBooks.swift`
 
-Contiene los libros locales que utilizamos para las sugerencias de Inicio. La búsqueda normal utiliza Open Library.
+Contiene libros de muestra para las pruebas automatizadas. La aplicación normal obtiene las sugerencias y las búsquedas desde Open Library.
 
 ### `Views/ContentView.swift`
 
-Es la vista principal. Controla la navegación entre Inicio, Buscar, Resultados, Detalle y Mis favoritos. Mantiene el estado de navegación y `SearchViewModel`. Recibe `BooksState` desde el punto de entrada de la aplicación y le comunica las acciones de favoritos. No obtiene el contexto de SwiftData ni realiza operaciones de almacenamiento directamente.
+Es la vista principal. Controla la navegación entre Inicio, Buscar, Resultados, Detalle y Mis favoritos. Mantiene el estado de navegación y dos instancias de `SearchViewModel`: una para las sugerencias y otra para la búsqueda del usuario. Recibe `BooksState` desde el punto de entrada de la aplicación y le comunica las acciones de favoritos. No obtiene el contexto de SwiftData ni realiza operaciones de almacenamiento directamente.
 
 ### `Views/HomeView.swift`
 
-Muestra la pantalla Inicio, las sugerencias y los accesos a Buscar y Mis favoritos. También utiliza el modo claro u oscuro del sistema para mostrar la ilustración correspondiente del gato, los libros y la lámpara. El botón «Ver todo» permite consultar las demás sugerencias de prueba.
+Muestra la pantalla Inicio, los libros sugeridos que proporciona Open Library y los accesos a Buscar y Mis favoritos. Presenta carga, contenido, sin resultados o error y permite reintentar. También utiliza el modo claro u oscuro del sistema para mostrar la ilustración del gato, los libros y la lámpara. El botón «Ver todo» muestra más resultados de la misma consulta.
 
 ### `Views/SearchView.swift`
 
@@ -176,7 +176,7 @@ También contamos con recursos de imágenes y colores utilizados por las vistas,
 
 La ruta de navegación (`path`) y la sección seleccionada (`showingMyBooks`) pertenecen a `ContentView` porque son datos de navegación. `HomeView` tiene un estado local para mostrar más sugerencias.
 
-El texto, los resultados y el estado de búsqueda pertenecen a `SearchViewModel`. Los libros y su estado de favorito se comparten mediante `BooksState`. No se necesita mantener otra copia de los favoritos en cada pantalla.
+El texto, los resultados y el estado de cada consulta pertenecen a su instancia de `SearchViewModel`. Inicio realiza una consulta por tema y Buscar utiliza el texto del usuario. Los libros y su estado de favorito se comparten mediante `BooksState`. No se necesita mantener otra copia de los favoritos en cada pantalla.
 
 ### Guardado local
 
@@ -190,7 +190,7 @@ Para organizar la interfaz diferenciamos entre los valores que solo necesita una
 
 **`@State` en `ContentView`**
 
-Se utiliza para conservar la ruta de navegación, la sección principal que está abierta y `SearchViewModel`. `BooksState` se crea una sola vez en `OpenBooksApp`, con el servicio de datos ya configurado, y `ContentView` recibe esa misma instancia. No se crean copias independientes de favoritos en cada pantalla.
+Se utiliza para conservar la ruta de navegación, la sección principal que está abierta y las dos instancias de `SearchViewModel`. `BooksState` se crea una sola vez en `OpenBooksApp`, con el servicio de datos ya configurado, y `ContentView` recibe esa misma instancia. No se crean copias independientes de favoritos en cada pantalla.
 
 **`@State` en `HomeView`**
 
@@ -247,7 +247,7 @@ Por ahora no necesitamos crear un ViewModel por cada pantalla. Preferimos manten
 
 Con esta organización, cada parte del proyecto tiene una función más clara. `SearchViewModel` resuelve las búsquedas, `BooksState` mantiene la colección compartida y `SavedBooksRepository` trabaja con SwiftData. Las vistas muestran información y comunican las acciones del usuario.
 
-Inicio conserva sus sugerencias locales y Resultados utiliza información de Open Library, sin necesidad de volver a concentrar toda la lógica en `ContentView`.
+Inicio y Resultados utilizan información de Open Library y comparten la colección de libros. Los datos de muestra se mantienen solo para las pruebas, sin concentrar la comunicación HTTP en las vistas.
 
 ### Consulta remota
 

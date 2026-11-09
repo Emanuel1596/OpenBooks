@@ -270,7 +270,7 @@ La organización propuesta es la siguiente:
 | Libro seleccionado | Detalle | La pantalla desde la que se selecciona el libro | Índice `Int` durante la navegación | `NavigationLink` envía el índice; `ContentView` obtiene el `Book` de `booksState.books` y lo entrega a Detalle. |
 | Sección principal activa: Inicio o Mis favoritos | Barra inferior y vista raíz | Usuario al cambiar de sección | `ContentView.showingMyBooks` | La vista raíz mantiene esta selección mediante `@State` porque controla las dos secciones principales. |
 | Ruta de navegación | `ContentView` y destinos de navegación | Acciones del usuario coordinadas por `ContentView` | `ContentView.path` | `NavigationStack` utiliza esta ruta para abrir Buscar, Resultados y Detalle. |
-| Título, autor, año y disponibilidad de portada | Inicio, Resultados, Detalle y Mis favoritos | Sugerencias locales en Inicio y datos reales de Open Library en Resultados | Modelo `Book` | Son datos propios del libro. `hasCover` indica si aparece un marcador provisional o el estado «Sin portada»; las portadas remotas se descargan cuando existe un identificador válido. |
+| Título, autor, año y disponibilidad de portada | Inicio, Resultados, Detalle y Mis favoritos | Datos reales de Open Library en Inicio y Resultados | Modelo `Book` | Son datos propios del libro. `hasCover` indica si aparece un marcador provisional o el estado «Sin portada»; las portadas remotas se descargan cuando existe un identificador válido. |
 
 ### Estado local y estado compartido
 
@@ -431,8 +431,8 @@ De esta forma existe una sola fuente de verdad para el estado de guardado y el c
 
 ## Organización del proyecto
 
-Las pantallas se encuentran en `OpenBooks/Views`, y los controles visuales compartidos en `OpenBooks/Views/Components`. El modelo `Book` se mantiene en `OpenBooks/Models/Book.swift`. El estado observable de favoritos y la lógica de búsqueda están en `OpenBooks/ViewModels`. Los libros locales de demostración se encuentran en `OpenBooks/Mocks/MockBooks.swift`.
+Las pantallas se encuentran en `OpenBooks/Views`, y los controles visuales compartidos en `OpenBooks/Views/Components`. El modelo `Book` se mantiene en `OpenBooks/Models/Book.swift`. El estado observable de favoritos y la lógica de búsqueda están en `OpenBooks/ViewModels`. Los libros locales utilizados únicamente en pruebas se encuentran en `OpenBooks/Mocks/MockBooks.swift`.
 
 El detalle muestra la portada, el título, el autor y el año de publicación disponible. Cuando el modelo contiene datos, también presenta el género, una sinopsis y los temas principales. El botón de favoritos permanece visible fuera del área desplazable.
 
-Las sugerencias incluyen información local. Los resultados remotos muestran únicamente la información que devuelve Open Library; si falta una sinopsis o género no se inventa. Los géneros de las sugerencias son información local. Los temas de los libros remotos proceden de los datos que devuelve Open Library.
+Las sugerencias y los resultados remotos muestran únicamente la información que devuelve Open Library; si falta una sinopsis o género no se inventa. Los temas de los libros remotos proceden de los datos que devuelve Open Library. Los datos simulados se utilizan en las pruebas para representar escenarios de manera repetible.
