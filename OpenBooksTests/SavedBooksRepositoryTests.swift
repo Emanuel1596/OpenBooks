@@ -68,6 +68,25 @@ final class SavedBooksRepositoryTests: XCTestCase {
         XCTAssertTrue(state.showingPersistenceError)
     }
 
+    func testRemoteFavoriteIsRestoredFromStorage() throws {
+        let container = try makeContainer()
+        let first = SavedBooksRepository(context: ModelContext(container))
+        let remote = Book(title: "El hobbit", author: "J. R. R. Tolkien", year: "1937",
+                          hasCover: true, isSaved: false, themes: ["Fantasía"],
+                          id: "/works/OL100W", coverID: 25)
+        XCTAssertTrue(try first.save(remote))
+
+        let second = SavedBooksRepository(context: ModelContext(container))
+        let state = BooksState(store: second)
+        state.loadFavorites()
+
+        let restored = state.books.first { $0.id == remote.id }
+        XCTAssertEqual(restored?.title, "El hobbit")
+        XCTAssertEqual(restored?.coverID, 25)
+        XCTAssertEqual(restored?.themes, ["Fantasía"])
+        XCTAssertEqual(restored?.isSaved, true)
+    }
+
     func testInvalidIndexDoesNotChangeSavedBooks() throws {
         let container = try makeContainer()
         let repository = SavedBooksRepository(context: ModelContext(container))
@@ -80,6 +99,10 @@ final class SavedBooksRepositoryTests: XCTestCase {
 @MainActor
 private struct UnavailableFavoritesStore: FavoriteBooksStore {
     func savedBookIDs() throws -> Set<String> {
+        throw TestStorageError.unavailable
+    }
+
+    func savedBookSummaries() throws -> [Book] {
         throw TestStorageError.unavailable
     }
 

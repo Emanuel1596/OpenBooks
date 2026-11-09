@@ -2,6 +2,8 @@ appId: com.openbooks.app
 ---
 - launchApp:
     clearState: true
+    arguments:
+      useMockSearch: "true"
 
 - assertVisible: "OpenBooks"
 

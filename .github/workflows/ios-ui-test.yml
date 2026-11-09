@@ -200,6 +200,22 @@ jobs:
             .maestro/persistence-flow.yaml \
             --test-output-dir=maestro-output
 
+      - name: Comprobar estados de red y reintento
+        run: |
+          maestro \
+            --device="$SIMULATOR_UDID" \
+            test \
+            .maestro/networking-states.yaml \
+            --test-output-dir=maestro-output
+
+      - name: Consultar Open Library real
+        run: |
+          maestro \
+            --device="$SIMULATOR_UDID" \
+            test \
+            .maestro/open-library-live.yaml \
+            --test-output-dir=maestro-output
+
       - name: Guardar evidencias
         if: always()
         uses: actions/upload-artifact@v7

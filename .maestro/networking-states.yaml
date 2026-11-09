@@ -1,0 +1,23 @@
+appId: com.openbooks.app
+---
+- launchApp:
+    clearState: true
+    arguments:
+      useMockSearch: "true"
+- assertVisible: "OpenBooks"
+- tapOn: "Buscar libros"
+- tapOn: "Buscar libros"
+- inputText: "Error de prueba"
+- pressKey: enter
+- assertVisible: "No se pudieron cargar los libros"
+- assertVisible: "Intentar nuevamente"
+- takeScreenshot: "busqueda-error"
+- tapOn: "Intentar nuevamente"
+- assertVisible: "No se pudieron cargar los libros"
+- tapOn: "Buscar libros"
+- tapOn: "Buscar libros"
+- eraseText: 50
+- inputText: "Libro que no existe 12345"
+- pressKey: enter
+- assertVisible: "No se encontraron libros"
+- takeScreenshot: "busqueda-sin-resultados"

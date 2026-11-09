@@ -3,6 +3,8 @@ appId: com.openbooks.app
 # Demuestra persistencia real: cierre y reapertura SIN borrar datos.
 - launchApp:
     clearState: true
+    arguments:
+      useMockSearch: "true"
 - assertVisible: "OpenBooks"
 - startRecording: persistencia-cierre-y-reapertura
 - tapOn: "1984"
@@ -15,6 +17,8 @@ appId: com.openbooks.app
 - stopApp
 - launchApp:
     clearState: false
+    arguments:
+      useMockSearch: "true"
 - assertVisible: "OpenBooks"
 - tapOn: "Mis favoritos"
 - assertVisible: "1984"

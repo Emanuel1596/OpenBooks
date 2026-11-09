@@ -1,0 +1,12 @@
+appId: com.openbooks.app
+---
+- launchApp:
+    clearState: true
+- assertVisible: "OpenBooks"
+- tapOn: "Buscar libros"
+- tapOn: "Buscar libros"
+- inputText: "The Hobbit"
+- pressKey: enter
+- assertVisible: "Resultados"
+- assertVisible: "The Hobbit"
+- takeScreenshot: "open-library-resultados-reales"
