@@ -41,6 +41,9 @@ appId: com.openbooks.app
 - inputText: "Harry Potter"
 - pressKey: enter
 - assertVisible: "Resultados"
+- extendedWaitUntil:
+    visible: "Harry Potter y la piedra filosofal"
+    timeout: 20000
 - assertVisible: "Harry Potter y la piedra filosofal"
 - tapOn: "Harry Potter y la piedra filosofal"
 - assertVisible: "Detalle del libro"
@@ -62,6 +65,9 @@ appId: com.openbooks.app
 - eraseText: 50
 - inputText: "Orgullo y prejuicio"
 - pressKey: enter
+- extendedWaitUntil:
+    visible: "Orgullo y prejuicio"
+    timeout: 20000
 - assertVisible: "Orgullo y prejuicio"
 - tapOn: "Orgullo y prejuicio"
 - assertVisible: "Sin portada"

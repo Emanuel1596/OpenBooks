@@ -16,6 +16,9 @@ appId: com.openbooks.app
 - pressKey: enter
 
 - assertVisible: "Resultados"
+- extendedWaitUntil:
+    visible: "Harry Potter y la piedra filosofal"
+    timeout: 20000
 - assertVisible: "Harry Potter y la piedra filosofal"
 - takeScreenshot: "resultados-harry-potter"
 
@@ -28,6 +31,9 @@ appId: com.openbooks.app
 - pressKey: enter
 
 - assertVisible: "Resultados"
+- extendedWaitUntil:
+    visible: "Orgullo y prejuicio"
+    timeout: 20000
 - assertVisible: "Orgullo y prejuicio"
 - assertVisible: "Emma"
 - assertNotVisible: "Harry Potter y la piedra filosofal"

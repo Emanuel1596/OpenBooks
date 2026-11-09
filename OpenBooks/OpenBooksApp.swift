@@ -16,7 +16,12 @@ struct OpenBooksApp: App {
             _booksState = State(initialValue: BooksState(
                 store: SavedBooksRepository(context: modelContainer.mainContext)
             ))
-            searchService = ProcessInfo.processInfo.arguments.contains("useMockSearch")
+            let launchArguments = ProcessInfo.processInfo.arguments
+            let useMockSearch = launchArguments.contains("useMockSearch")
+                || launchArguments.contains("-useMockSearch")
+                || launchArguments.contains("--useMockSearch")
+                || UserDefaults.standard.string(forKey: "useMockSearch") == "true"
+            searchService = useMockSearch
                 ? MockBookSearchService() : OpenLibraryBookSearchService()
         } catch {
             fatalError("No se pudo iniciar el almacenamiento: \(error)")
