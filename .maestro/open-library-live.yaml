@@ -4,9 +4,17 @@ appId: com.openbooks.app
     clearState: true
 - assertVisible: "OpenBooks"
 - tapOn: "Buscar libros"
+- waitForAnimationToEnd
 - tapOn: "Buscar libros"
 - inputText: "The Hobbit"
 - pressKey: enter
+- takeScreenshot: "open-library-despues-de-enter"
+- extendedWaitUntil:
+    visible: "Resultados"
+    timeout: 20000
 - assertVisible: "Resultados"
+- extendedWaitUntil:
+    visible: "The Hobbit"
+    timeout: 30000
 - assertVisible: "The Hobbit"
 - takeScreenshot: "open-library-resultados-reales"
