@@ -5,17 +5,25 @@ struct ContentView: View {
     @State var path: [Int] = []
     @State var showingMyBooks = false
     @State private var searchViewModel: SearchViewModel
+    @State private var suggestionsViewModel: SearchViewModel
+    @State private var suggestionsStarted = false
     @State private var activeSearch: Task<Void, Never>?
+    let usesMockSearch: Bool
 
     let resultsRoute = -1
     let searchRoute = -2
 
-    init(booksState: BooksState, searchService: any BookSearchService) {
+    init(booksState: BooksState, searchService: any BookSearchService,
+         usesMockSearch: Bool) {
         self.booksState = booksState
+        self.usesMockSearch = usesMockSearch
         _searchViewModel = State(initialValue: SearchViewModel(
             service: searchService,
             booksState: booksState
         ))
+        let suggestions = SearchViewModel(service: searchService, booksState: booksState)
+        suggestions.searchText = "subject:fiction"
+        _suggestionsViewModel = State(initialValue: suggestions)
     }
 
     var body: some View {
@@ -36,6 +44,12 @@ struct ContentView: View {
                 } else {
                     HomeView(
                         books: booksState.books,
+                        suggestionIndices: suggestionsViewModel.resultIndices,
+                        suggestionsState: suggestionsStarted ? suggestionsViewModel.state : .loading,
+                        usesMockSearch: usesMockSearch,
+                        onRetrySuggestions: {
+                            Task { await suggestionsViewModel.searchBooks() }
+                        },
                         onOpenSearch: { path.append(searchRoute) },
                         onMyBooks: { showingMyBooks = true }
                     )
@@ -85,7 +99,13 @@ struct ContentView: View {
                 }
             }
         }
-        .onAppear { booksState.loadFavorites() }
+        .onAppear {
+            booksState.loadFavorites()
+            if !usesMockSearch && !suggestionsStarted {
+                suggestionsStarted = true
+                Task { await suggestionsViewModel.searchBooks() }
+            }
+        }
         .alert("No se pudieron actualizar los favoritos", isPresented: $favorites.showingPersistenceError) {
             Button("Aceptar", role: .cancel) { booksState.clearPersistenceError() }
         } message: {
