@@ -61,6 +61,7 @@ struct BookDetailView: View {
                             .font(.headline)
                             .foregroundStyle(Color.appInk)
                             .accessibilityAddTraits(.isHeader)
+                            .accessibilityIdentifier(loadingDescription ? "book-description-loading" : "book-description-ready")
 
                         if let description = fetchedDetails?.description ?? book.synopsis {
                             Text(description)
