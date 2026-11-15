@@ -9,6 +9,7 @@ struct ContentView: View {
     @State private var suggestionsStarted = false
     @State private var activeSearch: Task<Void, Never>?
     let usesMockSearch: Bool
+    private let detailsService: (any BookDetailsService)?
 
     let resultsRoute = -1
     let searchRoute = -2
@@ -17,11 +18,13 @@ struct ContentView: View {
          usesMockSearch: Bool) {
         self.booksState = booksState
         self.usesMockSearch = usesMockSearch
+        self.detailsService = usesMockSearch ? nil : OpenLibraryBookDetailsService()
         _searchViewModel = State(initialValue: SearchViewModel(
             service: searchService,
             booksState: booksState
         ))
-        let suggestions = SearchViewModel(service: searchService, booksState: booksState)
+        let suggestions = SearchViewModel(service: searchService, booksState: booksState,
+                                          cacheSuggestions: !usesMockSearch)
         suggestions.searchText = "subject:fiction"
         _suggestionsViewModel = State(initialValue: suggestions)
     }
@@ -80,6 +83,10 @@ struct ContentView: View {
                 } else if booksState.books.indices.contains(route) {
                     BookDetailView(
                         book: booksState.books[route],
+                        detailsService: detailsService,
+                        onDetailsLoaded: { details in
+                            booksState.applyWorkDetails(details, at: route)
+                        },
                         homeActive: !showingMyBooks,
                         onSaveOrDelete: {
                             if booksState.toggleSaved(at: route) {
@@ -103,7 +110,8 @@ struct ContentView: View {
             booksState.loadFavorites()
             if !usesMockSearch && !suggestionsStarted {
                 suggestionsStarted = true
-                Task { await suggestionsViewModel.searchBooks() }
+                suggestionsViewModel.restoreCachedSuggestions()
+                Task { await suggestionsViewModel.searchBooks(retainingResults: true) }
             }
         }
         .alert("No se pudieron actualizar los favoritos", isPresented: $favorites.showingPersistenceError) {

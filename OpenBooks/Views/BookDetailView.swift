@@ -2,6 +2,11 @@ import SwiftUI
 
 struct BookDetailView: View {
     let book: Book
+    let detailsService: (any BookDetailsService)?
+    let onDetailsLoaded: (OpenLibraryWorkDetails) -> Void
+    @State private var fetchedDetails: OpenLibraryWorkDetails?
+    @State private var loadingDescription = false
+    @State private var descriptionLoadFailed = false
     let homeActive: Bool
     let onSaveOrDelete: () -> Void
     let onHome: () -> Void
@@ -57,23 +62,35 @@ struct BookDetailView: View {
                             .foregroundStyle(Color.appInk)
                             .accessibilityAddTraits(.isHeader)
 
-                        Text(book.synopsis ?? "Todavía no hay una descripción disponible para este libro.")
-                            .font(.body)
-                            .foregroundStyle(Color.appMuted)
-                            .lineSpacing(3)
-                            .fixedSize(horizontal: false, vertical: true)
+                        if let description = fetchedDetails?.description ?? book.synopsis {
+                            Text(description)
+                                .font(.body)
+                                .foregroundStyle(Color.appMuted)
+                                .lineSpacing(3)
+                                .fixedSize(horizontal: false, vertical: true)
+                        } else if loadingDescription {
+                            ProgressView("Cargando descripción...")
+                        } else {
+                            Text(descriptionLoadFailed
+                                 ? "No se pudo cargar la descripción. Intenta abrir el libro de nuevo."
+                                 : "Este libro no tiene una descripción registrada en Open Library.")
+                                .font(.body)
+                                .foregroundStyle(Color.appMuted)
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.bottom, 26)
 
-                    if !book.themes.isEmpty {
+                    let visibleThemes = fetchedDetails?.themes.isEmpty == false
+                        ? (fetchedDetails?.themes ?? []) : book.themes
+                    if !visibleThemes.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Temas principales")
                                 .font(.headline)
                                 .foregroundStyle(Color.appInk)
                                 .accessibilityAddTraits(.isHeader)
 
-                            Text(book.themes.joined(separator: " · "))
+                            Text(visibleThemes.joined(separator: " · "))
                                 .font(.subheadline)
                                 .foregroundStyle(Color.appMuted)
                                 .fixedSize(horizontal: false, vertical: true)
@@ -105,6 +122,26 @@ struct BookDetailView: View {
             )
         }
         .background(Color.appCanvas.ignoresSafeArea())
+        .task(id: book.id) {
+            fetchedDetails = nil
+            loadingDescription = false
+            descriptionLoadFailed = false
+            guard let detailsService, book.id.hasPrefix("/works/") else { return }
+            if book.synopsis != nil && !book.themes.isEmpty && book.coverID != nil { return }
+            loadingDescription = true
+            descriptionLoadFailed = false
+            do {
+                let details = try await detailsService.details(for: book.id)
+                guard !Task.isCancelled else { return }
+                if let details {
+                    fetchedDetails = details
+                    onDetailsLoaded(details)
+                }
+            } catch {
+                if !Task.isCancelled { descriptionLoadFailed = true }
+            }
+            loadingDescription = false
+        }
     }
 }
 private struct DetailInformationRow: View {
