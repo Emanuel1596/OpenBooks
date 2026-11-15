@@ -80,6 +80,29 @@ final class SearchViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.resultIndices.count, 1)
     }
 
+    func testSearchDoesNotEraseExistingCoverOrDescription() async {
+        let first = Book(title: "El hobbit", author: "Tolkien", year: "1937",
+                         hasCover: true, isSaved: false,
+                         synopsis: "Una aventura.", id: "/works/OL100W", coverID: 25)
+        let incomplete = Book(title: "El hobbit", author: "Tolkien", year: nil,
+                              hasCover: false, isSaved: false,
+                              id: "/works/OL100W")
+        let state = makeBooksState()
+        let original = SearchViewModel(service: TestSearchService(books: [first]), booksState: state)
+        original.searchText = "El hobbit"
+        await original.searchBooks()
+
+        let second = SearchViewModel(service: TestSearchService(books: [incomplete]), booksState: state)
+        second.searchText = "El hobbit"
+        await second.searchBooks()
+
+        let book = state.books[second.resultIndices[0]]
+        XCTAssertEqual(book.coverID, 25)
+        XCTAssertEqual(book.year, "1937")
+        XCTAssertEqual(book.synopsis, "Una aventura.")
+        XCTAssertTrue(book.hasCover)
+    }
+
     private func makeBooksState() -> BooksState {
         BooksState(store: SearchTestFavoritesStore())
     }

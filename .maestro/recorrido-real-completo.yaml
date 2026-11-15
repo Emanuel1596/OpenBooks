@@ -5,7 +5,8 @@ appId: com.openbooks.app
 - assertVisible: "OpenBooks"
 - startRecording: recorrido-real-completo-open-library
 - extendedWaitUntil:
-    visible: "De Open Library"
+    visible:
+      id: "sugerencia-0"
     timeout: 30000
 - takeScreenshot: "inicio-sugerencias-open-library"
 - tapOn:
@@ -52,7 +53,7 @@ appId: com.openbooks.app
 - takeScreenshot: "favoritos-vacios-al-final"
 - tapOn: "Inicio"
 - extendedWaitUntil:
-    visible: "De Open Library"
+    visible: "Sugerencias"
     timeout: 30000
 - scroll
 - takeScreenshot: "inicio-sugerencias-desplazadas"

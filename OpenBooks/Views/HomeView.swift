@@ -72,12 +72,6 @@ struct HomeView: View {
                             .foregroundStyle(Color.appInk)
                             .accessibilityAddTraits(.isHeader)
 
-                        if !usesMockSearch && suggestionsState == .content {
-                            Text("De Open Library")
-                                .font(.caption)
-                                .foregroundStyle(Color.appMuted)
-                        }
-
                         if usesMockSearch || suggestionsState == .content {
                             LazyVGrid(columns: suggestionColumns, alignment: .center, spacing: 24) {
                                 ForEach(visibleIndices, id: \.self) { index in

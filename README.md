@@ -13,7 +13,7 @@
 
 OpenBooks es una aplicación para iOS desarrollada con Swift y SwiftUI. Permite explorar libros, consultar su información y administrar una colección personal de favoritos.
 
-Las sugerencias de Inicio y los resultados de Buscar se obtienen de la API de Open Library. Los libros simulados se utilizan únicamente en las pruebas para comprobar comportamientos de forma repetible. Los favoritos se guardan localmente con SwiftData y siguen disponibles al volver a abrir la aplicación.
+Las sugerencias de Inicio y los resultados de Buscar se obtienen de la API de Open Library. Inicio recuerda las últimas sugerencias reales para mostrarlas al volver a abrir la aplicación mientras consulta información actualizada. Los libros simulados se utilizan únicamente en las pruebas para comprobar comportamientos de forma repetible. Los favoritos se guardan localmente con SwiftData y siguen disponibles al volver a abrir la aplicación.
 
 ## Objetivo
 
@@ -62,7 +62,7 @@ Si la búsqueda no devuelve coincidencias, se mostrará un estado sin resultados
 
 Si ocurre un error de conexión, respuesta HTTP o lectura de datos, la pantalla muestra un mensaje y permite intentar nuevamente.
 
-Desde el detalle del libro se puede consultar el autor, el año de publicación, el género, la sinopsis y los temas disponibles. También se puede guardar o quitar el libro de favoritos.
+Desde el detalle del libro se puede consultar el autor, el año de publicación, el género, la sinopsis y los temas disponibles. La descripción y los temas se consultan en la ficha de la obra de Open Library cuando hace falta esa información. Si la obra no tiene descripción, se informa sin inventar contenido. También se puede guardar o quitar el libro de favoritos.
 
 - Si el libro no está guardado, se mostrará la opción **Agregar a favoritos**.
 - Si el libro ya está guardado, se mostrará la opción **Quitar de favoritos**.
@@ -71,7 +71,7 @@ La sección **Mis favoritos** mostrará los libros almacenados localmente. Desde
 
 Si todavía no existen libros guardados, se mostrará un estado de lista vacía que permitirá al usuario abrir Buscar y realizar una consulta.
 
-La ilustración del encabezado de Inicio se conserva. Las sugerencias y los resultados remotos pueden mostrar portadas de Open Library cuando existe un identificador disponible; de lo contrario, muestran el estado sin portada.
+La ilustración del encabezado de Inicio se conserva. Las portadas se obtienen de Open Library y las imágenes descargadas correctamente se recuerdan en caché para evitar solicitudes repetidas al navegar. Si falta una portada o su descarga falla, se muestra un elemento sustituto.
 
 De esta manera, utilizamos una sola pantalla de detalle y la misma colección de favoritos para los diferentes recorridos. SwiftData conserva los libros seleccionados al cerrar y reabrir OpenBooks.
 

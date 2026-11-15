@@ -50,7 +50,7 @@ Contiene partes reutilizables de las pantallas, como las filas, las portadas, lo
 
 ### `ViewModels/SearchViewModel.swift`
 
-Guarda el texto, los índices de resultados y el estado de la búsqueda. Realiza consultas asíncronas mediante `BookSearchService`, actualiza los resultados y administra los cuatro estados de la interfaz.
+Guarda el texto, los índices de resultados y el estado de la búsqueda. Realiza consultas asíncronas mediante `BookSearchService`, actualiza los resultados y administra los cuatro estados de la interfaz. Para las sugerencias de Inicio conserva la última lista real recibida mientras busca una respuesta actualizada.
 
 ### `ViewModels/BooksState.swift`
 
@@ -85,7 +85,7 @@ Las vistas muestran información y reciben las acciones del usuario. Inicio mues
 - `SavedBooksRepository` realiza las operaciones de guardar, consultar y eliminar mediante SwiftData y cumple el protocolo `FavoriteBooksStore`.
 - `ContentView` se encarga de la navegación y comunica las acciones de favoritos al modelo de estado, sin manejar directamente el contexto ni los errores de SwiftData.
 
-`OpenLibraryBookSearchService` construye solicitudes, valida los códigos HTTP y decodifica JSON. Esta separación evita realizar comunicación de red u operaciones de almacenamiento dentro de las vistas.
+`OpenLibraryBookSearchService` construye solicitudes, valida los códigos HTTP y decodifica JSON. `OpenLibraryBookDetailsService` obtiene la descripción y temas de la ficha de la obra cuando se abre Detalle. Las portadas descargadas se reutilizan mediante una caché compartida. Esta separación evita realizar comunicación de red u operaciones de almacenamiento dentro de las vistas.
 
 ---
 
