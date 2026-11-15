@@ -168,6 +168,14 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
+      - name: Grabar recorrido real completo
+        run: |
+          maestro \
+            --device="$SIMULATOR_UDID" \
+            test \
+            .maestro/recorrido-real-completo.yaml \
+            --test-output-dir=maestro-output
+
       - name: Ejecutar prueba de estado compartido
         run: |
           maestro \
@@ -214,14 +222,6 @@ jobs:
             --device="$SIMULATOR_UDID" \
             test \
             .maestro/open-library-live.yaml \
-            --test-output-dir=maestro-output
-
-      - name: Grabar recorrido real completo
-        run: |
-          maestro \
-            --device="$SIMULATOR_UDID" \
-            test \
-            .maestro/recorrido-real-completo.yaml \
             --test-output-dir=maestro-output
 
       - name: Guardar evidencias

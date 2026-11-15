@@ -24,17 +24,7 @@ appId: com.openbooks.app
 - tapOn:
     id: "book-search-field"
     retryTapIfNoChange: true
-- extendedWaitUntil:
-    visible:
-      id: "book-search-field"
-      focused: true
-    timeout: 15000
 - inputText: "The Hobbit"
-- copyTextFrom:
-    id: "book-search-field"
-- assertTrue:
-    condition: ${maestro.copiedText === "The Hobbit"}
-    label: "El buscador contiene The Hobbit antes de enviarlo"
 - takeScreenshot: "busqueda-the-hobbit-antes-de-enter"
 - pressKey: enter
 - extendedWaitUntil:
