@@ -13,6 +13,15 @@ appId: com.openbooks.app
     id: "sugerencia-0"
 - assertVisible: "Detalle del libro"
 - takeScreenshot: "detalle-sugerencia-real"
+- scrollUntilVisible:
+    element: "Sobre este libro"
+    direction: DOWN
+    centerElement: true
+- extendedWaitUntil:
+    visible:
+      id: "book-description-ready"
+    timeout: 25000
+- takeScreenshot: "detalle-sugerencia-sinopsis-o-mensaje"
 - tapOn: "Inicio"
 - assertVisible: "OpenBooks"
 - tapOn: "Buscar libros"
@@ -40,6 +49,17 @@ appId: com.openbooks.app
 - assertVisible: "Detalle del libro"
 - assertVisible: "Agregar a favoritos"
 - takeScreenshot: "detalle-the-hobbit"
+- scrollUntilVisible:
+    element: "Sobre este libro"
+    direction: DOWN
+    centerElement: true
+- extendedWaitUntil:
+    visible:
+      id: "book-description-ready"
+    timeout: 25000
+- takeScreenshot: "detalle-the-hobbit-sinopsis-o-mensaje"
+- scroll
+- takeScreenshot: "detalle-the-hobbit-texto-y-temas"
 - tapOn: "Agregar a favoritos"
 - assertVisible: "Mis favoritos"
 - assertVisible: "The Hobbit"

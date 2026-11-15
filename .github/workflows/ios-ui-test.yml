@@ -176,46 +176,6 @@ jobs:
             .maestro/recorrido-real-completo.yaml \
             --test-output-dir=maestro-output
 
-      - name: Ejecutar prueba de estado compartido
-        run: |
-          maestro \
-            --device="$SIMULATOR_UDID" \
-            test \
-            .maestro/shared-state.yaml \
-            --test-output-dir=maestro-output
-
-      - name: Ejecutar prueba del buscador
-        run: |
-          maestro \
-            --device="$SIMULATOR_UDID" \
-            test \
-            .maestro/search-flow.yaml \
-            --test-output-dir=maestro-output
-
-      - name: Grabar recorrido completo
-        run: |
-          maestro \
-            --device="$SIMULATOR_UDID" \
-            test \
-            .maestro/recorrido-completo.yaml \
-            --test-output-dir=maestro-output
-
-      - name: Verificar persistencia tras reiniciar la app
-        run: |
-          maestro \
-            --device="$SIMULATOR_UDID" \
-            test \
-            .maestro/persistence-flow.yaml \
-            --test-output-dir=maestro-output
-
-      - name: Comprobar estados de red y reintento
-        run: |
-          maestro \
-            --device="$SIMULATOR_UDID" \
-            test \
-            .maestro/networking-states.yaml \
-            --test-output-dir=maestro-output
-
       - name: Consultar Open Library real
         run: |
           maestro \

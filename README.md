@@ -416,7 +416,7 @@ Actualmente tenemos implementado lo siguiente:
 - La prevención de libros duplicados al guardar el mismo favorito.
 - La separación de modelos, vistas, estado de búsqueda y operaciones de favoritos en diferentes archivos.
 - Etiquetas y encabezados de accesibilidad en varias pantallas. Falta comprobar el recorrido completo con VoiceOver.
-- Diecisiete pruebas unitarias XCTest que cubren la búsqueda, los modelos de respuesta y las operaciones de favoritos.
+- Veintitrés pruebas unitarias XCTest que cubren la búsqueda, los modelos de respuesta y las operaciones de favoritos.
 - Los wireframes y las capturas originales de este README, conservados como registro del diseño inicial.
 
 `SearchViewModel` solicita libros a `OpenLibraryBookSearchService`, mantiene el estado de la petición y recibe sus resultados. `BooksState` conserva la colección compartida y recupera los favoritos mediante `SavedBooksRepository` y `SavedBook`. La búsqueda utiliza identificadores estables de Open Library.

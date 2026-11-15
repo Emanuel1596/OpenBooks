@@ -17,7 +17,7 @@ Los libros locales conservan identificadores derivados de autor y título. Los r
 
 ## Pruebas unitarias con XCTest
 
-Utilizamos XCTest para revisar las respuestas JSON, la búsqueda y el guardado sin depender de una consulta real a Open Library. Los escenarios de éxito, error y resultados vacíos se prueban con servicios simulados.
+Utilizamos 23 pruebas XCTest para revisar las respuestas JSON, la búsqueda y el guardado sin depender de una consulta real a Open Library. Los escenarios de éxito, error y resultados vacíos se prueban con servicios simulados. A continuación se presentan los casos principales.
 
 ### Búsqueda
 
@@ -46,16 +46,16 @@ Las pruebas de SwiftData utilizan una configuración temporal en memoria y los e
 
 ## Comprobación al cerrar y reabrir
 
-Además de las pruebas unitarias, revisamos el siguiente recorrido en un simulador de iOS:
+Además de las pruebas unitarias, utilizamos un recorrido con Open Library real en el simulador de iOS:
 
-1. Abrir OpenBooks y agregar *1984* a Mis favoritos.
-2. Confirmar que aparece en la colección.
-3. Cerrar OpenBooks por completo.
-4. Volver a abrir la aplicación sin borrar sus datos.
-5. Entrar a Mis favoritos y comprobar que *1984* continúa guardado.
-6. Quitar el favorito y comprobar que la colección queda vacía.
+1. Abrir Inicio y comprobar que aparecen sugerencias de Open Library.
+2. Abrir un libro y desplazarse hasta «Sobre este libro» para mostrar su descripción o el mensaje correspondiente cuando no esté disponible.
+3. Buscar *The Hobbit* y abrir su detalle para comprobar también la sección «Sobre este libro».
+4. Guardarlo en Mis favoritos y confirmar que aparece en la colección.
+5. Cerrar y reabrir OpenBooks sin borrar los datos.
+6. Comprobar que el favorito sigue guardado, quitarlo y verificar que la colección queda vacía.
 
-Este recorrido permite distinguir entre un favorito que solamente permanece durante la navegación y uno que realmente se recupera después de cerrar la aplicación.
+Este recorrido permite distinguir entre un favorito que solamente permanece durante la navegación y uno que realmente se recupera después de cerrar la aplicación. Las pruebas XCTest siguen utilizando datos controlados; no generamos videos de los recorridos simulados con mocks.
 
 ## Pendientes
 
