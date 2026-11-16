@@ -1,5 +1,11 @@
 # OpenBooks
 
+Aplicación iOS para descubrir libros en Open Library, consultar sus datos y conservar una colección personal de favoritos.
+
+**Estado de esta copia:** preparación de la Práctica 8 en la rama de pruebas. La entrega oficial se realizará después de integrar y verificar estos cambios en el repositorio del equipo.
+
+**Consulta rápida:** [Configuración y ejecución](#instalación-y-configuración) · [Capturas reales](#evidencias-de-la-aplicación-en-el-simulador) · [Arquitectura y servicios](Docs/arquitectura-y-servicios.md) · [Revisión final](Docs/revision-de-entrega.md).
+
 ## Integrantes
 
 - Romero Palacios Randy Rodrigo
@@ -13,7 +19,7 @@
 
 OpenBooks es una aplicación para iOS desarrollada con Swift y SwiftUI. Permite explorar libros, consultar su información y administrar una colección personal de favoritos.
 
-Las sugerencias de Inicio y los resultados de Buscar se obtienen de la API de Open Library. Inicio recuerda las últimas sugerencias reales para mostrarlas al volver a abrir la aplicación mientras consulta información actualizada. Los libros simulados se utilizan únicamente en las pruebas para comprobar comportamientos de forma repetible. Los favoritos se guardan localmente con SwiftData y siguen disponibles al volver a abrir la aplicación.
+Las sugerencias de Inicio y los resultados de Buscar se obtienen de la API de Open Library. Inicio recuerda las últimas sugerencias reales para mostrarlas al volver a abrir la aplicación mientras consulta información actualizada. Los libros simulados se mantienen exclusivamente en el objetivo de pruebas unitarias XCTest; la aplicación normal utiliza el servicio real. Los favoritos se guardan localmente con SwiftData y siguen disponibles al volver a abrir la aplicación.
 
 ## Objetivo
 
@@ -147,7 +153,7 @@ Si un libro no tiene una portada disponible, la interfaz muestra un elemento sus
 
 <img width="1536" height="1024" alt="08-estados-adicionales" src="https://github.com/user-attachments/assets/d4c5124b-5d78-457f-b252-ebaca66c3d95" />
 
-## Tecnologías utilizadas y pendientes
+## Tecnologías utilizadas
 
 - **Swift y SwiftUI:** utilizados para las pantallas, los componentes y la navegación.
 - **Observation (`@Observable`):** utilizado para compartir los cambios de búsqueda y favoritos.
@@ -406,7 +412,7 @@ Actualmente tenemos implementado lo siguiente:
 - Las pantallas **Inicio**, **Buscar**, **Resultados**, **Detalle** y **Mis favoritos** con SwiftUI.
 - La navegación entre pantallas mediante `NavigationStack`, `NavigationLink` y `navigationDestination`.
 - Un diseño editorial con colores que cambian según el modo claro u oscuro del sistema. En Inicio también cambia la ilustración del gato, los libros y la lámpara.
-- Sugerencias procedentes de Open Library, con los estados de carga, resultados vacíos y error, además de la opción **Ver todo**.
+- Sugerencias procedentes de Open Library, con los estados de carga, resultados vacíos y error, con desplazamiento vertical para visualizar las demás sugerencias.
 - Una vista Buscar que ejecuta la consulta al presionar Enter o Buscar en el teclado.
 - Búsquedas remotas con Open Library y mensajes cuando no existen resultados.
 - Estados de carga y error activos durante las solicitudes de red, con reintento.
@@ -416,17 +422,78 @@ Actualmente tenemos implementado lo siguiente:
 - La prevención de libros duplicados al guardar el mismo favorito.
 - La separación de modelos, vistas, estado de búsqueda y operaciones de favoritos en diferentes archivos.
 - Etiquetas y encabezados de accesibilidad en varias pantallas. Falta comprobar el recorrido completo con VoiceOver.
-- Veintitrés pruebas unitarias XCTest que cubren la búsqueda, los modelos de respuesta y las operaciones de favoritos.
+- Veinticuatro pruebas unitarias XCTest que cubren la búsqueda, los modelos de respuesta y las operaciones de favoritos.
 - Los wireframes y las capturas originales de este README, conservados como registro del diseño inicial.
 
 `SearchViewModel` solicita libros a `OpenLibraryBookSearchService`, mantiene el estado de la petición y recibe sus resultados. `BooksState` conserva la colección compartida y recupera los favoritos mediante `SavedBooksRepository` y `SavedBook`. La búsqueda utiliza identificadores estables de Open Library.
 
 **Pendiente:** verificar manualmente la conexión en un dispositivo con internet, revisar el recorrido completo de accesibilidad y confirmar todas las pantallas en modo claro y oscuro. Algunos libros de Open Library no incluyen sinopsis ni todos sus datos descriptivos.
 
+## Instalación y configuración
+
+### Requisitos
+
+- **Mac con Xcode** que incluya el SDK para compilar aplicaciones de **iOS 17 o posterior**. El proyecto declara `IPHONEOS_DEPLOYMENT_TARGET = 17.0` y usa SwiftData.
+- Un simulador de iPhone compatible o un dispositivo iOS compatible configurado en Xcode. Si se utiliza un iPhone físico, será necesario configurar la firma del proyecto con un equipo de desarrollo propio.
+- Conexión a Internet para descargar sugerencias, búsquedas y descripciones desde Open Library. Las portadas descargadas se conservan en caché cuando es posible.
+- **No hace falta una clave API ni registrar una cuenta** para realizar las consultas públicas de Open Library implementadas en esta versión.
+
+### Preparar el proyecto
+
+1. En una Mac, clonar el repositorio oficial del equipo o descargar el ZIP de la versión que se desea ejecutar.
+2. Abrir **`OpenBooks.xcodeproj`** desde la raíz del repositorio. El repositorio de pruebas también incluye `project.yml` para regenerar su proyecto con XcodeGen durante la integración continua, pero **XcodeGen no es necesario para abrir el proyecto oficial**.
+3. Seleccionar el esquema **`OpenBooks`** y un simulador con iOS 17 o posterior.
+4. Pulsar **Run (⌘R)**. Cuando Inicio cargue, abrir Buscar, consultar un libro y guardarlo en Mis favoritos.
+5. Para comprobar la persistencia, cerrar la aplicación y volverla a abrir **sin borrar los datos del simulador**.
+
+### Servicios externos
+
+La aplicación consulta estos endpoints mediante HTTPS:
+
+| Uso | Endpoint | Autenticación |
+| --- | --- | --- |
+| Buscar libros y sugerencias | `GET https://openlibrary.org/search.json` | No requiere clave |
+| Descripción y temas de una obra | `GET https://openlibrary.org/works/{OL...W}.json` | No requiere clave |
+| Imagen de portada | `GET https://covers.openlibrary.org/b/id/{coverID}-M.jpg?default=false` | No requiere clave |
+
+La búsqueda solicita `key,title,author_name,first_publish_year,cover_i`, con límite de 15 documentos. La consulta de Inicio utiliza el término `subject:fiction`; **no representa un ranking oficial**. Una obra puede no tener año, portada, descripción o temas. No se necesita editar un archivo de secretos ni pegar tokens en el código. Más detalles en [Arquitectura y servicios](Docs/arquitectura-y-servicios.md).
+
+### Pruebas unitarias
+
+El objetivo `OpenBooksTests` tiene **24 métodos `test...`** en los archivos XCTest de esta copia. Desde Xcode, usar **Product → Test (⌘U)**. También pueden ejecutarse desde Terminal en una Mac, sustituyendo el nombre del simulador por uno instalado:
+
+```bash
+xcodebuild -project OpenBooks.xcodeproj -scheme OpenBooks \
+  -destination 'platform=iOS Simulator,name=NOMBRE_DEL_SIMULADOR' \
+  CODE_SIGNING_ALLOWED=NO test
+```
+
+Estas pruebas utilizan datos controlados y un almacenamiento SwiftData en memoria; no necesitan una conexión real con Open Library. El recorrido de interfaz con datos reales se ejecuta aparte en el repositorio de pruebas. **El número de métodos definidos no equivale a afirmar que todos hayan pasado en la futura versión final:** se debe registrar el resultado de la ejecución correspondiente al commit de entrega.
+
+## Evidencias de la aplicación en el simulador
+
+Capturas obtenidas de una ejecución del recorrido real en un simulador de iPhone el **16 de noviembre de 2026**. Muestran la interfaz en ese avance de la rama de pruebas; deben cotejarse de nuevo con el commit final de entrega. Las capturas históricas de las secciones anteriores se conservan sin sustituirlas.
+
+| Inicio con sugerencias | Resultados de Open Library | Detalle |
+| :---: | :---: | :---: |
+| <img width="235" alt="Inicio real con sugerencias" src="Docs/capturas-finales/inicio.png" /> | <img width="235" alt="Resultados reales de The Hobbit" src="Docs/capturas-finales/resultados.png" /> | <img width="235" alt="Detalle de The Hobbit" src="Docs/capturas-finales/detalle.png" /> |
+
+| Descripción proporcionada por la obra | Favorito recuperado tras reabrir | Favoritos vacíos después de eliminar |
+| :---: | :---: | :---: |
+| <img width="235" alt="Descripción real de The Hobbit" src="Docs/capturas-finales/sinopsis.png" /> | <img width="235" alt="Libro recuperado de favoritos" src="Docs/capturas-finales/favorito-reabierto.png" /> | <img width="235" alt="Vista vacía de favoritos" src="Docs/capturas-finales/favoritos-vacios.png" /> |
+
+## Limitaciones y decisiones de entrega
+
+- El servicio Open Library es externo: puede responder lentamente, devolver errores temporales o no incluir determinados campos. La aplicación maneja estados de carga, error y ausencia de coincidencias.
+- Las descripciones y etiquetas de temas se muestran **en el idioma registrado en Open Library**, que puede ser inglés; no se realiza traducción automática.
+- No todos los libros tienen portada, año o sinopsis. Si no se proporciona una descripción, no se inventa una.
+- Los favoritos se guardan localmente con SwiftData en el dispositivo; no se sincronizan mediante cuentas o servicios en la nube.
+- Las sugerencias se recuerdan con `UserDefaults` y las portadas con caché local; ese almacenamiento temporal puede limpiarse sin eliminar los favoritos de SwiftData.
+- Falta completar una evaluación manual de todas las pantallas con VoiceOver y en un dispositivo físico. Un simulador y pruebas automatizadas no sustituyen esa revisión.
+- Si el contenedor local de SwiftData no logra inicializarse, la app actualmente no dispone de un modo alternativo de recuperación; requiere revisión específica antes de publicar para usuarios reales.
+
+La revisión de seguridad, estructura, evidencias y pasos que todavía necesitan validación se registra en [Docs/revision-de-entrega.md](Docs/revision-de-entrega.md). **El commit final se identificará con su SHA después de comprobarlo y crear el Pull Request**, no antes.
+
 ## Ejecución del proyecto
 
-1. Clonar o descargar el proyecto con sus archivos Swift y recursos gráficos.
-2. Abrir el proyecto iOS actualizado en Xcode.
-3. Seleccionar un simulador de iOS compatible con iOS 17 o posterior.
-4. Ejecutar OpenBooks y revisar Inicio, Buscar, Detalle y Mis favoritos.
-5. Para revisar los dos aspectos, cambiar el modo claro u oscuro desde **Configuración → Pantalla y brillo** del simulador y volver a OpenBooks. También se puede hacer desde Xcode en **Environment Overrides**, cuando esté disponible.
+Seguir el apartado [Instalación y configuración](#instalación-y-configuración). Para verificar el diseño, usar el menú de apariencia del simulador o **Environment Overrides** desde Xcode cuando esté disponible y repetir la revisión en modos claro y oscuro.

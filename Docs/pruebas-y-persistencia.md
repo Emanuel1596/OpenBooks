@@ -13,11 +13,11 @@ Utilizamos SwiftData para conservar los libros seleccionados, incluso después d
 
 Al guardar un libro, comprobamos si su identificador ya existe. Si ya está registrado, no se agrega otra copia. Si ocurre un problema al guardar o eliminar, mostramos un mensaje en lugar de cambiar la interfaz como si la operación hubiera terminado correctamente.
 
-Los libros locales conservan identificadores derivados de autor y título. Los resultados remotos utilizan la clave estable de cada obra de Open Library. Al guardar un favorito remoto también conservamos su portada y temas disponibles.
+Los datos de muestra de XCTest utilizan identificadores derivados de autor y título. Los resultados remotos utilizan la clave estable de cada obra de Open Library. Al guardar un favorito remoto también conservamos su portada y temas disponibles.
 
 ## Pruebas unitarias con XCTest
 
-Utilizamos 23 pruebas XCTest para revisar las respuestas JSON, la búsqueda y el guardado sin depender de una consulta real a Open Library. Los escenarios de éxito, error y resultados vacíos se prueban con servicios simulados. A continuación se presentan los casos principales.
+El proyecto de pruebas define 24 métodos XCTest para revisar las respuestas JSON, la búsqueda y el guardado sin depender de una consulta real a Open Library. Los escenarios de éxito, error y resultados vacíos se prueban con servicios simulados. A continuación se presentan los casos principales.
 
 ### Búsqueda
 

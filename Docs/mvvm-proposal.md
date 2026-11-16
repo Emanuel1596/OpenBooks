@@ -16,7 +16,7 @@ Define la información de un libro: identificador, título, autor, año, disponi
 
 Define los datos que se guardan localmente con SwiftData. Cada favorito conserva su identificador, título, autor, año, portada y temas disponibles. El identificador sirve para reconocer un libro y evitar que se agregue dos veces.
 
-### `Mocks/MockBooks.swift`
+### `OpenBooksTests/MockBooks.swift`
 
 Contiene libros de muestra para las pruebas automatizadas. La aplicación normal obtiene las sugerencias y las búsquedas desde Open Library.
 
@@ -145,13 +145,11 @@ La estructura actual de archivos es:
 
 ```text
 OpenBooks/
+├── Assets.xcassets/ (portadas locales y colores)
 ├── Models/
 │   ├── Book.swift
 │   ├── SavedBook.swift
 │   └── OpenLibrarySearchResponse.swift
-├── Mocks/
-│   ├── MockBooks.swift
-│   └── MockBookSearchService.swift
 ├── ViewModels/
 │   ├── BooksState.swift
 │   ├── SearchViewModel.swift
@@ -168,13 +166,19 @@ OpenBooks/
 │   ├── SavedBooksRepository.swift
 │   └── OpenLibraryBookSearchService.swift
 └── OpenBooksApp.swift
+
+OpenBooksTests/
+├── MockBooks.swift
+├── SearchViewModelTests.swift
+├── SavedBooksRepositoryTests.swift
+└── OpenLibraryResponseTests.swift
 ```
 
 También contamos con recursos de imágenes y colores utilizados por las vistas, que cambian según la apariencia del sistema. Los nombres de los colores se mantienen en una extensión de `Color` para evitar repetirlos en cada pantalla.
 
 ### Estado local y compartido
 
-La ruta de navegación (`path`) y la sección seleccionada (`showingMyBooks`) pertenecen a `ContentView` porque son datos de navegación. `HomeView` tiene un estado local para mostrar más sugerencias.
+La ruta de navegación (`path`) y la sección seleccionada (`showingMyBooks`) pertenecen a `ContentView` porque son datos de navegación. `HomeView` recibe los índices de sugerencias ya preparados y permite recorrer la cuadrícula vertical; no conserva una segunda copia de esos libros.
 
 El texto, los resultados y el estado de cada consulta pertenecen a su instancia de `SearchViewModel`. Inicio realiza una consulta por tema y Buscar utiliza el texto del usuario. Los libros y su estado de favorito se comparten mediante `BooksState`. No se necesita mantener otra copia de los favoritos en cada pantalla.
 
@@ -247,8 +251,8 @@ Por ahora no necesitamos crear un ViewModel por cada pantalla. Preferimos manten
 
 Con esta organización, cada parte del proyecto tiene una función más clara. `SearchViewModel` resuelve las búsquedas, `BooksState` mantiene la colección compartida y `SavedBooksRepository` trabaja con SwiftData. Las vistas muestran información y comunican las acciones del usuario.
 
-Inicio y Resultados utilizan información de Open Library y comparten la colección de libros. Los datos de muestra se mantienen solo para las pruebas, sin concentrar la comunicación HTTP en las vistas.
+Inicio y Resultados utilizan información de Open Library y comparten la colección de libros. Los datos de muestra se mantienen dentro del objetivo XCTest, sin concentrar la comunicación HTTP en las vistas.
 
 ### Consulta remota
 
-El endpoint es `https://openlibrary.org/search.json`. Se solicitan únicamente el identificador, título, autores, año, portada y temas, con un límite de 15 libros. No utilizamos claves privadas. La pantalla de resultados no construye URLs ni interpreta JSON.
+El endpoint es `https://openlibrary.org/search.json`. Se solicitan únicamente el identificador, título, autores, primer año de publicación y portada, con un límite de 15 libros. Los temas se consultan por separado en el endpoint de obras. No utilizamos claves privadas. La pantalla de resultados no construye URLs ni interpreta JSON.

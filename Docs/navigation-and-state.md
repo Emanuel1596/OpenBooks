@@ -403,7 +403,7 @@ Las filas de libros utilizan `NavigationLink` para abrir el detalle correspondie
 
 Inicio y Resultados muestran una lupa que abre la vista Buscar. El campo editable se encuentra únicamente en Buscar. El texto pertenece a `SearchViewModel`, que `ContentView` mantiene mediante `@State`. Buscar lo modifica con `@Binding`, conectado mediante `@Bindable`. Resultados recibe los índices de los libros seleccionados por el ViewModel, sin mostrar la consulta como un encabezado independiente.
 
-Cuando el usuario presiona Enter desde Buscar, `ContentView` llama a `searchViewModel.searchBooks()` y actualiza la ruta para mostrar Resultados. El ViewModel solicita los datos a Open Library mediante el Service y administra carga, contenido, ausencia de resultados y error. La vista presenta estos estados y permite reintentar.
+Cuando el usuario presiona Enter desde Buscar, `ContentView` establece primero el estado de carga, navega a Resultados y comienza la tarea de búsqueda del `SearchViewModel`. El ViewModel solicita los datos a Open Library mediante el Service y administra carga, contenido, ausencia de resultados y error. La vista presenta estos estados y permite reintentar.
 
 Para la colección de libros se utiliza `BooksState`, definido como un objeto `@Observable`. `OpenBooksApp` crea una instancia de este estado y `ContentView` proporciona la misma colección a las vistas que la necesitan.
 
@@ -431,7 +431,7 @@ De esta forma existe una sola fuente de verdad para el estado de guardado y el c
 
 ## Organización del proyecto
 
-Las pantallas se encuentran en `OpenBooks/Views`, y los controles visuales compartidos en `OpenBooks/Views/Components`. El modelo `Book` se mantiene en `OpenBooks/Models/Book.swift`. El estado observable de favoritos y la lógica de búsqueda están en `OpenBooks/ViewModels`. Los libros locales utilizados únicamente en pruebas se encuentran en `OpenBooks/Mocks/MockBooks.swift`.
+Las pantallas se encuentran en `OpenBooks/Views`, y los controles visuales compartidos en `OpenBooks/Views/Components`. El modelo `Book` se mantiene en `OpenBooks/Models/Book.swift`. El estado observable de favoritos y la lógica de búsqueda están en `OpenBooks/ViewModels`. Los libros locales utilizados únicamente en pruebas se encuentran en `OpenBooksTests/MockBooks.swift`.
 
 El detalle muestra la portada, el título, el autor y el año de publicación disponible. Cuando el modelo contiene datos, también presenta el género, una sinopsis y los temas principales. El botón de favoritos permanece visible fuera del área desplazable.
 
