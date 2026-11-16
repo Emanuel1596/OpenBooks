@@ -1,6 +1,6 @@
 # Arquitectura y servicios de OpenBooks
 
-Documento técnico de la versión preparada para la Práctica 8. Describe lo que está implementado en el código, no funciones previstas para el futuro.
+Esta guía describe cómo están organizados los archivos, cómo se consultan los libros y cómo se guardan los favoritos.
 
 ## Estructura y responsabilidades
 
@@ -19,7 +19,7 @@ Documento técnico de la versión preparada para la Práctica 8. Describe lo que
 | `Views/Components/` | Componentes visuales reutilizables: barra inferior, colores, filas, portadas y estados vacíos. |
 | `OpenBooksTests/` | Datos de muestra aislados y pruebas XCTest. |
 
-Se aplica una separación MVVM pragmática: **las vistas no construyen URLs ni manipulan directamente `ModelContext`**. `SearchViewModel` coordina la búsqueda, `BooksState` mantiene los datos compartidos y los servicios realizan I/O. `@State`, `@Bindable`, `@Observable` y `NavigationStack` siguen los contenidos de estado y navegación revisados en clase.
+Se aplica una separación MVVM pragmática: **las vistas no construyen URLs ni manipulan directamente `ModelContext`**. `SearchViewModel` coordina la búsqueda, `BooksState` mantiene los datos compartidos y los servicios realizan I/O. La navegación utiliza `NavigationStack`; el estado se administra con `@State`, `@Bindable` y `@Observable` según la responsabilidad de cada pantalla.
 
 ## Networking
 
@@ -61,4 +61,4 @@ No se guardan cuentas, contraseñas ni tokens. La conexión a Open Library es ne
 - La inicialización de SwiftData puede fallar; actualmente el arranque utiliza `fatalError` si no se puede crear `ModelContainer`. Es una limitación registrada, no una situación que se haya verificado como resuelta.
 - A falta de una revisión manual en dispositivo real, el comportamiento de VoiceOver y todos los tamaños de texto requiere verificación adicional.
 
-Para el estado concreto de las comprobaciones y la transferencia a la rama oficial, consultar [Revisión de entrega](revision-de-entrega.md).
+Para ejecutar el proyecto y revisar las pantallas, consulta el [README](../README.md).
