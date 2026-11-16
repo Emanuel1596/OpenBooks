@@ -33,6 +33,17 @@ final class SearchViewModel {
         state = resultIndices.isEmpty ? .noResults : .content
     }
 
+    private func searchWithSuggestionsRetry(query: String) async throws -> [Book] {
+        do {
+            return try await service.searchBooks(query: query)
+        } catch BookSearchError.timeout {
+            guard suggestionsCacheKey != nil else { throw BookSearchError.timeout }
+            try Task.checkCancellation()
+            try await Task.sleep(nanoseconds: 750_000_000)
+            return try await service.searchBooks(query: query)
+        }
+    }
+
     func searchBooks(retainingResults: Bool = false) async {
         let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
         if !retainingResults { resultIndices = [] }
@@ -44,7 +55,7 @@ final class SearchViewModel {
 
         if resultIndices.isEmpty { state = .loading }
         do {
-            let results = try await service.searchBooks(query: query)
+            let results = try await searchWithSuggestionsRetry(query: query)
             try Task.checkCancellation()
             if !results.isEmpty || resultIndices.isEmpty {
                 resultIndices = booksState.addSearchResults(results)

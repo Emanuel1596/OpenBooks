@@ -119,6 +119,52 @@ final class SearchViewModelTests: XCTestCase {
         XCTAssertTrue(book.hasCover)
     }
 
+    func testSuggestionsRetryOnceAfterTimeout() async {
+        let service = TimeoutSearchService(failuresBeforeSuccess: 1)
+        let viewModel = SearchViewModel(service: service, booksState: makeBooksState(),
+                                        cacheSuggestions: true)
+        viewModel.searchText = "subject:fiction"
+        defer { UserDefaults.standard.removeObject(forKey: "OpenBooks.Suggestions.v1") }
+
+        await viewModel.searchBooks()
+
+        let attempts = await service.callCount()
+        XCTAssertEqual(attempts, 2)
+        XCTAssertEqual(viewModel.state, .content)
+        XCTAssertEqual(viewModel.resultIndices.count, 1)
+    }
+
+    func testSuggestionsStopRetryingAfterSecondTimeout() async {
+        let service = TimeoutSearchService(failuresBeforeSuccess: 2)
+        let viewModel = SearchViewModel(service: service, booksState: makeBooksState(),
+                                        cacheSuggestions: true)
+        viewModel.searchText = "subject:fiction"
+
+        await viewModel.searchBooks()
+
+        let attempts = await service.callCount()
+        XCTAssertEqual(attempts, 2)
+        guard case .error = viewModel.state else {
+            XCTFail("Se esperaba un error después de dos intentos")
+            return
+        }
+    }
+
+    func testRegularSearchDoesNotRetryTimeout() async {
+        let service = TimeoutSearchService(failuresBeforeSuccess: 1)
+        let viewModel = SearchViewModel(service: service, booksState: makeBooksState())
+        viewModel.searchText = "The Hobbit"
+
+        await viewModel.searchBooks()
+
+        let attempts = await service.callCount()
+        XCTAssertEqual(attempts, 1)
+        guard case .error = viewModel.state else {
+            XCTFail("La búsqueda debe informar el error de conexión")
+            return
+        }
+    }
+
     private func makeBooksState() -> BooksState {
         BooksState(store: SearchTestFavoritesStore())
     }
@@ -144,4 +190,22 @@ private struct SearchTestFavoritesStore: FavoriteBooksStore {
     func savedBookSummaries() throws -> [Book] { [] }
     func save(_ book: Book) throws -> Bool { true }
     func delete(_ book: Book) throws -> Bool { true }
+}
+
+private actor TimeoutSearchService: BookSearchService {
+    private var attempts = 0
+    private let failuresBeforeSuccess: Int
+
+    init(failuresBeforeSuccess: Int) {
+        self.failuresBeforeSuccess = failuresBeforeSuccess
+    }
+
+    func searchBooks(query: String) async throws -> [Book] {
+        attempts += 1
+        if attempts <= failuresBeforeSuccess { throw BookSearchError.timeout }
+        return [Book(title: "The Hobbit", author: "J. R. R. Tolkien", year: "1937",
+                     hasCover: false, isSaved: false, id: "/works/OL123W")]
+    }
+
+    func callCount() -> Int { attempts }
 }

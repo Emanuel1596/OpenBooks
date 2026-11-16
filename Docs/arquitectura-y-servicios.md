@@ -33,7 +33,7 @@ Se aplica una separación MVVM pragmática: **las vistas no construyen URLs ni m
 
 `Book.year` es `String?` porque `first_publish_year` es opcional. `OpenLibraryWorkDescription` admite descripción como cadena o como objeto con `value`. Se aceptan respuestas HTTP 2xx; se informan errores de conexión, HTTP y decodificación. El detalle utiliza el identificador estable de tipo `/works/OL...W` para construir una URL de obra válida. La app **no emplea una clave API** para estos endpoints públicos.
 
-Inicio usa la consulta `subject:fiction` para sugerencias. No es un listado certificado de libros más populares. La sinopsis y los temas pueden estar en inglés o no estar registrados; se muestran tal como llegan. El cliente limita el número de resultados solicitados y presenta estados de carga, sin resultados y error.
+Inicio usa la consulta `subject:fiction` para sugerencias. No es un listado certificado de libros más populares. La sinopsis y los temas pueden estar en inglés o no estar registrados; se muestran tal como llegan. El cliente limita el número de resultados solicitados y presenta estados de carga, sin resultados y error. En Inicio, si la consulta de sugerencias agota su tiempo, se intenta una vez más; si tampoco funciona, aparece el error y se conserva el reintento manual. Las búsquedas normales no se repiten automáticamente.
 
 ## Persistencia y caché
 
