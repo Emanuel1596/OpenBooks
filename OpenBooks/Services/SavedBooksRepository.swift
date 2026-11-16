@@ -34,7 +34,6 @@ final class SavedBooksRepository: FavoriteBooksStore {
         try savedBooks().map { $0.asBook() }
     }
 
-    @discardableResult
     func save(_ book: Book) throws -> Bool {
         guard try !savedBooks().contains(where: { $0.bookID == book.id }) else {
             return false
@@ -71,7 +70,6 @@ final class SavedBooksRepository: FavoriteBooksStore {
         }
     }
 
-    @discardableResult
     func delete(_ book: Book) throws -> Bool {
         let matches = try savedBooks().filter { $0.bookID == book.id }
         guard !matches.isEmpty else { return false }

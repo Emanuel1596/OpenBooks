@@ -8,11 +8,11 @@ final class SearchViewModel {
     private(set) var state: SearchViewState = .noResults
     private(set) var resultIndices: [Int] = []
 
-    private let service: any BookSearchService
+    private let service: BookSearchService
     private let booksState: BooksState
     private let suggestionsCacheKey: String?
 
-    init(service: any BookSearchService, booksState: BooksState,
+    init(service: BookSearchService, booksState: BooksState,
          cacheSuggestions: Bool = false) {
         self.service = service
         self.booksState = booksState

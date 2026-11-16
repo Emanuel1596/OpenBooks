@@ -6,7 +6,7 @@ import SwiftData
 @MainActor
 struct OpenBooksApp: App {
     private let container: ModelContainer
-    private let searchService: any BookSearchService
+    private let searchService: BookSearchService
     private let usesMockSearch: Bool
     @State private var booksState: BooksState
 

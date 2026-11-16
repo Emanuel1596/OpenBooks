@@ -4,12 +4,12 @@ import Observation
 @MainActor
 @Observable
 final class BooksState {
-    private let store: any FavoriteBooksStore
+    private let store: FavoriteBooksStore
     var books: [Book]
     var showingPersistenceError = false
     var persistenceErrorMessage = ""
 
-    init(store: any FavoriteBooksStore, books: [Book] = mockBooks) {
+    init(store: FavoriteBooksStore, books: [Book] = mockBooks) {
         self.store = store
         self.books = books
     }
@@ -85,7 +85,6 @@ final class BooksState {
         }
     }
 
-    @discardableResult
     func toggleSaved(at index: Int) -> Bool {
         guard books.indices.contains(index) else { return false }
 

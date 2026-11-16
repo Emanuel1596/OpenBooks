@@ -9,12 +9,12 @@ struct ContentView: View {
     @State private var suggestionsStarted = false
     @State private var activeSearch: Task<Void, Never>?
     let usesMockSearch: Bool
-    private let detailsService: (any BookDetailsService)?
+    private let detailsService: BookDetailsService?
 
     let resultsRoute = -1
     let searchRoute = -2
 
-    init(booksState: BooksState, searchService: any BookSearchService,
+    init(booksState: BooksState, searchService: BookSearchService,
          usesMockSearch: Bool) {
         self.booksState = booksState
         self.usesMockSearch = usesMockSearch

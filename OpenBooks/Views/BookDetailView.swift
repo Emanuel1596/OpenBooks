@@ -2,7 +2,7 @@ import SwiftUI
 
 struct BookDetailView: View {
     let book: Book
-    let detailsService: (any BookDetailsService)?
+    let detailsService: BookDetailsService?
     let onDetailsLoaded: (OpenLibraryWorkDetails) -> Void
     @State private var fetchedDetails: OpenLibraryWorkDetails?
     @State private var loadingDescription = false

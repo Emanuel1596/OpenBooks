@@ -33,7 +33,7 @@ final class SavedBooksRepositoryTests: XCTestCase {
     func testRemovingBookLeavesAnEmptyCollection() throws {
         let container = try makeContainer()
         let repository = SavedBooksRepository(context: ModelContext(container))
-        try repository.save(mockBooks[2])
+        XCTAssertTrue(try repository.save(mockBooks[2]))
         XCTAssertTrue(try repository.delete(mockBooks[2]))
         XCTAssertTrue(try repository.savedBooks().isEmpty)
         XCTAssertFalse(try repository.delete(mockBooks[2]))
