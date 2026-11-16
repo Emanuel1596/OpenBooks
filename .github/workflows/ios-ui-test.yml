@@ -176,13 +176,25 @@ jobs:
             .maestro/recorrido-real-completo.yaml \
             --test-output-dir=maestro-output
 
-      - name: Consultar Open Library real
+      - name: Verificar evidencias del recorrido real
         run: |
-          maestro \
-            --device="$SIMULATOR_UDID" \
-            test \
-            .maestro/open-library-live.yaml \
-            --test-output-dir=maestro-output
+          python3 - <<'PYTHON'
+          from pathlib import Path
+
+          output = Path("maestro-output")
+          expected = [
+              "recorrido-real-completo-open-library.mp4",
+              "detalle-sugerencia-sinopsis-o-mensaje.png",
+              "resultados-reales-the-hobbit.png",
+              "detalle-the-hobbit-sinopsis-o-mensaje.png",
+              "favorito-despues-de-reabrir.png",
+          ]
+          for filename in expected:
+              matches = list(output.rglob(filename))
+              if len(matches) != 1 or matches[0].stat().st_size <= 1000:
+                  raise SystemExit(f"Evidencia ausente o vacía: {filename}")
+              print(f"Verificado: {matches[0]} ({matches[0].stat().st_size} bytes)")
+          PYTHON
 
       - name: Guardar evidencias
         if: always()
