@@ -169,7 +169,37 @@ jobs:
           retention-days: 7
 
       - name: Grabar recorrido real completo
+        shell: bash
         run: |
+          set -euo pipefail
+
+          if maestro \
+            --device="$SIMULATOR_UDID" \
+            test \
+            .maestro/recorrido-real-completo.yaml \
+            --test-output-dir=maestro-output; then
+            exit 0
+          fi
+
+          # Reintentar solo cuando el diagnóstico confirma un timeout de Open Library.
+          if ! python3 - <<'PYTHON'
+          from pathlib import Path
+
+          output = Path("maestro-output")
+          is_timeout = any(
+              "The request timed out" in path.read_text(encoding="utf-8", errors="replace")
+              for path in output.rglob("*.json")
+          )
+          raise SystemExit(0 if is_timeout else 1)
+          PYTHON
+          then
+            echo "::error::Maestro fallo por una causa distinta al timeout; revisar el artefacto."
+            exit 1
+          fi
+
+          echo "::warning::Open Library no respondio a tiempo; se repite una sola vez el recorrido real."
+          mv maestro-output maestro-output-primer-intento
+          sleep 5
           maestro \
             --device="$SIMULATOR_UDID" \
             test \
@@ -201,6 +231,8 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: OpenBooks-UI-Test
-          path: maestro-output
+          path: |
+            maestro-output
+            maestro-output-primer-intento
           if-no-files-found: warn
           retention-days: 7
