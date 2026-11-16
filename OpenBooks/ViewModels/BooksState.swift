@@ -9,7 +9,7 @@ final class BooksState {
     var showingPersistenceError = false
     var persistenceErrorMessage = ""
 
-    init(store: FavoriteBooksStore, books: [Book] = mockBooks) {
+    init(store: FavoriteBooksStore, books: [Book] = []) {
         self.store = store
         self.books = books
     }

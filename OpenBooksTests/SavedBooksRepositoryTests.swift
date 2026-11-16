@@ -17,7 +17,7 @@ final class SavedBooksRepositoryTests: XCTestCase {
         let second = SavedBooksRepository(context: ModelContext(container))
         XCTAssertEqual(try second.savedBooks().map(\.bookID), [mockBooks[2].id])
 
-        let state = BooksState(store: second)
+        let state = BooksState(store: second, books: mockBooks)
         state.loadFavorites()
         XCTAssertTrue(state.books[2].isSaved)
     }
@@ -42,7 +42,7 @@ final class SavedBooksRepositoryTests: XCTestCase {
     func testTogglingBookUpdatesFavorites() throws {
         let container = try makeContainer()
         let repository = SavedBooksRepository(context: ModelContext(container))
-        let state = BooksState(store: repository)
+        let state = BooksState(store: repository, books: mockBooks)
 
         state.loadFavorites()
         XCTAssertTrue(state.toggleSaved(at: 2))
@@ -62,7 +62,7 @@ final class SavedBooksRepositoryTests: XCTestCase {
     }
 
     func testFailedSaveDoesNotChangeFavoriteState() {
-        let state = BooksState(store: UnavailableFavoritesStore())
+        let state = BooksState(store: UnavailableFavoritesStore(), books: mockBooks)
         XCTAssertFalse(state.toggleSaved(at: 2))
         XCTAssertFalse(state.books[2].isSaved)
         XCTAssertTrue(state.showingPersistenceError)

@@ -7,17 +7,12 @@ struct HomeView: View {
     let books: [Book]
     let suggestionIndices: [Int]
     let suggestionsState: SearchViewState
-    let usesMockSearch: Bool
     let onRetrySuggestions: () -> Void
     let onOpenSearch: () -> Void
     let onMyBooks: () -> Void
 
     private var visibleIndices: [Int] {
-        if usesMockSearch {
-            let featured = [3, 2, 7].filter { books.indices.contains($0) }
-            return featured + books.indices.filter { !featured.contains($0) }
-        }
-        return suggestionIndices.filter { books.indices.contains($0) }
+        suggestionIndices.filter { books.indices.contains($0) }
     }
 
     private var suggestionColumns: [GridItem] {
@@ -72,7 +67,7 @@ struct HomeView: View {
                             .foregroundStyle(Color.appInk)
                             .accessibilityAddTraits(.isHeader)
 
-                        if usesMockSearch || suggestionsState == .content {
+                        if suggestionsState == .content {
                             LazyVGrid(columns: suggestionColumns, alignment: .center, spacing: 24) {
                                 ForEach(visibleIndices, id: \.self) { index in
                                     NavigationLink(value: index) {
@@ -80,7 +75,7 @@ struct HomeView: View {
                                             ZStack {
                                                 RoundedRectangle(cornerRadius: 11)
                                                     .fill(Color.appNavSurface)
-                                                editorialCover(for: index)
+                                                BookCoverArtworkView(book: books[index])
                                                     .frame(maxWidth: .infinity, maxHeight: .infinity,
                                                            alignment: .center)
                                                     .padding(3)
@@ -89,7 +84,7 @@ struct HomeView: View {
                                             .frame(maxWidth: .infinity)
                                             .clipShape(RoundedRectangle(cornerRadius: 11))
 
-                                            Text(shortTitle(for: index))
+                                            Text(books[index].title)
                                                 .font(.subheadline.weight(.medium))
                                                 .foregroundStyle(Color.appInk)
                                                 .lineLimit(3)
@@ -143,23 +138,5 @@ struct HomeView: View {
             BottomNavigationView(homeActive: true, onHome: {}, onMyBooks: onMyBooks)
         }
         .background(Color.appCanvas.ignoresSafeArea())
-    }
-
-    private func shortTitle(for index: Int) -> String {
-        if usesMockSearch && index == 3 { return "Harry Potter" }
-        return books[index].title
-    }
-
-    @ViewBuilder
-    private func editorialCover(for index: Int) -> some View {
-        if usesMockSearch && index == 3 {
-            Image("EditorialHarry").resizable().scaledToFit()
-        } else if usesMockSearch && index == 2 {
-            Image("Editorial1984").resizable().scaledToFit()
-        } else if usesMockSearch && index == 7 {
-            Image("EditorialPride").resizable().scaledToFit()
-        } else {
-            BookCoverArtworkView(book: books[index])
-        }
     }
 }

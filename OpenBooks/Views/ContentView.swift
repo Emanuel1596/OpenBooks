@@ -8,23 +8,20 @@ struct ContentView: View {
     @State private var suggestionsViewModel: SearchViewModel
     @State private var suggestionsStarted = false
     @State private var activeSearch: Task<Void, Never>?
-    let usesMockSearch: Bool
     private let detailsService: BookDetailsService?
 
     let resultsRoute = -1
     let searchRoute = -2
 
-    init(booksState: BooksState, searchService: BookSearchService,
-         usesMockSearch: Bool) {
+    init(booksState: BooksState, searchService: BookSearchService) {
         self.booksState = booksState
-        self.usesMockSearch = usesMockSearch
-        self.detailsService = usesMockSearch ? nil : OpenLibraryBookDetailsService()
+        self.detailsService = OpenLibraryBookDetailsService()
         _searchViewModel = State(initialValue: SearchViewModel(
             service: searchService,
             booksState: booksState
         ))
         let suggestions = SearchViewModel(service: searchService, booksState: booksState,
-                                          cacheSuggestions: !usesMockSearch)
+                                          cacheSuggestions: true)
         suggestions.searchText = "subject:fiction"
         _suggestionsViewModel = State(initialValue: suggestions)
     }
@@ -49,7 +46,6 @@ struct ContentView: View {
                         books: booksState.books,
                         suggestionIndices: suggestionsViewModel.resultIndices,
                         suggestionsState: suggestionsStarted ? suggestionsViewModel.state : .loading,
-                        usesMockSearch: usesMockSearch,
                         onRetrySuggestions: {
                             Task { await suggestionsViewModel.searchBooks() }
                         },
@@ -108,7 +104,7 @@ struct ContentView: View {
         }
         .onAppear {
             booksState.loadFavorites()
-            if !usesMockSearch && !suggestionsStarted {
+            if !suggestionsStarted {
                 suggestionsStarted = true
                 suggestionsViewModel.restoreCachedSuggestions()
                 Task { await suggestionsViewModel.searchBooks(retainingResults: true) }
