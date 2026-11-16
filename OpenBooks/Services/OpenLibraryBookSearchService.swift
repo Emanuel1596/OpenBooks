@@ -10,7 +10,6 @@ enum BookSearchError: LocalizedError {
     case httpStatus(Int)
     case decoding
     case connectivity(String)
-    case timeout
 
     var errorDescription: String? {
         switch self {
@@ -24,8 +23,6 @@ enum BookSearchError: LocalizedError {
             return "No se pudo interpretar la información de Open Library."
         case .connectivity(let message):
             return "No se pudo conectar con Open Library: \(message)"
-        case .timeout:
-            return "Open Library tardó demasiado en responder. Intenta nuevamente."
         }
     }
 }
@@ -54,7 +51,6 @@ struct OpenLibraryBookSearchService: BookSearchService {
         do {
             (data, response) = try await URLSession.shared.data(for: request)
         } catch let error as URLError {
-            if error.code == .timedOut { throw BookSearchError.timeout }
             throw BookSearchError.connectivity(error.localizedDescription)
         }
 

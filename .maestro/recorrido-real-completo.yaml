@@ -7,7 +7,7 @@ appId: com.openbooks.app
 - extendedWaitUntil:
     visible:
       id: "sugerencia-0"
-    timeout: 75000
+    timeout: 30000
 - takeScreenshot: "inicio-sugerencias-open-library"
 - tapOn:
     id: "sugerencia-0"
