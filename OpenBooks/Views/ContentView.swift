@@ -123,6 +123,7 @@ struct ContentView: View {
 
     private func searchBooks() {
         activeSearch?.cancel()
+        searchViewModel.prepareForSearch()
         path = [resultsRoute]
         activeSearch = Task {
             await searchViewModel.searchBooks()

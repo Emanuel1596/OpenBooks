@@ -18,6 +18,22 @@ final class SearchViewModelTests: XCTestCase {
         XCTAssertEqual(state.books[viewModel.resultIndices[0]].title, "El hobbit")
     }
 
+    func testSearchShowsLoadingBeforeNavigationAndEmptyOnlyAfterResponse() async {
+        let viewModel = SearchViewModel(
+            service: TestSearchService(books: []), booksState: makeBooksState()
+        )
+        viewModel.searchText = "Libro inexistente"
+
+        viewModel.prepareForSearch()
+
+        XCTAssertEqual(viewModel.state, .loading)
+        XCTAssertTrue(viewModel.resultIndices.isEmpty)
+
+        await viewModel.searchBooks()
+
+        XCTAssertEqual(viewModel.state, .noResults)
+    }
+
     func testSuccessfulSearchWithoutBooksShowsEmptyState() async {
         let viewModel = SearchViewModel(service: TestSearchService(books: []), booksState: makeBooksState())
         viewModel.searchText = "Libro que no existe"

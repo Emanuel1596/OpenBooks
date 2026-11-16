@@ -19,6 +19,11 @@ final class SearchViewModel {
         self.suggestionsCacheKey = cacheSuggestions ? "OpenBooks.Suggestions.v1" : nil
     }
 
+    func prepareForSearch() {
+        resultIndices = []
+        state = .loading
+    }
+
     func restoreCachedSuggestions() {
         guard let suggestionsCacheKey,
               let data = UserDefaults.standard.data(forKey: suggestionsCacheKey),
